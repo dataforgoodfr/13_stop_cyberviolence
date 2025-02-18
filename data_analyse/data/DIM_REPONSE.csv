@@ -1,0 +1,165 @@
+KEY_QUESTION,KEY_REPONSE,LB_REPONSE,TYPE_REPONSE,FLG_PRIMAIRE,FLG_SECONDAIRE
+A_1_1,A_1_1_a,Jouer à des jeux vidéos en solo,SOLO,True,True
+A_1_1,A_1_1_b,Jouer à des jeux vidéos avec des amis ou d'autres joueurs,SOCIAL,True,True
+A_1_1,A_1_1_c,Regarder des vidéos (streaming),SOLO,True,True
+A_1_1,A_1_1_d,Partager des vidéos ou commenter sur les vidéos que je regarde (streaming),SOCIAL,True,True
+A_1_1,A_1_1_e,M'informer sur ce que les autres font via mes réseaux sociaux,SOCIAL,True,True
+A_1_1,A_1_1_f,Partager sur ce que je fais et ce qui m'intéresse via mes réseaux sociaux,SOCIAL,True,True
+A_1_1,A_1_1_g,"Lire des articles, des livres, des bandes dessinées via internet ",SOLO,True,True
+A_1_1,A_1_1_h,Faire des recherches sur des sujets qui m'intéressent via internet,SOLO,True,True
+A_1_2,A_1_2_a,Facebook / Facebook Messenger,,True,True
+A_1_2,A_1_2_b,TikTok,,True,True
+A_1_2,A_1_2_c,Instagram,,True,True
+A_1_2,A_1_2_d,Snapchat,,True,True
+A_1_2,A_1_2_e,X (anciennement Twitter),,True,True
+A_1_2,A_1_2_f,WhatsApp,,True,True
+A_1_2,A_1_2_g,Discord,,True,True
+A_1_2,A_1_2_h,Twitch,,True,True
+A_1_2,A_1_2_i,YouTube,,True,True
+A_1_2,A_1_2_j,Roblox,,True,True
+A_1_2,A_1_2_k,Pinguin club,,True,True
+A_1_2,A_1_2_l,Autres (….),,True,True
+A_1_2,A_1_2_m,Aucun,,True,True
+A_1_3,A_1_3_a,Je me sens connecté à des gens qui comptent pour moi via internet,IMPORTANCE,True,True
+A_1_3,A_1_3_b,J'interromps souvent mes autres activités pour répondre lorsqu'on me contacte via internet (ex: sur mon téléphone portable),DÉPENDANCE,True,True
+A_1_3,A_1_3_c,J'utilise les écrans pour éviter de m'ennuyer,IMPORTANCE,True,True
+A_1_3,A_1_3_d,"L'idée d'être sans écran portable (ex: téléphone, console) me rend anxieux ",DÉPENDANCE,True,True
+A_1_3,A_1_3_e,Je ne vois pas le temps passer quand je suis devant un écran,TEMPS +,True,True
+A_1_3,A_1_3_f,J'ai essayé mais je n'ai pas réussi à réduire l'utilisation de mes écrans,TEMPS +,True,True
+A_1_3,A_1_3_g,Mes parents (ou les adultes qui s'occupent de moi) limitent mon temps d'utilisation des écrans ,TEMPS -,True,True
+A_1_3,A_1_3_h,"Personnellement, je préfère ne pas passer beaucoup de temps sur les écrans",TEMPS -,True,True
+A_2_1,A_2_1_a,J'ai reçu des commentaires négatifs qui m'ont fait de la peine,VICTIMISATION,True,True
+A_2_1,A_2_1_b,Quelqu'un a partagé une de mes photos ou vidéos sans mon autorisation,RISQUE,True,True
+A_2_1,A_2_1_c,"Quelqu'un a publié des choses fausses, méchantes embarrassantes à mon sujet",VICTIMISATION,True,True
+A_2_1,A_2_1_d,J'ai été contacté par quelqu'un que je ne connaissais pas,RISQUE,True,True
+A_2_1,A_2_1_e,Aucune de ces situations,,True,True
+A_2_2,A_2_2_a,Je ne partage aucune information personnelle en ligne car j'évite de me créer des comptes,PROTECTION,True,True
+A_2_2,A_2_2_b,"Je partage seulement le minimum d'information requis pour pouvoir accéder aux sites et activtés en ligne qui m'intéressent (ex: nom, pseudo, âge, etc.) ",PROTECTION,True,True
+A_2_2,A_2_2_c,Je garde mes profils en mode 'privé' et je limite qui peut communiquer avec moi,PROTECTION,True,True
+A_2_2,A_2_2_d,Je partage surtout des informations valorisantes au sujet de mes activités et mes réussites,CONTENU (PARTAGE PRIMAIRE),True,True
+A_2_2,A_2_2_e,"Je partage des photos ou des vidéos de moi avec mes amis, avec ma famille, etc.",CONTENU (PARTAGE PRIMAIRE),True,True
+A_2_2,A_2_2_f,Je partage mes opinions et je commente sur différents sujets d'actualité,CONTENU,True,True
+A_2_2,A_2_2_g,Je rends mes profils accessibles au gens avec lesquels j'ai des amis en commun ou qui ont des intérêts similaires aux miens,PARTAGE,True,True
+A_2_2,A_2_2_h,Je rends certains de mes profils accessibles à tous et je m'assure de leur visibilité  (ex: blog vidéo),PARTAGE,True,True
+A_3_1,A_3_1_a,Je réponds à la personne pour régler le problème ou lui demander de me laisser tranquille,ACTIF,True,True
+A_3_1,A_3_1_b,J'utilise les fonctions du site internet me permettant de bloquer ou de signaler la personne ,ACTIF,True,True
+A_3_1,A_3_1_c,Je traite la personne de la même façon qu'elle m'a traité(e),ACTIF,True,True
+A_3_1,A_3_1_d,Je ferme mon appareil et j'arrête d'utiliser l'internet pour un temps,FUITE,True,True
+A_3_1,A_3_1_e,"Je change de site ou d'activité en ligne, au moins pour un temps",FUITE,True,True
+A_3_1,A_3_1_f,J'en parle à quelqu'un en ligne qui peut me comprendre ou m'aider,SOUTIEN SOCIAL,True,True
+A_3_1,A_3_1_g,J'en parle à quelqu'un en dehors de l'internet qui peut me comprendre ou m'aider,SOUTIEN SOCIAL,True,True
+A_3_1,A_3_1_h,J'ignore le message et je continue mes activités en ligne,PASSIF,True,True
+A_3_2,A_3_2_a,Je suis intervenu(e) directement pour prendre la défense de quelqu'un d'autre en ligne,DIRECT,True,True
+A_3_2,A_3_2_b,J'ai discuté avec un(e) ami(e) pour l'aider à trouver des solutions à un problème vécu sur internet,DIRECT,True,True
+A_3_2,A_3_2_c,"J'ai averti un adulte que je connais (parent, intervenant, etc) d'une situation inacceptable dont j'ai été témoin sur internet",SIGNAL,True,True
+A_3_2,A_3_2_d,J'ai utilisé la fonction de signalement d'un site internet pour dénoncer un comportement inacceptable dont j'ai été témoin en ligne,SIGNAL,True,True
+A_3_2,A_3_2_e,J'ai préféré ignorer un comportement en ligne qui me semblait inacceptable,PASSIF,True,True
+A_3_2,A_3_2_f,Je n'ai pas été témoin d'un comportement inacceptable sur internet,AUCUN,True,True
+B_1_1,B_1_1_a,J'ai reçu un message de quelqu'un qui se faisait passer pour quelqu'un d'autre ou pour un compte officiel d'une compagnie,ARNAQUE,True,True
+B_1_1,B_1_1_b,Quelqu'un que je ne connais pas m'a demandé de l'ajouter à ma liste d'amis,RISQUE,True,True
+B_1_1,B_1_1_c,"Quelqu'un a tenté de me convaincre de partager des informations confidentielles (mot de passe, numéro de carte de crédit, etc.) ou de leur envoyer de l'argent ou des items de valeur ",ARNAQUE,True,True
+B_1_1,B_1_1_d,Quelqu'un a tenté de me faire peur (menaces) pour que je lui partage des informations confidentielles ou de leur envoyer de l'argent ou des items de valeur ,ARNAQUE,True,True
+B_1_1,B_1_1_e,Quelqu'un m'a demandé de lui envoyer des photos ou des vidéos intimes ou osés de moi.,RISQUE,True,True
+B_1_2,B_1_2_a,J'accepte généralement toutes les demandes que je reçois.,ACCES ++,True,True
+B_1_2,B_1_2_b,J'accepte les demandes des personnes que je reconnais et de celles qui se trouvent sur la liste de contact de mes amis.,ACCES +,True,True
+B_1_2,B_1_2_c,J'accepte généralement les demandes des personnes que je reconnais.,ACCES,True,True
+B_1_2,B_1_2_d,"J'accepte les demandes des personnes que je connais personnellement, mais seulement après vérification.",ACCES -,True,True
+B_1_2,B_1_2_e,Je refuse généralement les demandes que je reçois.,ACCES --,True,True
+B_2_1,B_2_1_a,Des personnes qui font du mal physiquement à d'autres personnes,CHOQUANT,True,True
+B_2_1,B_2_1_b,Des personnes qui font du mal physiquement à des animaux,CHOQUANT,True,True
+B_2_1,B_2_1_c,"Des personnes qui encouragent ou banalisent la violence ou les mauvais traitements envers soi-même (ex: prendre des risques inutiles, se priver de nourriture, se suicider)",CHOQUANT,True,True
+B_2_1,B_2_1_d,"Des messages haineux envers des personnes à cause de la couleur de leur peau, de leur culture ou de leur religion.",CHOQUANT,True,True
+B_2_1,B_2_1_e,Des encouragements à boire de l'alcool ou à prendre de la drogue ,CHOQUANT,True,True
+B_2_1,B_2_1_f,Des images pornographiques,CHOQUANT,True,True
+B_2_2,B_2_2_a,troublé (surpris),NÉGATIF,True,True
+B_2_2,B_2_2_b,"mal à l'aise (gêné, embarrassé)",NÉGATIF,True,True
+B_2_2,B_2_2_c,"triste (peiné, blessé) ",NÉGATIF,True,True
+B_2_2,B_2_2_d,"fâché (révolté, insulté)",NÉGATIF,True,True
+B_2_2,B_2_2_e,"inquiet (effrayé, apeuré)",NÉGATIF,True,True
+B_2_2,B_2_2_f,curieux (au sujet du contenu ou de la personne qui l'a partagé),POSITIF,True,True
+B_2_2,B_2_2_g,amusé (par le contenu ou sa présentation),POSITIF,True,True
+B_2_2,B_2_2_h,indifférent (cela ne m'a pas dérangé),NEUTRE,True,True
+B_3_1,B_3_1_a,troublé (surpris),NÉGATIF,True,True
+B_3_1,B_3_1_b,"mal à l'aise (gêné, embarrassé)",NÉGATIF,True,True
+B_3_1,B_3_1_c,"triste (peiné, blessé) ",NÉGATIF,True,True
+B_3_1,B_3_1_d,"fâché (révolté, insulté)",NÉGATIF,True,True
+B_3_1,B_3_1_e,"inquiet (effrayé, peur que cela se reproduise)",NÉGATIF,True,True
+B_3_1,B_3_1_f,coupable (j'ai senti que j'étais responsable de ce qui est arrivé),NÉGATIF,True,True
+B_3_1,B_3_1_g,indifférent (cela ne m'a pas dérangé),NEUTRE,True,True
+B_3_1,B_3_1_h,mes données personnelles n'ont jamais été partagées sans mon accord.,AUCUN,True,True
+Pr_C_1,Pr_C_1_a,Je ne fréquente généralement pas d'environnement en ligne qui me permette de joindre un groupe.,SOLO,True,True
+Pr_C_1,Pr_C_1_b,"Je ne rejoins généralement aucun groupe, même quand c'est possible de le faire.",SOLO,True,True
+Pr_C_1,Pr_C_1_c,Je rejoins généralement un groupe pour échanger ou jouer en ligne.,SOCIAL,True,True
+Pr_C_1,Pr_C_1_d,Je rejoins généralement des groupes formés de personnes que je connais bien ou que j'ai appris à connaitre en ligne.,SOCIAL,True,True
+Pr_C_1,Pr_C_1_e,Je rejoins généralement des groupes formés de personnes que je ne connais pas ou que je fréquente pour de courtes périodes seulement.,SOCIAL,True,True
+C_1_1,C_1_1_a,J'ai répondu avec des insultes à quelqu'un ou je me suis moqué de lui/elle  ,AGRESSION,True,True
+C_1_1,C_1_1_b,J'ai dit du mal ou parlé dans le dos de quelqu'un en son absence,AGRESSION,True,True
+C_1_1,C_1_1_c,J'ai partagé des images ou vidéos personnels sans l'autorisation de la personne concernée,AGRESSION,True,True
+C_1_1,C_1_1_d,J'ai exclu quelqu'un qui me dérangeait d'un groupe en ligne,RISQUE,True,True
+C_1_1,C_1_1_e,J'ai joué la comédie ou je me suis fait passer pour quelqu'un d'autre,RISQUE,True,True
+C_1_1,C_1_1_f,"J'ai partagé des contenus méchants, blessants ou faux (''fake'')",RISQUE,True,True
+C_2_1,C_2_1_a,Quelqu'un (ou un groupe de personnes) t'as harcelé ou embêté à répétition.,AGRESSION,True,True
+C_2_1,C_2_1_b,Quelqu'un a parlé de toi en mal ou a fait circuler des rumeurs à ton sujet.,AGRESSION,True,True
+C_2_1,C_2_1_c,Quelqu'un a diffusé tes informations ou images personnelles sans ton consentement.,AGRESSION,True,True
+C_2_1,C_2_1_d,Quelqu'un t'a menacé de te faire du mal physiquement.,AGRESSION,True,True
+C_2_1,C_2_1_e,Quelqu'un t'a menacé de nuire à ta réputation (ou de te faire de peine/blesser) en ligne.,AGRESSION,True,True
+C_2_1,C_2_1_f,Quelqu'un t'a fait des propositions à connotation sexuelle que tu ne voulais pas.,AGRESSION,True,True
+C_2_1,C_2_1_g,Quelqu'un s'est fait passer pour toi sans ton accord.,AGRESSION,True,True
+C_2_1,C_2_1_h,Quelqu'un t'a espionné ou a surveillé tes activités en ligne (autre que tes parents ou adultes responsables),AGRESSION,True,True
+C_2_2,C_2_2_a,"Ta couleur de peau, ton ethnie ou ton pays d'origine",MOTIF,True,True
+C_2_2,C_2_2_b,Ta religion ou les pratiques religieuses de ta famille ,MOTIF,True,True
+C_2_2,C_2_2_c,Ton genre ou ton identité sexuelle,MOTIF,True,True
+C_2_2,C_2_2_d,Ton orientation sexuelle,MOTIF,True,True
+C_2_2,C_2_2_e,Un handicap ou une limitation physique ou mentale,MOTIF,True,True
+C_2_2,C_2_2_f,Ton apparence physique ou ton poids,MOTIF,True,True
+C_2_2,C_2_2_g,"Tes résultats (succès/échec) à l'école, dans les sports, dans un jeu en ligne, etc.",MOTIF,True,True
+C_2_2,C_2_2_h,La situation économique de ta famile,MOTIF,True,True
+C_3_1,C_3_1_a,Aucun (je ne passe pas de temps avec mes amis via internet),AMIS,True,True
+C_3_1,C_3_1_b,Mes amis en ligne sont les mêmes que ceux je fréquente hors de l'internet,AMIS,True,True
+C_3_1,C_3_1_c,J'ai quelques amis que je fréquente uniquement en ligne,AMIS,True,True
+C_3_1,C_3_1_d,J'interagis avec toutes les personnes que je considère comme des amis exclusivement  via internet,AMIS,True,True
+C_3_2,C_3_2_a,L'internet me permet de passer plus de temps avec mes amis,POSITIF,True,True
+C_3_2,C_3_2_b,Je rencontre généralement de nouvelles personnes qui partagent mes intérêts via internet,POSITIF,True,True
+C_3_2,C_3_2_c,"Lorsque j'ai un problème, je sais que je peux en discuter avec des gens via internet",POSITIF,True,True
+C_3_2,C_3_2_d,Il m'arrive de rester dans des environnements en ligne qui me mettent mal à l'aise afin de passer plus de temps avec mes amis ,NÉGATIF,True,True
+C_3_2,C_3_2_e,Je passe beaucoup de mon temps en ligne à discuter de mes problèmes ou de ceux de mon entourage,NÉGATIF,True,True
+D_1_1,D_1_1_a,troublé (surpris),NÉGATIF,True,True
+D_1_1,D_1_1_b,"mal à l'aise (gêné, embarrassé)",NÉGATIF,True,True
+D_1_1,D_1_1_c,"triste (peiné, blessé) ",NÉGATIF,True,True
+D_1_1,D_1_1_d,"fâché (révolté, insulté)",NÉGATIF,True,True
+D_1_1,D_1_1_e,"inquiet (effrayé, peur que cela se reproduise)",NÉGATIF,True,True
+D_1_1,D_1_1_f,coupable (j'ai senti que j'étais responsable de ce qui est arrivé),NÉGATIF,True,True
+D_1_1,D_1_1_g,indifférent (cela ne m'a pas dérangé),NEUTRE,True,True
+D_1_1,D_1_1_h,je n'ai pas subi un incident de ce type au cours du dernier mois,AUCUN,True,True
+D_1_2,D_1_2_a,troublé (surpris),NÉGATIF,True,True
+D_1_2,D_1_2_b,"mal à l'aise (gêné, embarrassé)",NÉGATIF,True,True
+D_1_2,D_1_2_c,"triste (peiné, blessé) ",NÉGATIF,True,True
+D_1_2,D_1_2_d,"fâché (révolté, insulté)",NÉGATIF,True,True
+D_1_2,D_1_2_e,"inquiet (effrayé, peur que cela se reproduise)",NÉGATIF,True,True
+D_1_2,D_1_2_f,amusé (par le contenu ou sa présentation),POSITIF,True,True
+D_1_2,D_1_2_g,indifférent (cela ne m'a pas dérangé),NEUTRE,True,True
+D_1_2,D_1_2_h,je n'ai pas été témoin d'un tel incident au cours du dernier mois,AUCUN,True,True
+D_2_1,D_2_1_a,"Oui, je me compare souvent aux autres à cause de ces stéréotypes.",,True,True
+D_2_1,D_2_1_b,"Oui, j'ai déjà eu des idées tristes ou de la dépression à cause de ces stéréotypes.",,True,True
+D_2_1,D_2_1_c,"Oui, cela affecte ma santé mentale en général.",,True,True
+D_2_1,D_2_1_d,"Oui, ça m'a déjà donné envie de participer à des défis dangereux ou des jeux d'alcool pour être accepté.",,True,True
+D_2_1,D_2_1_e,"Non, cela ne m'affecte pas beaucoup.",,True,True
+D_2_1,D_2_1_f,Autre,,True,True
+D_2_2,D_2_2_a,Parler avec mes amis et ma famille des stéréotypes pour les comprendre et les éviter.,,True,True
+D_2_2,D_2_2_b,Suivre et partager des contenus d'influenceurs qui respectent l'égalité entre les garçons et les filles.,,True,True
+D_2_2,D_2_2_c,Signaler les contenus et les commentaires en ligne qui propagent des stéréotypes ou qui sont injustes envers les genres.,,True,True
+D_2_2,D_2_2_d,Encourager mes amis à ne pas rire ou partager des blagues qui font des stéréotypes sur les genres.,,True,True
+D_2_2,D_2_2_e,Autre.,,True,True
+D_3_1,D_3_1_a,Des personnes ont fait des commentaires méchants sur mon genre.,,True,True
+D_3_1,D_3_1_b,Des personnes ont fait des commentaires sur mon apparence physique.,,True,True
+D_3_1,D_3_1_c,Quelqu'un a menacé de me faire du mal à cause de mon apparence ou de mon genre.,,True,True
+D_3_1,D_3_1_d ,Des rumeurs sur mon apparence ou mon genre ont été partagées.,,True,True
+D_3_1,D_3_1_e,Des photos de moi ont été utilisées d'une manière blessante à cause de mon apparence ou de mon genre.,,True,True
+D_3_1,D_3_1_f,Quelqu'un s'est fait passer pour moi pour dire des choses fausses.,,True,True
+D_3_1,D_3_1_g,Je n'ai jamais été embêté de cette manière en ligne.,,True,True
+D_3_2,D_3_2_c,De l'anxiété,,True,True
+D_3_2,D_3_2_b,"Des troubles de l'alimentation [trop manger, ne pas assez manger]",,True,True
+D_3_2,D_3_2_c,De la tristesse,,True,True
+D_3_2,D_3_2_d,Des difficultés à avoir des amis,,True,True
+D_3_2,D_3_2_e,De la fierté,,True,True
+D_3_2,D_3_2_f,Rien de spécial,,True,True
