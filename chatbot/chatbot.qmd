@@ -1,0 +1,57 @@
+---
+title: Data for Good Saison 13 - Stop Cyber
+subtitle: Chatbot developement
+---
+
+# Cahier de charges
+
+
+# Journal implementations
+
+Inspire entre autre de cet [article](https://ai.gopubby.com/building-rag-research-multi-agent-with-langgraph-1bd47acac69f)
+
+## Premier draft
+
+Dans un premier temps on se focalise sur le service 1 "Aide a la reponse"
+
+## Initial design
+
+```{mermaid}
+flowchart
+  A[User input] --> B(Agent Service 1)
+  B --> C{Context} 
+  C --> A
+  B --> D(Reasearch assistant)
+  D --> B
+```
+
+```{mermaid}
+stateDiagram-v2
+  u: User input
+  a1: Agent service 1
+  r1: Research assistant
+  class1: classifier
+
+
+  u --> a1
+  a1 --> u : context questions
+
+Service1 --> Service2 : Cyberviolence detection
+
+state Service1 {
+  a1 --> r1
+  r1 --> a1
+  a1 --> class1
+  class1 --> a1
+}
+
+  a2: Agent service 2
+
+state Service2{
+  a2 
+}
+
+end : End
+
+Service2 --> end
+```
