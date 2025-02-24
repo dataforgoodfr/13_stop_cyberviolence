@@ -3,6 +3,6 @@
       "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
     },
     "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv pip install -r requirements.txt --system",
-    "postStartCommand": "python ./chatbot/agents/service1.py | tee app.log"
+    // "postStartCommand": "python ./chatbot/agents/service1.py | tee app.log"
 }
   
