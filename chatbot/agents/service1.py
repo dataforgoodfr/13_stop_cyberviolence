@@ -13,6 +13,7 @@ from langgraph.graph import StateGraph, START, END
 import sys
 from rich.console import Console
 from rich.text import Text
+from rich.prompt import Prompt
 
 console = Console()
 
@@ -20,19 +21,16 @@ with open("./agent1_system_prompt", "r") as f:
     SYSTEM_PROMPT = f.read()
 
 class Service1State(TypedDict):
-
     messages: List
     next_actor: str
 
 class Agent1Response(TypedDict):
-
     response: Annotated[str, ..., "Response"]
     destination: Annotated[
         Literal['USER', 'RESEARCHER1', 'CLASSIFIER1', 'SERVICE2'], ..., "Receipient of message"
     ]
 
 def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
-
     llm = llm.with_structured_output(Agent1Response)
 
     system_prompt = SYSTEM_PROMPT
@@ -40,9 +38,30 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
         In order to understand the context of the situations ask
         clarifying questions. Always asks those questions one by one.
 
-        You are working together with a specialized research agent with
+        You are working together with RESEARCHER1 a specialized research agent with
         access to documents concerning guidelines on online behaviour for
-        children and coping strategies.
+        children and coping strategies. For each question that you receive on coping 
+        strategies or other behavioural advice YOU MUST ALWAYS consult with RESEARCHER1 and
+        integrate the obtained information into your answer. Any consultation should 
+        not be revealed to USER in the sense that you MUST NOT explicitly state that
+        you are consulting with RESEARCHER1.
+        If you consult with RESEARCHER1, be concise and ask questions one by one.
+        RESEARCHER1 does not have any knowledge of the ongoing conversation. 
+        Thus YOU MUST include the message in question when commuicating
+        with RESEARCHER1.
+        
+        Summarize the information and return it to USER.
+        
+        Every time you are asked about whether a certain text message is cyberbullying,
+        YOU MUST consult with CLASSIFIER1 and intergrate the transmitted result into your answer.
+        Any consultation should not be revealed to USER. CLASSIFIER1 does not have any knowledge of the
+        ongoing conversation. Thus YOU MUST include the message in question when commuicating
+        with CLASSIFIER1.
+        
+        If you deem necessary or the child/teenager asks for it, you can transfer the case
+        to SERVICE2. In this case, summarize all the information you already gathered (if any) and 
+        hand the case over to SERVICE2. You HAVE TO TRANSFER the USER to SERVICE2 in case of
+        suspected cyberviolence. Clearly state that a specialized service will take on the case.
 
         Always clearly state who you are adressing and include this in your
         answer as follows:
@@ -53,67 +72,74 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
                         check if a given text messsage is likely to be classified
                         as cyberviolence
         SERVICE2 - if you think that a specialized service for dealing with cyberviolence
-                    needs to be called.
+                   needs to be called or if the child/teenager asks for transferral.
     """
 
     def agent1(state: Service1State):
-
-        # print(state['next_actor'])
-
         if state['next_actor'] == "INITIAL":
             messages = [
                 SystemMessage(content=system_prompt)
             ]
-
             response = llm.invoke(messages)
-
-        # print(response)
-
         else:
             response = llm.invoke(
-                [system_prompt, *state['messages']]
+                [SystemMessage(system_prompt), *state['messages']]
             )
-
+            
+        try:
+            
+            print(response.keys())
+            assert 'destination' in response.keys()
+        
+        except:
+            print(response)
+            print("Check Recipient")
+            destination = llm.invoke(
+                [
+                    SystemMessage(system_prompt),
+                    *state['messages'],
+                    AIMessage(response['response']),
+                    HumanMessage("Please clarify who is the Recipient of your last message. DO NOT repeat your response.")
+                ]
+            )
+            
+            response['destination'] = destination['destination']
+            print(response)
+            
+        AIMessage(response['response']).pretty_print()
+        print('Routed to: ', response['destination'])
+        
         return {
-            "messages": [*state["messages"], response['response']],
+            "messages": [*state["messages"], AIMessage(response['response'])],
             "next_actor": response['destination']
         }
 
     return agent1
 
 def user(state: Service1State):
-
-    # print(state['messages'][-1])
-
     return {
-        'messages': [*state['messages'], HumanMessage(input("Please answer"))]
-        'messages': [*state['messages'], HumanMessage(input("Please answer: "))]
+        'messages': [*state['messages'], HumanMessage(
+            Prompt.ask("[red]> ")
+            )
+                     ]
     }
 
 def classifier1(state: Service1State):
-
     return {"messages": [*state["messages"], AIMessage("Clearly cyberviolence")]}
 
 def researcher1(state: Service1State):
     return {"messages": [*state["messages"], AIMessage("No information available")]}
 
-    return {"messages", [*state["messages"], AIMessage("No information available")]}
-
 def service2(state: Service1State):
-
-    return {"messages", [*state["messages"],
     return {"messages": [*state["messages"],
                          AIMessage("Service 2 not yet implemented")]}
 
 def create_workflow():
-
     agent1 = create_agent1()
-
     workflow = StateGraph(Service1State)
 
     def route_after_agent1(state: Service1State) -> Literal["USER", "RESEARCHER1",
                                                             "CLASSIFIER1", "SERVICE2"]:
-
         return state['next_actor']
 
     workflow.add_node("Agent1", agent1)
@@ -130,74 +156,43 @@ def create_workflow():
     workflow.add_edge("SERVICE2", END)
 
     app = workflow.compile()
-
-    app.get_graph().draw_mermaid_png(output_file_path = "graph.png")
-
     app.get_graph().draw_mermaid_png(output_file_path="graph.png")
     return app
 
 import time
+import json
 
-def process_query(query):
-
+async def process_query(query):
     initial_state = {
-        "messages":[HumanMessage(query)],
-        'next_actor':'INITIAL'
         "messages": [HumanMessage(query)],
         'next_actor': 'INITIAL'
     }
 
-    # process_query(query)
-
     app = create_workflow()
 
-    for c, metadata in app.stream(
-        input = initial_state,
+    async for c, metadata in app.astream(
         input=initial_state,
         stream_mode="messages",
-        # config=thread
-        ):
     ):
         if c.additional_kwargs.get("tool_calls"):
-            print(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), end="", flush=True)
             console.print(Text(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), style="cyan"), end="", flush=True)
         if c.content:
+            # console.print("\n")
             time.sleep(0.05)
-            print(c.content, end="", flush=True)
-            console.print(Text(c.content, style="magenta"), end="", flush=True)
+            # console.print(Text(c.content, style="magenta"), end="")#, flush=True)
 
-    print()
-    console.print()
-
-
-
-def main():
-
+    console.print("\n")
+    console.print("finally new line")
+    
+async def main():
     input = builtins.input
-    print("Enter your query (type '-q' to quit):")
-    # while True:
     console.print("Enter your query (type '-q' to quit):")
     query = input("> ")
     if query.strip().lower() == "-q":
-        print("Exiting...")
-        # break
         console.print("Exiting...")
         return
 
-    # initial_state = {
-    #     "messages":[HumanMessage(query)],
-    #     'next_actor':'INITIAL'
-    # }
-
-    # # process_query(query)
-
-    # app = create_workflow()
-
-    # app.invoke(initial_state)
-
-    process_query(query)
-
+    await process_query(query)
 
 if __name__ == "__main__":
-    # asyncio.run(main())
-    main()
+    asyncio.run(main())
