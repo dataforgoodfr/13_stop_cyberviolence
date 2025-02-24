@@ -11,24 +11,29 @@ import asyncio
 import builtins
 from langgraph.graph import StateGraph, START, END
 import sys
+from pathlib import Path
 from rich.console import Console
 from rich.text import Text
 from rich.prompt import Prompt
 
 console = Console()
 
-with open("./agent1_system_prompt", "r") as f:
+script_folder = Path(__file__).parent
+
+with open(script_folder / "agent1_system_prompt", "r") as f:
     SYSTEM_PROMPT = f.read()
 
 class Service1State(TypedDict):
     messages: List
     next_actor: str
+    # user_input: bool
 
 class Agent1Response(TypedDict):
     response: Annotated[str, ..., "Response"]
     destination: Annotated[
-        Literal['USER', 'RESEARCHER1', 'CLASSIFIER1', 'SERVICE2'], ..., "Receipient of message"
+        Literal['USER', 'RESEARCHER1', 'CLASSIFIER1', 'SERVICE2'], ..., "Recipient of message"
     ]
+    # user_input: Annotated[bool, True, "User input required"]
 
 def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
     llm = llm.with_structured_output(Agent1Response)
@@ -75,17 +80,20 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
         print()
         print('---')
         console.print('[blue] Routed to: ', response['destination'])
+        # console.print('[blue] Input needed: ', response['user_input'])
         print('---')
         print()
         
         return {
             "messages": [*state["messages"], AIMessage(response['response'])],
-            "next_actor": response['destination']
+            "next_actor": response['destination'],
+            # "user_input": response['user_input']
         }
 
     return agent1
 
 def user(state: Service1State):
+    # if state['user_input']:
     user_message = HumanMessage(
             Prompt.ask("[red]> ")
             )
@@ -96,6 +104,10 @@ def user(state: Service1State):
     return {
         'messages': [*state['messages'], user_message]
     }
+    # else: 
+    #     return {
+    #         'messages': [*state['messages']]
+    #     }
 
 def classifier1(state: Service1State):
     message = AIMessage("Clearly cyberviolence")
@@ -150,37 +162,53 @@ def create_workflow():
 import time
 import json
 
-async def process_query(query):
+# async def process_query(query):
+#     initial_state = {
+#         "messages": [HumanMessage(query)],
+#         'next_actor': 'bla'
+#     }
+
+#     # app = create_workflow()
+
+#     async for c, metadata in app.astream(
+#         input=initial_state,
+#         stream_mode="messages",
+#     ):
+#         if c.additional_kwargs.get("tool_calls"):
+#             console.print(Text(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), style="cyan"), end="", flush=True)
+#         if c.content:
+#             # console.print("\n")
+#             time.sleep(0.05)
+#             # console.print(Text(c.content, style="magenta"), end="")#, flush=True)
+
+#     console.print("\n")
+#     console.print("finally new line")
+    
+async def main():
+
     initial_state = {
-        "messages": [HumanMessage(query)],
-        'next_actor': 'INITIAL'
+        "messages": [
+            SystemMessage(SYSTEM_PROMPT),
+            HumanMessage("""
+            On va discuter en francais. Presente-toi stp. 
+            Après pose la question 'A quel message souhaites-tu répondre ?'
+            """
+            )
+            ],
+        'next_actor': 'Agent1'
     }
 
     app = create_workflow()
+    app.invoke(initial_state)
 
-    async for c, metadata in app.astream(
-        input=initial_state,
-        stream_mode="messages",
-    ):
-        if c.additional_kwargs.get("tool_calls"):
-            console.print(Text(c.additional_kwargs.get("tool_calls")[0]["function"].get("arguments"), style="cyan"), end="", flush=True)
-        if c.content:
-            # console.print("\n")
-            time.sleep(0.05)
-            # console.print(Text(c.content, style="magenta"), end="")#, flush=True)
+    # input = builtins.input
+    # console.print("Enter your query (type '-q' to quit):")
+    # query = input("> ")
+    # if query.strip().lower() == "-q":
+    #     console.print("Exiting...")
+    #     return
 
-    console.print("\n")
-    console.print("finally new line")
-    
-async def main():
-    input = builtins.input
-    console.print("Enter your query (type '-q' to quit):")
-    query = input("> ")
-    if query.strip().lower() == "-q":
-        console.print("Exiting...")
-        return
-
-    await process_query(query)
+    # await process_query(query)
 
 if __name__ == "__main__":
     asyncio.run(main())
