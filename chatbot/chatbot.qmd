@@ -13,6 +13,7 @@ format:
 ## Prospective design
 
 ```{mermaid}
+%%| collapse: true
 stateDiagram-v2
   u: User input
   a1: Agent service 1
@@ -84,7 +85,120 @@ Mes modifications portent surtout sur le routage.
 
 **Ce qui manque**
 
+- [ ] le debut de l'echange doit etre ameliore (le bot doit se presenter et preparer le terrain)
 - [ ] mise en place de la BDD des documents pour RESEARCHER
 - [ ] procedure de retrival des infos
-- [ ] modele de classification du dataset [`cyberagressionado-v1](https://hatespeechdata.com/#cyberagressionado-v1)
+- [ ] modele de classification du dataset [`cyberagressionado-v1`](https://hatespeechdata.com/#cyberagressionado-v1)
 - [ ] procedure pour que CLASSIFIER1 puisse se servir du modele de classification (peut-etre ce sera plutot un tool pour AGENT1 qu'un agent specialise)
+- [ ] les interactions avec USER sont implementees avec un equivalent de `input()` ce qui posera probleme pour la mise en place de l'interface graphique
+- [ ] interface graphique
+
+**Exemple d'un echange**
+
+```
+Enter your query (type '-q' to quit):
+> ================================== Ai Message ==================================
+
+I understand that you're feeling upset about what happened. It's really important to talk about it. Can you tell me more about what was said or done? This will help me understand the situation better.
+
+---
+ Routed to:  USER
+---
+
+> : ================================ Human Message =================================
+
+hi, est-ce qu'on peut discuter en francais ?
+
+================================== Ai Message ==================================
+
+Bien sûr, nous pouvons discuter en français ! Je suis là pour t'aider. Peux-tu me dire ce qui te préoccupe ?
+
+---
+ Routed to:  USER
+---
+
+> : ================================ Human Message =================================
+
+j'ai recu un message de qqn que je connais pas vraiment. je comprends pas trop ce que ca veut dire
+
+================================== Ai Message ==================================
+
+Je comprends que recevoir un message d'une personne que tu ne connais pas peut être déroutant et même un peu inquiétant. Peux-tu me dire ce que le message disait ? Cela m'aidera à mieux comprendre la situation et à te donner des conseils appropriés.
+
+---
+ Routed to:  USER
+---
+
+> : ================================ Human Message =================================
+
+il m'a dit que je suis moche
+
+================================== Ai Message ==================================
+
+Je suis vraiment désolé d'apprendre que tu as reçu un message aussi blessant. C'est très injuste et tu ne mérites pas d'être traité de cette façon. Les commentaires comme celui-ci sont une forme de cyberharcèlement, et c'est important de se rappeler que ce n'est pas de ta faute. 
+
+Voici quelques étapes que tu peux suivre :
+1. **Ne réponds pas** à ce message. Parfois, ignorer les personnes qui essaient de te blesser est la meilleure chose à faire.
+2. **Prends une capture d'écran** du message pour garder une preuve de ce qui a été dit.
+3. **Bloque la personne** sur la plateforme où tu as reçu le message. Cela peut t'aider à te sentir plus en sécurité.
+4. **Parle-en à un adulte de confiance**, comme un parent, un enseignant ou un conseiller scolaire. Ils peuvent t'aider à gérer la situation.
+
+N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi et qui peuvent t'aider. Tu es précieux et tu mérites d'être traité avec respect !
+
+---
+ Routed to:  USER
+---
+
+> : ================================ Human Message =================================
+
+tu me conseilles de faire quoi?
+
+================================== Ai Message ==================================
+
+Je te conseille de suivre ces étapes :
+
+1. **Ne réponds pas** au message. Ignorer les personnes qui essaient de te blesser est souvent la meilleure option.
+2. **Prends une capture d'écran** du message pour garder une preuve de ce qui a été dit. Cela peut être utile si tu en parles à un adulte.
+3. **Bloque la personne** sur la plateforme où tu as reçu le message. Cela peut t'aider à te sentir plus en sécurité et à éviter d'autres messages blessants.
+4. **Parle-en à un adulte de confiance**, comme un parent, un enseignant ou un conseiller scolaire. Ils peuvent t'aider à gérer la situation et à te soutenir.
+
+N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi et qui peuvent t'aider. Tu es précieux et tu mérites d'être traité avec respect !
+
+---
+ Routed to:  USER
+---
+
+> : ================================ Human Message =================================
+
+tu crois que c'est du cyberharcelement?
+
+================================== Ai Message ==================================
+
+Oui, ce que tu as décrit ressemble à du cyberharcèlement. Quand quelqu'un t'envoie des messages blessants ou méchants, cela fait partie des comportements de harcèlement en ligne. C'est important de se rappeler que ce n'est pas de ta faute et que tu ne mérites pas d'être traité de cette manière. 
+
+Si tu veux, je peux t'aider à prendre des mesures pour te protéger et te sentir mieux. Que souhaites-tu faire ?
+
+---
+ Routed to:  CLASSIFIER1
+---
+
+================================== Ai Message ==================================
+
+Clearly cyberviolence
+
+================================== Ai Message ==================================
+
+Je pense qu'il est important de prendre cette situation au sérieux. Étant donné que tu as reçu un message blessant et que cela ressemble à du cyberharcèlement, je vais transférer ton cas à un service spécialisé qui pourra t'aider davantage. Ils pourront te fournir le soutien dont tu as besoin. 
+
+N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi. Je vais maintenant te transférer à ce service.
+
+---
+ Routed to:  SERVICE2
+---
+
+================================== Ai Message ==================================
+
+Service 2 not yet implemented
+
+
+```

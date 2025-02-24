@@ -87,27 +87,35 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
             )
             
         try:
-            
-            print(response.keys())
+            # sometimes the return dict has keys = ['type', 'properties']
+            # print(response.keys())
             assert 'destination' in response.keys()
         
         except:
-            print(response)
-            print("Check Recipient")
-            destination = llm.invoke(
-                [
-                    SystemMessage(system_prompt),
-                    *state['messages'],
-                    AIMessage(response['response']),
-                    HumanMessage("Please clarify who is the Recipient of your last message. DO NOT repeat your response.")
-                ]
-            )
             
-            response['destination'] = destination['destination']
-            print(response)
+            if 'type' in response.keys():
+                response = response['properties']
+            else:
+                print(response)
+                print("Check Recipient")
+                destination = llm.invoke(
+                    [
+                        SystemMessage(system_prompt),
+                        *state['messages'],
+                        AIMessage(response['response']),
+                        HumanMessage("Please clarify who is the Recipient of your last message. DO NOT repeat your response.")
+                    ]
+                )
+                
+                response['destination'] = destination['destination']
+                print(response)
             
         AIMessage(response['response']).pretty_print()
-        print('Routed to: ', response['destination'])
+        print()
+        print('---')
+        console.print('[blue] Routed to: ', response['destination'])
+        print('---')
+        print()
         
         return {
             "messages": [*state["messages"], AIMessage(response['response'])],
@@ -117,22 +125,41 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
     return agent1
 
 def user(state: Service1State):
-    return {
-        'messages': [*state['messages'], HumanMessage(
+    user_message = HumanMessage(
             Prompt.ask("[red]> ")
             )
-                     ]
+    
+    user_message.pretty_print()
+    print()
+    
+    return {
+        'messages': [*state['messages'], user_message]
     }
 
 def classifier1(state: Service1State):
-    return {"messages": [*state["messages"], AIMessage("Clearly cyberviolence")]}
+    message = AIMessage("Clearly cyberviolence")
+    
+    message.pretty_print()
+    print()
+    
+    return {"messages": [*state["messages"], message]}
 
 def researcher1(state: Service1State):
-    return {"messages": [*state["messages"], AIMessage("No information available")]}
+    
+    message = AIMessage("No information available")
+    message.pretty_print()
+    print()
+    
+    return {"messages": [*state["messages"], message]}
 
 def service2(state: Service1State):
+    
+    message = AIMessage("Service 2 not yet implemented")
+    message.pretty_print()
+    print()
+    
     return {"messages": [*state["messages"],
-                         AIMessage("Service 2 not yet implemented")]}
+                         message]}
 
 def create_workflow():
     agent1 = create_agent1()
