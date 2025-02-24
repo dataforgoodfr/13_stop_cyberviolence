@@ -2,7 +2,7 @@
 title: Data for Good Saison 13 - Stop Cyber
 subtitle: Chatbot development
 format:
-  gfm: 
+  gfm:
     output-ext: "md"
     output-file: "README"
 ---
@@ -62,39 +62,37 @@ end : End
 
 Service3 --> end
 ```
-
 ## Implementation
 
-J'ai choisi `langgraph` en combinaison avec `langchain`. Les deux open-source, documentations extensive, bcp de tutos.
+J'ai choisi `langgraph` en combinaison avec `langchain`. Les deux sont open-source, avec une documentation extensive et de nombreux tutoriels disponibles.
 
-Le modele utilise est `GPT-4o-mini` de `OpenAI`, aucune raison specifique.
+Le modèle utilisé est `GPT-4o-mini` de `OpenAI`, sans raison spécifique.
 
-Pour un premier draft je me suis inspire (entre autre) de cet [article](https://ai.gopubby.com/building-rag-research-multi-agent-with-langgraph-1bd47acac69f)
+Pour un premier draft, je me suis inspiré (entre autres) de cet [article](https://ai.gopubby.com/building-rag-research-multi-agent-with-langgraph-1bd47acac69f).
 
 ## Premier draft
 
-Pour le premier draft on se focalise sur le service 1 "Aide a la reponse"
+Pour le premier draft, nous nous concentrons sur le service 1 "Aide à la réponse".
 
-**Etat actuel**
+**État actuel**
 
 ![](./agents/graph.png)
 
-Le routage est en place, pour l'instant j'ai l'impression qu'on doit forcer l'agent de soliciter le RESEARCHER ou le CLASSIFER (du genre demander directement). Ceci peut etre une question de choix de modele et/ou une question du SYSTEM_PROMPT. J'ai modifie celle de Valentin qui pour l'instant me semble encore trop cible "Prise en charge de cyberviolence" et pas trop "Aide a la reponse".
+Le routage est en place. Pour l'instant, j'ai l'impression que nous devons forcer l'agent à solliciter le RESEARCHER ou le CLASSIFIER (du genre à demander directement). Ceci peut être une question de choix de modèle et/ou une question du SYSTEM_PROMPT. J'ai modifié celle de Valentin qui, pour l'instant, me semble encore trop ciblée "Prise en charge de cyberviolence" et pas assez "Aide à la réponse".
 
 Mes modifications portent surtout sur le routage.
 
 **Ce qui manque**
 
-- [ ] le debut de l'echange doit etre ameliore (le bot doit se presenter et preparer le terrain)
-- [ ] mise en place de la BDD des documents pour RESEARCHER
-- [ ] procedure de retrival des infos
-- [ ] modele de classification du dataset [`cyberagressionado-v1`](https://hatespeechdata.com/#cyberagressionado-v1)
-- [ ] procedure pour que CLASSIFIER1 puisse se servir du modele de classification (peut-etre ce sera plutot un tool pour AGENT1 qu'un agent specialise)
-- [ ] les interactions avec USER sont implementees avec un equivalent de `input()` ce qui posera probleme pour la mise en place de l'interface graphique
-- [ ] interface graphique
+- [ ] Le début de l'échange doit être amélioré (le bot doit se présenter et préparer le terrain).
+- [ ] Mise en place de la BDD des documents pour le RESEARCHER.
+- [ ] Procédure de récupération des informations.
+- [ ] Modèle de classification du dataset [`cyberagressionado-v1`](https://hatespeechdata.com/#cyberagressionado-v1).
+- [ ] Procédure pour que CLASSIFIER1 puisse se servir du modèle de classification (peut-être ce sera plutôt un outil pour AGENT1 qu'un agent spécialisé).
+- [ ] Les interactions avec l'USER sont implémentées avec un équivalent de `input()`, ce qui posera problème pour la mise en place de l'interface graphique.
+- [ ] Interface graphique.
 
-**Exemple d'un echange**
-
+**Exemple d'un échange**
 ```
 Enter your query (type '-q' to quit):
 > ================================== Ai Message ==================================
@@ -135,7 +133,7 @@ il m'a dit que je suis moche
 
 ================================== Ai Message ==================================
 
-Je suis vraiment désolé d'apprendre que tu as reçu un message aussi blessant. C'est très injuste et tu ne mérites pas d'être traité de cette façon. Les commentaires comme celui-ci sont une forme de cyberharcèlement, et c'est important de se rappeler que ce n'est pas de ta faute. 
+Je suis vraiment désolé d'apprendre que tu as reçu un message aussi blessant. C'est très injuste et tu ne mérites pas d'être traité de cette façon. Les commentaires comme celui-ci sont une forme de cyberharcèlement, et c'est important de se rappeler que ce n'est pas de ta faute.
 
 Voici quelques étapes que tu peux suivre :
 1. **Ne réponds pas** à ce message. Parfois, ignorer les personnes qui essaient de te blesser est la meilleure chose à faire.
@@ -174,7 +172,7 @@ tu crois que c'est du cyberharcelement?
 
 ================================== Ai Message ==================================
 
-Oui, ce que tu as décrit ressemble à du cyberharcèlement. Quand quelqu'un t'envoie des messages blessants ou méchants, cela fait partie des comportements de harcèlement en ligne. C'est important de se rappeler que ce n'est pas de ta faute et que tu ne mérites pas d'être traité de cette manière. 
+Oui, ce que tu as décrit ressemble à du cyberharcèlement. Quand quelqu'un t'envoie des messages blessants ou méchants, cela fait partie des comportements de harcèlement en ligne. C'est important de se rappeler que ce n'est pas de ta faute et que tu ne mérites pas d'être traité de cette manière.
 
 Si tu veux, je peux t'aider à prendre des mesures pour te protéger et te sentir mieux. Que souhaites-tu faire ?
 
@@ -188,7 +186,7 @@ Clearly cyberviolence
 
 ================================== Ai Message ==================================
 
-Je pense qu'il est important de prendre cette situation au sérieux. Étant donné que tu as reçu un message blessant et que cela ressemble à du cyberharcèlement, je vais transférer ton cas à un service spécialisé qui pourra t'aider davantage. Ils pourront te fournir le soutien dont tu as besoin. 
+Je pense qu'il est important de prendre cette situation au sérieux. Étant donné que tu as reçu un message blessant et que cela ressemble à du cyberharcèlement, je vais transférer ton cas à un service spécialisé qui pourra t'aider davantage. Ils pourront te fournir le soutien dont tu as besoin.
 
 N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi. Je vais maintenant te transférer à ce service.
 
