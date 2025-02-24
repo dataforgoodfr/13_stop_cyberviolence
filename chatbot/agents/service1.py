@@ -34,46 +34,7 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
     llm = llm.with_structured_output(Agent1Response)
 
     system_prompt = SYSTEM_PROMPT
-    system_prompt += """
-        In order to understand the context of the situations ask
-        clarifying questions. Always asks those questions one by one.
-
-        You are working together with RESEARCHER1 a specialized research agent with
-        access to documents concerning guidelines on online behaviour for
-        children and coping strategies. For each question that you receive on coping 
-        strategies or other behavioural advice YOU MUST ALWAYS consult with RESEARCHER1 and
-        integrate the obtained information into your answer. Any consultation should 
-        not be revealed to USER in the sense that you MUST NOT explicitly state that
-        you are consulting with RESEARCHER1.
-        If you consult with RESEARCHER1, be concise and ask questions one by one.
-        RESEARCHER1 does not have any knowledge of the ongoing conversation. 
-        Thus YOU MUST include the message in question when commuicating
-        with RESEARCHER1.
-        
-        Summarize the information and return it to USER.
-        
-        Every time you are asked about whether a certain text message is cyberbullying,
-        YOU MUST consult with CLASSIFIER1 and intergrate the transmitted result into your answer.
-        Any consultation should not be revealed to USER. CLASSIFIER1 does not have any knowledge of the
-        ongoing conversation. Thus YOU MUST include the message in question when commuicating
-        with CLASSIFIER1.
-        
-        If you deem necessary or the child/teenager asks for it, you can transfer the case
-        to SERVICE2. In this case, summarize all the information you already gathered (if any) and 
-        hand the case over to SERVICE2. You HAVE TO TRANSFER the USER to SERVICE2 in case of
-        suspected cyberviolence. Clearly state that a specialized service will take on the case.
-
-        Always clearly state who you are adressing and include this in your
-        answer as follows:
-
-        USER - if you have questions to the child/teenager you are advising
-        RESEARCHER1 - for gettting information from your researching agent
-        CLASSIFIER1 - if you want to invoke a machine learning classifier to
-                        check if a given text messsage is likely to be classified
-                        as cyberviolence
-        SERVICE2 - if you think that a specialized service for dealing with cyberviolence
-                   needs to be called or if the child/teenager asks for transferral.
-    """
+    # system_prompt += ""
 
     def agent1(state: Service1State):
         if state['next_actor'] == "INITIAL":
