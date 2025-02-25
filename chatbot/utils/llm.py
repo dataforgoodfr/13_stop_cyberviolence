@@ -1,5 +1,5 @@
 import os
-from mistralai import Mistral
+# from mistralai import Mistral
 from .content import SYSTEM_PROMPT
 
 def complete_chat(input_user, temperature, max_tokens):
