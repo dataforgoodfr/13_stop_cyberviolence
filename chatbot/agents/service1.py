@@ -5,6 +5,8 @@ from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langchain.tools import tool
+from langchain_core.messages import AnyMessage
+from langgraph.graph.message import add_messages
 from pydantic import BaseModel
 from PyPDF2 import PdfReader
 import asyncio
@@ -24,9 +26,9 @@ with open(script_folder / "agent1_system_prompt", "r") as f:
     SYSTEM_PROMPT = f.read()
 
 class Service1State(TypedDict):
-    messages: List
+    messages: Annotated[List[AnyMessage], add_messages]
     next_actor: str
-    # user_input: bool
+
 
 class Agent1Response(TypedDict):
     response: Annotated[str, ..., "Response"]
@@ -46,10 +48,12 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
             messages = [
                 SystemMessage(content=system_prompt)
             ]
-            response = llm.invoke(messages)
+            response = llm.invoke(messages, config)
         else:
             response = llm.invoke(
-                [SystemMessage(system_prompt), *state['messages']]
+                # [SystemMessage(system_prompt), *state['messages']],
+                [SystemMessage(system_prompt)] + [*state['messages']],
+                config
             )
             
         try:
@@ -75,7 +79,7 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
                 
                 response['destination'] = destination['destination']
                 print(response)
-            
+        print(response)    
         AIMessage(response['response']).pretty_print()
         print()
         print('---')
@@ -85,7 +89,7 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
         print()
         
         return {
-            "messages": [*state["messages"], AIMessage(response['response'])],
+            "messages": [AIMessage(response['response'])],
             "next_actor": response['destination'],
             # "user_input": response['user_input']
         }
@@ -93,21 +97,18 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
     return agent1
 
 def user(state: Service1State):
-    # if state['user_input']:
-    user_message = HumanMessage(
-            Prompt.ask("[red]> ")
-            )
+
+    # user_message = HumanMessage(
+    #         Prompt.ask("[red]> ")
+    #         )
     
-    user_message.pretty_print()
-    print()
+    # user_message.pretty_print()
+    # print()
     
     return {
-        'messages': [*state['messages'], user_message]
+        'messages': [*state['messages']]#, user_message]
     }
-    # else: 
-    #     return {
-    #         'messages': [*state['messages']]
-    #     }
+
 
 def classifier1(state: Service1State):
     message = AIMessage("Clearly cyberviolence")
@@ -152,10 +153,13 @@ def create_workflow():
     workflow.add_conditional_edges("Agent1", route_after_agent1)
     workflow.add_edge("RESEARCHER1", "Agent1")
     workflow.add_edge("CLASSIFIER1", "Agent1")
-    workflow.add_edge("USER", "Agent1")
+    # workflow.add_edge("USER", "Agent1")
+    workflow.add_edge("USER", END)
     workflow.add_edge("SERVICE2", END)
 
-    app = workflow.compile()
+    memory = MemorySaver()
+
+    app = workflow.compile(checkpointer = memory)
     app.get_graph().draw_mermaid_png(output_file_path="graph.png")
     return app
 
@@ -184,11 +188,13 @@ import json
 #     console.print("\n")
 #     console.print("finally new line")
     
-async def main():
+def main():
+
+    global app, config
 
     initial_state = {
         "messages": [
-            SystemMessage(SYSTEM_PROMPT),
+            # SystemMessage(SYSTEM_PROMPT),
             HumanMessage("""
             On va discuter en francais. Presente-toi stp. 
             Après pose la question 'A quel message souhaites-tu répondre ?'
@@ -199,7 +205,10 @@ async def main():
     }
 
     app = create_workflow()
-    app.invoke(initial_state)
+
+    config = {'configurable':{'thread_id' : "1"}}
+    
+    app.invoke(initial_state, config)
 
     # input = builtins.input
     # console.print("Enter your query (type '-q' to quit):")
@@ -211,4 +220,24 @@ async def main():
     # await process_query(query)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    
+    # asyncio.run(main())
+    
+    main()
+    
+    print(config)
+    
+    while True:
+        try:
+            content = Prompt.ask("[red]> ")
+            if content.endswith('-q'):
+                break
+            user_message = HumanMessage(
+                content
+            )
+            user_message.pretty_print()
+            app.invoke({"messages": [user_message]}, config)
+            
+        except KeyboardInterrupt:
+            break
+    
