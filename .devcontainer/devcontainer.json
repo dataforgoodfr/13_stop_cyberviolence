@@ -2,7 +2,7 @@
     "remoteEnv": {
       "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
     },
-    "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && uv pip install -r requirements.txt --system",
-    // "postStartCommand": "python ./chatbot/agents/service1.py | tee app.log"
+    "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && cd chatbot && uv python install && uv pip install -r requirements.txt && uv pip install chainlit",
+    "postStartCommand": "source chatbot/.venv/bin/activate && chainlit run ./chatbot/chainlit_app.py "
 }
   
