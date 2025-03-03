@@ -24,7 +24,8 @@ async def setup():
             HumanMessage("""
             On va discuter en francais. Presente-toi stp. 
             Après pose la question 'A quel message souhaites-tu répondre ?'
-            set action=user_feedback
+            YOU MUST NOT SPEAK ENGLISH! ONLY FRENCH
+            YOU MUST DIRECTLY RETURN action:user_feedback
             """
             )
             ],
@@ -36,7 +37,7 @@ async def setup():
                         )
     # print(output.content)
     # output = json.loads("".join([*output]))
-    content=output['messages'][-1].content
+    content = output['messages'][-2].content
     initial_answer = cl.Message(content)
     
     # for msg, metadata in app.stream(
@@ -65,25 +66,46 @@ async def on_message(msg: cl.Message):
     config = cl.user_session.get("config")
     cb = cl.user_session.get("cb")
     
+    answer = cl.Message(content="")
+    
+    # Stream the graph execution
+    async for chunk in app.astream(
+        {"messages": HumanMessage(msg.content)},
+        config = config,
+        stream_mode="updates"  # Use "values" to get the full state at each step
+    ):
+        print(chunk)
+        for k in chunk.keys():
+            for kk in chunk[k].keys():
+                if kk == "messages" and not isinstance(chunk[k][kk], HumanMessage):
+                    print("author: ", k)
+                    # Stream the response field specifically
+                    answer = cl.Message("", author=k)
+                    await answer.stream_token(chunk[k][kk][0].content)
+            
+        await answer.send()
     
     # for msg, metadata in app.stream(
     #     {"messages": [HumanMessage(content=msg.content)]},
     #     stream_mode="messages",
-    #     config=RunnableConfig(callbacks=[cb],
+    #     config=RunnableConfig(#callbacks=[cb],
     #                           **config)):
     #     if (
     #         msg.content
     #         and not isinstance(msg, HumanMessage)
-    #         and metadata["langgraph_node"] == "final"
+    #         # and metadata["langgraph_node"] == "final"
     #     ):
     #         await final_answer.stream_token(msg.content)
 
-    output = app.invoke({"messages": [HumanMessage(content=msg.content)]},
-                        RunnableConfig(callbacks = [cb], **config)
-                        )
+    # output = app.invoke({"messages": [HumanMessage(content=msg.content)]},
+    #                     RunnableConfig(callbacks = [cb], **config)
+    #                     )
     
-    # output = json.loads("".join([*output]))
+    # # output = json.loads("".join([*output]))
     
-    final_answer = cl.Message(content=output['messages'][-1].content)  
+    # for m in output['messages']:
+    #     await cl.Message(m.content).send()
+    
+    # final_answer = cl.Message(content=output['messages'][-1].content)  
 
-    await final_answer.send()
+    # await final_answer.send()

@@ -19,6 +19,13 @@ from rich.text import Text
 from rich.prompt import Prompt
 from langchain.schema.runnable.config import RunnableConfig
 from .prompts import *
+import sys
+import os
+# sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
+# print(sys.path)
+from ..utils import ChatOpenRouter as ChatOpenAI
+
+model = 'google/gemini-2.0-flash-001'
 
 console = Console()
 
@@ -37,7 +44,7 @@ def agent1(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model=model, temperature=0, stream = True)
     system_prompt = agent1_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -91,7 +98,7 @@ def ask_for_context(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = ask_for_context_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -115,7 +122,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=1)
+    llm = ChatOpenAI(model=model, temperature=0, stream = True)
     system_prompt = give_advice_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -169,7 +176,7 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = research_strategies_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -195,7 +202,7 @@ def classify_message(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = classify_message_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -218,7 +225,7 @@ def escalate(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = escalate_system_prompt
     messages = [
         SystemMessage(system_prompt),
