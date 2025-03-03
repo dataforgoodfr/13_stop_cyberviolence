@@ -1,0 +1,22 @@
+digraph {
+    __start__ [shape="rectangle"]
+    agent1
+    router [style="dotted"]
+    ask_for_context
+    give_advice
+    research_strategies
+    classify_message
+    escalate
+    __end__ [shape="rectangle"]
+    
+    __start__ -> agent1
+    agent1 -> router [style="dotted"];
+    router -> ask_for_context [style="dashed"];
+    router -> give_advice [style="dashed"];
+    give_advice -> research_strategies;
+    research_strategies -> give_advice
+    classify_message -> agent1;
+    router -> classify_message [style="dashed"];
+    router -> escalate [style="dashed"];
+    escalate -> __end__ 
+}
