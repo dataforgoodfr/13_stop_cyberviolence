@@ -26,7 +26,7 @@ import os
 from ..utils import ChatOpenRouter as ChatOpenAI
 
 model = 'google/gemini-2.0-flash-001'
-
+# model = 'openai/gpt-4o-mini'
 console = Console()
 
 class Service1State(TypedDict):
