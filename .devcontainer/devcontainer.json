@@ -1,0 +1,29 @@
+{
+  "name": "DFG13 StopCyber",
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  "remoteEnv": {
+    "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
+  },
+  // "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && cd chatbot && uv venv && uv pip install -r requirements.txt && uv pip install chainlit",
+  // "postStartCommand": "source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && chainlit run /workspaces/13_stop_cyberviolence/chatbot/chainlit_app.py "
+  "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r requirements.txt && uv pip install chainlit'",
+  "postStartCommand": "bash -c 'source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && chainlit run /workspaces/13_stop_cyberviolence/chatbot/chainlit_app.py'",
+  "forwardPorts": [8000],
+  "portsAttributes": {
+    "8000": {
+      "label": "Chainlit App",
+      "onAutoForward": "notify"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/13_stop_cyberviolence/chatbot/.venv/bin/python"
+      }
+    }
+  }
+}
