@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ID_ETABLISSEMENT,TYPE,ZIPCODE,ACADEMIE,NB_ELEVES
 ETAB01,ecole,18046,Paris,205
 ETAB02,ecole,99605,Paris,532
@@ -9,3 +10,16 @@ ETAB07,lycee,66609,Marseille,477
 ETAB08,lycee,99145,Toulouse,383
 ETAB09,lycee,38367,Toulouse,581
 ETAB10,ecole,44686,Marseille,890
+=======
+ID_ETABLISSEMENT,TYPE,ZIPCODE,ACADEMIE
+ETAB01,college,54172,Paris
+ETAB02,college,10653,Paris
+ETAB03,college,75401,Toulouse
+ETAB04,college,11685,Marseille
+ETAB05,college,29078,Toulouse
+ETAB06,ecole,79065,Paris
+ETAB07,college,29618,Lyon
+ETAB08,college,99215,Lyon
+ETAB09,ecole,47156,Marseille
+ETAB10,ecole,30745,Paris
+>>>>>>> ef3b7d731d682be246bf40addf0e00b4e70f68fd
