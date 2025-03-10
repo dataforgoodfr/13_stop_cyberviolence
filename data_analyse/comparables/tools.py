@@ -4,8 +4,6 @@ import numpy as np
 
 def discretize_age(
     data: pd.DataFrame,
-    date_col: str = 'DATE_TIME',
-    bd_col: str = "DATE_NAISSANCE",
     bins: List[int] = [0, 11, 13, 15, 17, 99],
     labels: List[str] = ['0-11', '11-12', '13-14', '15-17', '>17'],
     no_days_year: float = 365.2425
@@ -13,7 +11,7 @@ def discretize_age(
     
     return pd.cut(
         # delta t annees
-        (data[date_col] - data[bd_col]).dt.days // no_days_year,
+        data.AGE,
         bins = bins,
         labels = labels,
         right = False
