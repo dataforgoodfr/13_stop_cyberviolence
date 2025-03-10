@@ -55,52 +55,69 @@ end : End
 Service3 --> end
 ```
 
+# Update 03/03/2025
+
 ## Implementation
 
 J’ai choisi `langgraph` en combinaison avec `langchain`. Les deux sont
 open-source, avec une documentation extensive et de nombreux tutoriels
 disponibles.
 
-Le modèle utilisé est `GPT-4o-mini` de `OpenAI`, sans raison spécifique.
-
 Pour un premier draft, je me suis inspiré (entre autres) de cet
 [article](https://ai.gopubby.com/building-rag-research-multi-agent-with-langgraph-1bd47acac69f).
-
-## Premier draft
 
 Pour le premier draft, nous nous concentrons sur le service 1 “Aide à la
 réponse”.
 
+Le modèle utilisé est ~~`GPT-4o-mini` de `OpenAI`sans raison
+spécifique.~~ `Gemini 2.0 Flash` pour sa fenêtre de contexte très large.
+Avec `GPT-4o-mini`, on arrivait déjà à la limite ce qui reste suspicieux
+(code à vérifier). Les calls de API passe maintenant par `OpenRouter`,
+cela permet de facilement changer les modèles pour un prototypage
+rapide. Potentiellement, on pourra envisager d’utiliser différents
+modèles pour différents tâches.
+
 **État actuel**
 
-![](./agents/graph.png)
+![](./graph.png)
 
-Le routage est en place. Pour l’instant, j’ai l’impression que nous
-devons forcer l’agent à solliciter le RESEARCHER ou le CLASSIFIER (du
-genre à demander directement). Ceci peut être une question de choix de
-modèle et/ou une question du SYSTEM_PROMPT. J’ai modifié celle de
-Valentin qui, pour l’instant, me semble encore trop ciblée “Prise en
-charge de cyberviolence” et pas assez “Aide à la réponse”.
+Le routage fonctionne (par exemple, “je me sens en danger” active la
+voie ‘escalate’), à vérifier en language ados.
 
-Mes modifications portent surtout sur le routage.
+~~Pour l’instant, j’ai l’impression que nous devons forcer l’agent à
+solliciter le RESEARCHER ou le CLASSIFIER (du genre à demander
+directement).~~
 
-**Ce qui manque**
+Chaque node a un prompt qui reste à definir/améliorer.
 
-- [ ] Le début de l’échange doit être amélioré (le bot doit se présenter
+**Ce qui manque / reste à faire**
+
+- [x] Le début de l’échange doit être amélioré (le bot doit se présenter
   et préparer le terrain).
-- [ ] Mise en place de la BDD des documents pour le RESEARCHER.
-- [ ] Procédure de récupération des informations.
+
+### RAG pour `research_strategies`
+
+- [ ] Liste des documents à ingérer
+- [ ] Quel vectorstore ?
+- [ ] Procédure de retrieval des informations.
+
+### NLP message classifier
+
 - [ ] Modèle de classification du dataset
   [`cyberagressionado-v1`](https://hatespeechdata.com/#cyberagressionado-v1).
 - [ ] Procédure pour que CLASSIFIER1 puisse se servir du modèle de
   classification (peut-être ce sera plutôt un outil pour AGENT1 qu’un
   agent spécialisé).
-- [ ] Les interactions avec l’USER sont implémentées avec un équivalent
-  de `input()`, ce qui posera problème pour la mise en place de
-  l’interface graphique.
-- [ ] Interface graphique.
 
+### Interface graphique
+
+- [x] Interface graphique de base en place, implementé avec `chainlit`
+- [ ] Customisation ….
+
+<details>
+<summary>
 **Exemple d’un échange**
+</summary>
 
     Enter your query (type '-q' to quit):
     > ================================== Ai Message ==================================
@@ -205,3 +222,5 @@ Mes modifications portent surtout sur le routage.
     ================================== Ai Message ==================================
 
     Service 2 not yet implemented
+
+</details>
