@@ -1,10 +1,21 @@
 import chainlit as cl
+import base64
+from PIL import Image
+from io import BytesIO
 from agents.service1 import create_app
 from langchain_core.messages import BaseMessage, SystemMessage, HumanMessage
 from langchain.schema.runnable.config import RunnableConfig
 import json
 
 config = {"configurable": {"thread_id": 555123412345}}
+
+def encode_image_to_base64(image_path: str) -> str:
+    with Image.open(image_path) as img:
+        buffered = BytesIO()
+        img.save(buffered, format=img.format)
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        return img_str
+
 
 @cl.on_chat_start
 async def setup():
@@ -66,11 +77,31 @@ async def on_message(msg: cl.Message):
     config = cl.user_session.get("config")
     cb = cl.user_session.get("cb")
     
+    
+    if not msg.elements:
+        human_msg = HumanMessage(msg.content)
+    else:
+        # Processing images exclusively
+        images = [file for file in msg.elements if "image" in file.mime]
+        
+        # Read the first image
+        image_str = encode_image_to_base64(images[0].path)     
+    
+        human_msg = HumanMessage(
+            content=[
+                {"type": "text", "text": msg.content},
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:image/jpeg;base64,{image_str}"},
+                },
+            ],
+        )
+        
     answer = cl.Message(content="")
     
     # Stream the graph execution
     async for chunk in app.astream(
-        {"messages": HumanMessage(msg.content)},
+        {"messages": human_msg},
         config = config,
         stream_mode="updates"  # Use "values" to get the full state at each step
     ):

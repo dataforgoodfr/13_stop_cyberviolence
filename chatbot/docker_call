@@ -1,0 +1,5 @@
+docker run -it \
+    -p 127.0.0.1:8000:8000 \
+    -e OPENROUTER_API_KEY=$OPENROUTER_API_KEY \
+    -v $(pwd):/app \
+    langroid_chainlit:v01 /usr/bin/zsh && cd /app
