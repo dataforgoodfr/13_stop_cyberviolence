@@ -34,8 +34,8 @@ class Service1State(TypedDict):
     action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate', 'user_feedback']
     
 class Agent1Response(TypedDict):
-    response: Annotated[str, ..., "Response"]
     action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
+    # response: Annotated[str, ..., "Response"]
     
 class ContextQuestion(TypedDict):
     question: Annotated[str, ..., "Question aiming for clarifying the context of the user's inquiry"]
@@ -61,20 +61,20 @@ def agent1(state: Service1State, config: RunnableConfig):
     try:
         # sometimes the return dict has keys = ['type', 'properties']
         print(response.keys())
-        assert 'response' in response.keys()
+        assert 'action' in response.keys()
     
     except:
         # print(response)    
         if 'type' in response.keys():
             response = response['properties']
     
-    message = AIMessage(response['response'])
+    message = AIMessage(response['action'])
 
     message.pretty_print()
     print()
     
     return {
-        'messages' : [message],
+        # 'messages' : [message],
         'action' : response['action']
     }
 

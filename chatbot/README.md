@@ -55,7 +55,7 @@ end : End
 Service3 --> end
 ```
 
-# Update 03/03/2025
+# Update 10/03/2025
 
 ## Implementation
 
@@ -90,10 +90,15 @@ directement).~~
 
 Chaque node a un prompt qui reste à definir/améliorer.
 
-**Ce qui manque / reste à faire**
+**TODO**
+
+### Agent
 
 - [x] Le début de l’échange doit être amélioré (le bot doit se présenter
   et préparer le terrain).
+- [ ] `agent1` doit probablement etre converti en simple point de
+  routage
+- [ ] definition des informations contextuelle minimales
 
 ### RAG pour `research_strategies`
 
@@ -101,7 +106,7 @@ Chaque node a un prompt qui reste à definir/améliorer.
 - [ ] Quel vectorstore ?
 - [ ] Procédure de retrieval des informations.
 
-### NLP message classifier
+### NLP message classifier (priorite moindre)
 
 - [ ] Modèle de classification du dataset
   [`cyberagressionado-v1`](https://hatespeechdata.com/#cyberagressionado-v1).
@@ -112,6 +117,7 @@ Chaque node a un prompt qui reste à definir/améliorer.
 ### Interface graphique
 
 - [x] Interface graphique de base en place, implementé avec `chainlit`
+- [x] support envoi capture d’ecran
 - [ ] Customisation ….
 
 <details>
