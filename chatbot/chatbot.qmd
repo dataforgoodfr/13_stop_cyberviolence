@@ -63,7 +63,7 @@ end : End
 Service3 --> end
 ```
 
-# Update 10/03/2025
+# Update 12/03/2025
 
 ## Implementation
 
@@ -93,10 +93,33 @@ Chaque node a un prompt qui reste à definir/améliorer.
 ### Agent
 
 - [x] Le début de l'échange doit être amélioré (le bot doit se présenter et préparer le terrain).
-- [ ] `agent1` doit probablement etre converti en simple point de routage 
+- [x] `agent1` doit probablement etre converti en simple point de routage 
 - [ ] definition des informations contextuelle minimales
 
+### Situational context
+
+Pour bien comprendre la situation qui a conduit le jeune / ado à soliciter le chatbot, on a besoin des infos suivants:
+
+- Rôle du jeune: Expéditeur (potentitiel), destinataire ou témoin
+- Le canal de communication par lequel le message est arrivé chez le jeune
+- Le ressenti que le message a évoqué
+
+**Implementation**
+
+Deux solutions semblent envisageables:
+
+1. Séries des questions déterminstes au début de l'échange, les infos sont enregistré dans dictionnaire
+2. Défintion d'un dictionnaire avec des champs prédefinis, la collecte des informations est laissé au LLM
+
+Dans les deux cas, les informations devront être injectés dans les system prompts. 
+
 ### RAG pour `research_strategies`
+
+On part pour une exploration de [`kotaemon`](https://github.com/Cinnamon/kotaemon/tree/main), 
+un open-source RAG tool. Ce qui sera probablement le plus intéressant, sont
+les procédures de traitement des documents, les embeddings, le stockage et le retrieval.
+
+Est-ce qu'on ne garderait pqs l'UI `kotaemon` pour la gestion des documents ?
 
 - [ ] Liste des documents à ingérer
 - [ ] Quel vectorstore ?
