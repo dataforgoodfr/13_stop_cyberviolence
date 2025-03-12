@@ -48,7 +48,7 @@ async def setup():
                         )
     # print(output.content)
     # output = json.loads("".join([*output]))
-    content = output['messages'][-2].content
+    content = output['messages'][-1].content
     initial_answer = cl.Message(content)
     
     # for msg, metadata in app.stream(
