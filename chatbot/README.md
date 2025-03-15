@@ -107,8 +107,9 @@ soliciter le chatbot, on a besoin des infos suivants:
 
 - Rôle du jeune: Expéditeur (potentitiel), destinataire ou témoin
 - Le canal de communication par lequel le message est arrivé chez le
-  jeune
-- Le ressenti que le message a évoqué
+  jeune (message privé, sur quelle plateforme, message public, commentaire interposé, ...)
+- Le ressenti / émotions que le message a évoqué
+- l'action envisagée à la suite de la réception
 
 **Implementation**
 
