@@ -32,15 +32,17 @@ async def setup():
     initial_state = {
         "messages": [
             # SystemMessage(SYSTEM_PROMPT),
-            HumanMessage("""
-            On va discuter en francais. Presente-toi stp. 
-            Après pose la question 'A quel message souhaites-tu répondre ?'
-            YOU MUST NOT SPEAK ENGLISH! ONLY FRENCH
-            YOU MUST DIRECTLY RETURN action:user_feedback
-            """
-            )
+            # HumanMessage("""
+            # On va discuter en francais. Presente-toi stp. 
+            # Après pose la question 'A quel message souhaites-tu répondre ?'
+            # YOU MUST NOT SPEAK ENGLISH! ONLY FRENCH
+            # YOU MUST DIRECTLY RETURN action:user_feedback
+            # """
+            # )
             ],
-        'action': 'user_feedback'
+        "context_complete": False,
+        "context_data": {},
+        'action': 'collect_context'
     }
     
     output = app.invoke(initial_state,

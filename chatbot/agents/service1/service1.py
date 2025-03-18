@@ -21,6 +21,7 @@ from langchain.schema.runnable.config import RunnableConfig
 from .prompts import *
 import sys
 import os
+from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUESTIONS
 # sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
 # print(sys.path)
 from ..utils import ChatOpenRouter as ChatOpenAI
@@ -31,7 +32,9 @@ console = Console()
 
 class Service1State(TypedDict):
     messages: Annotated[List[AnyMessage], add_messages]
-    action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate', 'user_feedback']
+    action: Literal['collect_context', 'ask_for_context', 'give_advice', 'classify_message', 'escalate', 'user_feedback']
+    context_complete: bool
+    context_data: dict[str, str]
     
 class Agent1Response(TypedDict):
     action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
@@ -93,6 +96,40 @@ def router(state: Service1State) -> Literal["ask_for_context","give_advice","cla
 
 def user_feedback(state: Service1State, config: RunnableConfig):
     return
+
+def get_next_question(context_data: dict) -> str:
+    """Get next question to ask to the user to collect context. If all questions have been asked, return None."""
+    if all(question["id"] in context_data for question in REQUIRED_CONTEXT_QUESTIONS):
+        return None
+
+    return REQUIRED_CONTEXT_QUESTIONS[len(context_data.keys())]["question"]
+
+def collect_context(state: Service1State):
+    if not state["messages"] or (len(state["messages"]) > 0 and state["messages"][-1].type == "human"):
+        if len(state["messages"]) > 0 and state["messages"][-1].type == "human":
+            user_answer = state["messages"][-1].content
+            state["context_data"][REQUIRED_CONTEXT_QUESTIONS[len(state["context_data"])]["id"]] = user_answer
+        next_question = get_next_question(state["context_data"])
+        state["context_complete"] = next_question is None
+
+        if state["context_complete"]:
+            return {
+                "messages": [AIMessage("Merci pour ces informations. A quel message souhaites-tu répondre ?")],
+                "context_complete": True,
+                "context_data": state["context_data"],
+            }
+        return {
+            'messages': [AIMessage(next_question)],
+            "context_complete": False,
+            "context_data": state["context_data"]
+        }
+    return state
+
+def should_collect_context(state: Service1State) -> Literal["collect_context", "agent1"]:
+    if state["context_complete"]:
+        return "agent1"
+    else:
+        return "collect_context"
 
 def ask_for_context(state: Service1State, config: RunnableConfig):
     
@@ -244,6 +281,7 @@ def create_app():
     graph = StateGraph(Service1State)
 
     graph.add_node("agent1", agent1)
+    graph.add_node("collect_context", collect_context)
     graph.add_node("ask_for_context", ask_for_context)
     graph.add_node("give_advice", give_advice)
     graph.add_node("research_strategies", research_strategies)
@@ -252,7 +290,7 @@ def create_app():
     graph.add_node("user_feedback", user_feedback)
 
 
-    graph.add_edge("__start__", "agent1")
+    graph.add_conditional_edges("__start__", should_collect_context)
     graph.add_conditional_edges("agent1", router)
     # graph.add_edge("give_advice", "research_strategies")
     graph.add_conditional_edges("give_advice", advice_router)
