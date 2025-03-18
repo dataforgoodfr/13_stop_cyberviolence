@@ -6,6 +6,9 @@ prompt_folder = Path(__file__).parent
 with open(prompt_folder / "./agent1_prompt_routage","r") as f:
     agent1_system_prompt = f.read()
 
+with open(prompt_folder / "collect_context_system_prompt_fr","r") as f:
+    collect_context_system_prompt = f.read()
+
 with open(prompt_folder / "ask_for_context_system_prompt_fr","r") as f:
     ask_for_context_system_prompt = f.read()
 

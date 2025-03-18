@@ -104,12 +104,17 @@ def get_next_question(context_data: dict) -> str:
 
     return REQUIRED_CONTEXT_QUESTIONS[len(context_data.keys())]["question"]
 
-def collect_context(state: Service1State):
+def collect_context(state: Service1State, config: RunnableConfig):
+    llm = ChatOpenAI(model=model, temperature=0)
+    system_prompt = collect_context_system_prompt
+    
     if not state["messages"] or (len(state["messages"]) > 0 and state["messages"][-1].type == "human"):
         if len(state["messages"]) > 0 and state["messages"][-1].type == "human":
             user_answer = state["messages"][-1].content
             state["context_data"][REQUIRED_CONTEXT_QUESTIONS[len(state["context_data"])]["id"]] = user_answer
         next_question = get_next_question(state["context_data"])
+        if next_question is not None:
+            system_prompt = system_prompt + "La question a poser: " + next_question
         state["context_complete"] = next_question is None
 
         if state["context_complete"]:
@@ -118,8 +123,18 @@ def collect_context(state: Service1State):
                 "context_complete": True,
                 "context_data": state["context_data"],
             }
+        
+        messages = [
+            SystemMessage(system_prompt),
+            *state['messages']
+        ]
+        response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
+        message = AIMessage(response['question'])
+        message.pretty_print()
+        print()
+        
         return {
-            'messages': [AIMessage(next_question)],
+            'messages': [message],
             "context_complete": False,
             "context_data": state["context_data"]
         }
