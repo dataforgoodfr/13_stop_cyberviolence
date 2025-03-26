@@ -18,7 +18,9 @@ from rich.console import Console
 from rich.text import Text
 from rich.prompt import Prompt
 from langchain.schema.runnable.config import RunnableConfig
-from .prompts import *
+#modification apporté à cause de la non compilation du pré- commit
+#from .prompts import *
+from .prompts import agent1_system_prompt, ask_for_context_system_prompt
 import sys
 import os
 # sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
