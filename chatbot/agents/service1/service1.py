@@ -99,7 +99,7 @@ def user_feedback(state: Service1State, config: RunnableConfig):
 
 def get_next_question(context_data: dict) -> str:
     """Get next question to ask to the user to collect context. If all questions have been asked, return None."""
-    if all(question["id"] in context_data for question in REQUIRED_CONTEXT_QUESTIONS):
+    if all(question["id"] in context_data.keys() for question in REQUIRED_CONTEXT_QUESTIONS):
         return None
 
     return REQUIRED_CONTEXT_QUESTIONS[len(context_data.keys())]["question"]
@@ -108,13 +108,21 @@ def collect_context(state: Service1State, config: RunnableConfig):
     llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = collect_context_system_prompt
     
+    print("next context question (in theory):")
+    print(get_next_question(state['context_data']))
+    
     if not state["messages"] or (len(state["messages"]) > 0 and state["messages"][-1].type == "human"):
+        
         if len(state["messages"]) > 0 and state["messages"][-1].type == "human":
             user_answer = state["messages"][-1].content
             state["context_data"][REQUIRED_CONTEXT_QUESTIONS[len(state["context_data"])]["id"]] = user_answer
+            print(state['context_data'])
+        
         next_question = get_next_question(state["context_data"])
+        
         if next_question is not None:
             system_prompt = system_prompt + "La question a poser: " + next_question
+        
         state["context_complete"] = next_question is None
 
         if state["context_complete"]:
@@ -128,6 +136,7 @@ def collect_context(state: Service1State, config: RunnableConfig):
             SystemMessage(system_prompt),
             *state['messages']
         ]
+        
         response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
         message = AIMessage(response['question'])
         message.pretty_print()
@@ -138,6 +147,7 @@ def collect_context(state: Service1State, config: RunnableConfig):
             "context_complete": False,
             "context_data": state["context_data"]
         }
+        
     return state
 
 def should_collect_context(state: Service1State) -> Literal["collect_context", "agent1"]:
