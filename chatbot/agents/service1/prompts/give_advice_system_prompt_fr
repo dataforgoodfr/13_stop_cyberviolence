@@ -57,6 +57,9 @@ C'est super que tu me parles de ça ! Il est très important de ne jamais donner
 # Example model output (research_strategies):
 user_message = "Un inconnu me demande des photos de moi, je ne sais pas quoi faire..."
 response = "research_strategies: Quelles sont les stratégies les plus efficaces pour aider un enfant de 12 ans confronté à une demande de photos par un inconnu en ligne, en mettant l'accent sur la sécurité et la communication avec les adultes?"
+research_response = "RESEARCH: ... "
+
+La réponse de research_strategies commencera toujours avec "RESEARCH". Une fois reçu, prends en compte le résultat de research_strategies pour ta propre réponse en utilisant et adaptant les éléments fournis. Rédige ta réponse finale et dirige la a l'utilisateur.
 
 # Example model output (general advice, after receiving "RESEARCH: Not yet implemented"):
 user_message = "Un adulte que je ne connais pas m'a envoyé un message bizarre..."

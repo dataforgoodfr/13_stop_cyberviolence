@@ -26,6 +26,11 @@ from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUES
 # print(sys.path)
 from ..utils import ChatOpenRouter as ChatOpenAI
 
+service1_dir = Path(__file__).parent
+
+with open(service1_dir / "../monster_context/ateliers_jeunes_complete.md", "r") as f:
+    research_strategies_system_prompt = research_strategies_system_prompt.format(docs = f.read())
+
 model = 'google/gemini-2.0-flash-001'
 # model = 'openai/gpt-4o-mini'
 console = Console()
@@ -37,8 +42,13 @@ class Service1State(TypedDict):
     context_data: dict[str, str]
     
 class Agent1Response(TypedDict):
-    action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
+    # action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
+    action: Literal['ask_for_context', 'give_advice', 'escalate']
     # response: Annotated[str, ..., "Response"]
+    
+class ResearchResult(TypedDict):
+    response: Annotated[str, ..., "Answer for the query based on the available documents"]
+    action: Literal['give_advice']
     
 class ContextQuestion(TypedDict):
     question: Annotated[str, ..., "Question aiming for clarifying the context of the user's inquiry"]
@@ -47,7 +57,7 @@ def agent1(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0, stream = True)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = agent1_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -184,7 +194,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0, stream = True)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = give_advice_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -242,18 +252,34 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     system_prompt = research_strategies_system_prompt
     messages = [
         SystemMessage(system_prompt),
-        *state['messages']
+        state['messages'][-1]
     ]
     
     # TODO: do node work
         
-    response = AIMessage("RESEARCH: Not yet implemented")
+    # response = AIMessage("RESEARCH: Not yet implemented")
+    
+    output = llm.with_structured_output(ResearchResult).invoke(messages, config)
+    print(output)
+    
+    try:
+        # sometimes the return dict has keys = ['type', 'properties']
+        assert 'response' in output.keys()
+    
+    except:
+        # print(response)    
+        print(output.keys())
+        if 'type' in output.keys():
+            output = output['properties']    
+    
+    response = AIMessage(output['response'])
     
     response.pretty_print()
     print()
     
     return {
-        'messages' : [response]
+        'messages' : [response],
+        'action': output['action']
     }
 
 
@@ -273,7 +299,7 @@ def classify_message(state: Service1State, config: RunnableConfig):
     
     # TODO: do node work
     
-    response = AIMessage("CLASSIFIER: Not yet implemented")
+    response = AIMessage("CLASSIFIER: Not yet implemented, DO NOT CALL AGAIN")
     
     return {
         'messages' : [response]
@@ -345,7 +371,9 @@ def main():
             """
             )
             ],
-        'action': 'user_feedback'
+        'action': 'collect_context',
+        'context_complete':False,
+        'context_data':{}
     }
 
     app = create_app()
