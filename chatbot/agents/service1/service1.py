@@ -49,6 +49,10 @@ class Service1State(TypedDict):
     action: Literal['collect_context', 'ask_for_context', 'give_advice', 'classify_message', 'escalate', 'user_feedback']
     context_complete: bool
     context_data: dict[str, str]
+    # the idea here would be not to keep the research reports in the general message flow to 
+    # save tokens ... 
+    research_result: str
+    research_results_ready: bool
     
 class Agent1Response(TypedDict):
     # action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
@@ -56,7 +60,7 @@ class Agent1Response(TypedDict):
     # response: Annotated[str, ..., "Response"]
     
 class ResearchResult(TypedDict):
-    response: Annotated[str, ..., "Answer for the query based on the available documents"]
+    research_result: Annotated[str, ..., "Answer for the query based on the available documents"]
     action: Literal['give_advice']
     
 class ContextQuestion(TypedDict):
@@ -206,28 +210,47 @@ def give_advice(state: Service1State, config: RunnableConfig):
     llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = give_advice_system_prompt
     
-    #Check if 'RESEARCH:' in the last model reponse
-    #force give advice to take the research results into account
+    # Check if there is a research request, that has not been consumed yet
+    # force give advice to take the research results into account
+    # force action=user_feedback
     
-    system_prompt_extension="""Voici les resultats de `research_strategies` que 
-    tu dois prendre en compte pour la redaction de ta reponse:
+    action = None
     
-    {results}
+    if state['research_results_ready']:
+        
+        system_prompt_extension="""Voici les resultats de `research_strategies` que 
+        tu dois prendre en compte pour la redaction de ta reponse.
+        
+        Tu dois les synthetiser et adapter au language de l'utilisateur.
+        
+        Tu NE DOIT PAS envoyer une 2eme requete a `research_strategies`.
+        
+        RESEARCH RESULT:
+        ================
+        """
     
-    """
-    
-    if "RESEARCH:" in state['messages'][-1].content:
         print('### Got RESEARCH:')
-        system_prompt += system_prompt_extension.format(
-            results = state['messages'][-1].content
-        )
+        system_prompt += system_prompt_extension
+        # .format(
+        #     results = state['research_result'] #state['messages'][-1].content
+        # )
         print()
-        print(system_prompt)
-    
+        # print(system_prompt)
+        
+        #manually set next action
+        action = 'user_feedback'
+        
+    # prepare message flux
     messages = [
         SystemMessage(system_prompt),
-        *state['messages']
+        *state['messages'],
     ]
+    
+    # append the research output if it has not been consumed yet
+    if state['research_results_ready']:
+        messages.append(
+        AIMessage(state['research_result'])
+        )
     
     class GiveAdviceAnswer(TypedDict):
         response: Annotated[str, ..., "Response"]
@@ -254,7 +277,8 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     return {
         'messages' : [response],
-        'action' : output['action']
+        'action' : output['action'] if not action else action,
+        'research_results_ready': False
     }
     
 def advice_router(state: Service1State) -> Literal["research_strategies", "user_feedback"]:
@@ -292,7 +316,7 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     
     try:
         # sometimes the return dict has keys = ['type', 'properties']
-        assert 'response' in output.keys()
+        assert 'research_result' in output.keys()
     
     except:
         # print(response)    
@@ -300,16 +324,21 @@ def research_strategies(state: Service1State, config: RunnableConfig):
         if 'type' in output.keys():
             output = output['properties']    
     
-    if 'RESEARCH:' not in output['response']:
-        response = AIMessage('RESEARCH: ' + output['response'])
+    ######
+    # This is probably not necessary anymore
+    if 'RESEARCH:' not in output['research_result']:
+        response = AIMessage('RESEARCH: ' + output['research_result'])
     else:
-        response = AIMessage(output['response'])
+        response = AIMessage(output['research_result'])
+    ####
     
     response.pretty_print()
     print()
     
     return {
-        'messages' : [response],
+        # 'messages' : [response],
+        'research_result':response.content,
+        'research_results_ready':True,
         'action': output['action']
     }
 

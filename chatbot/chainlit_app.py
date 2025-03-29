@@ -51,7 +51,8 @@ async def setup():
             'message_type':'prive',
             'emotion':'triste',
             'planned_action':'rien'
-        }
+        },
+        'research_results_ready':False
     }
     
     output = app.invoke(initial_state,
