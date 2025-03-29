@@ -40,9 +40,18 @@ async def setup():
             # """
             # )
             ],
-        "context_complete": False,
-        "context_data": {},
-        'action': 'collect_context'
+        # "context_complete": False,
+        # "context_data": {},
+        # 'action': 'collect_context'
+        'action': 'ask_for_context',
+        'context_complete':True,
+        'context_data':{
+            'role':"recu",
+            'platform':'whatsapp',
+            'message_type':'prive',
+            'emotion':'triste',
+            'planned_action':'rien'
+        }
     }
     
     output = app.invoke(initial_state,

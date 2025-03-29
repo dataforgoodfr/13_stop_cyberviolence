@@ -20,7 +20,14 @@ from rich.prompt import Prompt
 from langchain.schema.runnable.config import RunnableConfig
 #modification apporté à cause de la non compilation du pré- commit
 #from .prompts import *
-from .prompts import agent1_system_prompt, ask_for_context_system_prompt
+from .prompts import (
+    agent1_system_prompt, 
+    ask_for_context_system_prompt, 
+    research_strategies_system_prompt,
+    collect_context_system_prompt,
+    give_advice_system_prompt,
+    escalate_system_prompt
+    )
 import sys
 import os
 from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUESTIONS
@@ -198,6 +205,25 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = give_advice_system_prompt
+    
+    #Check if 'RESEARCH:' in the last model reponse
+    #force give advice to take the research results into account
+    
+    system_prompt_extension="""Voici les resultats de `research_strategies` que 
+    tu dois prendre en compte pour la redaction de ta reponse:
+    
+    {results}
+    
+    """
+    
+    if "RESEARCH:" in state['messages'][-1].content:
+        print('### Got RESEARCH:')
+        system_prompt += system_prompt_extension.format(
+            results = state['messages'][-1].content
+        )
+        print()
+        print(system_prompt)
+    
     messages = [
         SystemMessage(system_prompt),
         *state['messages']
@@ -274,7 +300,10 @@ def research_strategies(state: Service1State, config: RunnableConfig):
         if 'type' in output.keys():
             output = output['properties']    
     
-    response = AIMessage(output['response'])
+    if 'RESEARCH:' not in output['response']:
+        response = AIMessage('RESEARCH: ' + output['response'])
+    else:
+        response = AIMessage(output['response'])
     
     response.pretty_print()
     print()
@@ -373,9 +402,15 @@ def main():
             """
             )
             ],
-        'action': 'collect_context',
-        'context_complete':False,
-        'context_data':{}
+        'action': 'ask_for_context',
+        'context_complete':True,
+        'context_data':{
+            'role':"recu",
+            'platform':'whatsapp',
+            'message_type':'prive',
+            'emotion':'triste',
+            'planned_action':'rien'
+        }
     }
 
     app = create_app()
