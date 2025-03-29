@@ -1,5 +1,8 @@
 docker run -it \
     -p 127.0.0.1:8000:8000 \
     -e OPENROUTER_API_KEY=$OPENROUTER_API_KEY \
+    -e LANGCHAIN_API_KEY=$LANGCHAIN_API_KEY \
+    -e LANGCHAIN_TRACING_V2=$LANGCHAIN_TRACING_V2 \
+    -e LANGCHAIN_PROJECT=$LANGCHAIN_PROJECT \
     -v $(pwd):/app \
     langroid_chainlit:v01 /usr/bin/zsh && cd /app

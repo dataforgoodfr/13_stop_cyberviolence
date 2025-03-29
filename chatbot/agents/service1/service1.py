@@ -150,7 +150,11 @@ def collect_context(state: Service1State, config: RunnableConfig):
 
         if state["context_complete"]:
             return {
-                "messages": [AIMessage("Merci pour ces informations. A quel message souhaites-tu répondre ?")],
+                "messages": [
+                    AIMessage(
+                        "Merci pour ces informations. A quel message souhaites-tu répondre ?"
+                        )
+                    ],
                 "context_complete": True,
                 "context_data": state["context_data"],
             }
