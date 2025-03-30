@@ -6,7 +6,7 @@
   },
   // "postCreateCommand": "curl -LsSf https://astral.sh/uv/install.sh | sh && cd chatbot && uv venv && uv pip install -r requirements.txt && uv pip install chainlit",
   // "postStartCommand": "source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && chainlit run /workspaces/13_stop_cyberviolence/chatbot/chainlit_app.py "
-  "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r requirements.txt && uv pip install chainlit'",
+  "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r chatbot_reqs.txt && uv pip install chainlit'",
   "postStartCommand": "bash -c 'source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && chainlit run /workspaces/13_stop_cyberviolence/chatbot/chainlit_app.py'",
   "forwardPorts": [8000],
   "portsAttributes": {
