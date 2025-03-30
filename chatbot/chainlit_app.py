@@ -89,9 +89,10 @@ async def on_message(msg: cl.Message):
     config = cl.user_session.get("config")
     cb = cl.user_session.get("cb")
     
-    
+    # Check for attachements
     if not msg.elements:
         human_msg = HumanMessage(msg.content)
+        
     else:
         # Processing images exclusively
         images = [file for file in msg.elements if "image" in file.mime]
@@ -118,13 +119,15 @@ async def on_message(msg: cl.Message):
         stream_mode="updates"  # Use "values" to get the full state at each step
     ):
         print(chunk)
-        for k in chunk.keys():
-            for kk in chunk[k].keys():
-                if kk == "messages" and not isinstance(chunk[k][kk], HumanMessage):
-                    print("author: ", k)
-                    # Stream the response field specifically
-                    answer = cl.Message("", author=k)
-                    await answer.stream_token(chunk[k][kk][0].content)
+        if hasattr(chunk, 'keys'):
+            for k in chunk.keys():
+                if hasattr(chunk[k], 'keys'):
+                    for kk in chunk[k].keys():
+                        if kk == "messages" and not isinstance(chunk[k][kk], HumanMessage):
+                            print("author: ", k)
+                            # Stream the response field specifically
+                            answer = cl.Message("", author=k)
+                            await answer.stream_token(chunk[k][kk][0].content)
             
         await answer.send()
     
