@@ -5,7 +5,7 @@ from .content import SYSTEM_PROMPT
 def complete_chat(input_user, temperature, max_tokens):
 
     model = "ministral-3b-latest"
-    client = Mistral(api_key='TOFTnjahuRASGAsbc4C6a4U5VOWpYBkT')
+    client = Mistral(api_key='xxx')
 
     chat_response = client.chat.complete(
         model= model,

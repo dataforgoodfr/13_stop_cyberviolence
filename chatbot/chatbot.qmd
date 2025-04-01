@@ -63,7 +63,7 @@ end : End
 Service3 --> end
 ```
 
-# Update 03/03/2025
+# Update 12/03/2025
 
 ## Implementation
 
@@ -88,17 +88,44 @@ Le routage fonctionne (par exemple, "je me sens en danger" active la voie 'escal
 
 Chaque node a un prompt qui reste à definir/améliorer.
 
-**Ce qui manque / reste à faire**
+**TODO**
+
+### Agent
 
 - [x] Le début de l'échange doit être amélioré (le bot doit se présenter et préparer le terrain).
+- [x] `agent1` doit probablement etre converti en simple point de routage 
+- [ ] definition des informations contextuelle minimales
+
+### Situational context
+
+Pour bien comprendre la situation qui a conduit le jeune / ado à soliciter le chatbot, on a besoin des infos suivants:
+
+- Rôle du jeune: Expéditeur (potentitiel), destinataire ou témoin
+- Le canal de communication par lequel le message est arrivé chez le jeune
+- Le ressenti que le message a évoqué
+
+**Implementation**
+
+Deux solutions semblent envisageables:
+
+1. Séries des questions déterminstes au début de l'échange, les infos sont enregistré dans dictionnaire
+2. Défintion d'un dictionnaire avec des champs prédefinis, la collecte des informations est laissé au LLM
+
+Dans les deux cas, les informations devront être injectés dans les system prompts. 
 
 ### RAG pour `research_strategies`
+
+On part pour une exploration de [`kotaemon`](https://github.com/Cinnamon/kotaemon/tree/main), 
+un open-source RAG tool. Ce qui sera probablement le plus intéressant, sont
+les procédures de traitement des documents, les embeddings, le stockage et le retrieval.
+
+Est-ce qu'on ne garderait pqs l'UI `kotaemon` pour la gestion des documents ?
 
 - [ ] Liste des documents à ingérer
 - [ ] Quel vectorstore ?
 - [ ] Procédure de retrieval des informations.
 
-### NLP message classifier
+### NLP message classifier (priorite moindre)
 
 - [ ] Modèle de classification du dataset [`cyberagressionado-v1`](https://hatespeechdata.com/#cyberagressionado-v1).
 - [ ] Procédure pour que CLASSIFIER1 puisse se servir du modèle de classification (peut-être ce sera plutôt un outil pour AGENT1 qu'un agent spécialisé).
@@ -106,6 +133,7 @@ Chaque node a un prompt qui reste à definir/améliorer.
 ### Interface graphique
 
 - [x] Interface graphique de base en place, implementé avec `chainlit`
+- [x] support envoi capture d'ecran
 - [ ] Customisation ....
 
 <details>

@@ -20,24 +20,48 @@ from rich.prompt import Prompt
 from langchain.schema.runnable.config import RunnableConfig
 #modification apporté à cause de la non compilation du pré- commit
 #from .prompts import *
-from .prompts import agent1_system_prompt, ask_for_context_system_prompt
+from .prompts import (
+    agent1_system_prompt, 
+    ask_for_context_system_prompt, 
+    research_strategies_system_prompt,
+    collect_context_system_prompt,
+    give_advice_system_prompt,
+    escalate_system_prompt
+    )
 import sys
 import os
+from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUESTIONS
 # sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
 # print(sys.path)
 from ..utils import ChatOpenRouter as ChatOpenAI
 
-model = 'google/gemini-2.0-flash-001'
+service1_dir = Path(__file__).parent
 
+with open(service1_dir / "../monster_context/ateliers_jeunes_complete.md", "r") as f:
+    research_strategies_system_prompt = research_strategies_system_prompt.format(docs = f.read())
+
+model = 'google/gemini-2.0-flash-001'
+# model = 'openai/gpt-4o-mini'
 console = Console()
 
 class Service1State(TypedDict):
     messages: Annotated[List[AnyMessage], add_messages]
-    action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate', 'user_feedback']
+    action: Literal['collect_context', 'ask_for_context', 'give_advice', 'classify_message', 'escalate', 'user_feedback']
+    context_complete: bool
+    context_data: dict[str, str]
+    # the idea here would be not to keep the research reports in the general message flow to 
+    # save tokens ... 
+    research_result: str
+    research_results_ready: bool
     
 class Agent1Response(TypedDict):
-    response: Annotated[str, ..., "Response"]
-    action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
+    # action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
+    action: Literal['ask_for_context', 'give_advice', 'escalate']
+    # response: Annotated[str, ..., "Response"]
+    
+class ResearchResult(TypedDict):
+    research_result: Annotated[str, ..., "Answer for the query based on the available documents"]
+    action: Literal['give_advice']
     
 class ContextQuestion(TypedDict):
     question: Annotated[str, ..., "Question aiming for clarifying the context of the user's inquiry"]
@@ -46,7 +70,7 @@ def agent1(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0, stream = True)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = agent1_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -63,20 +87,20 @@ def agent1(state: Service1State, config: RunnableConfig):
     try:
         # sometimes the return dict has keys = ['type', 'properties']
         print(response.keys())
-        assert 'response' in response.keys()
+        assert 'action' in response.keys()
     
     except:
         # print(response)    
         if 'type' in response.keys():
             response = response['properties']
     
-    message = AIMessage(response['response'])
+    message = AIMessage(response['action'])
 
     message.pretty_print()
     print()
     
     return {
-        'messages' : [message],
+        # 'messages' : [message],
         'action' : response['action']
     }
 
@@ -95,6 +119,69 @@ def router(state: Service1State) -> Literal["ask_for_context","give_advice","cla
 
 def user_feedback(state: Service1State, config: RunnableConfig):
     return
+
+def get_next_question(context_data: dict) -> str:
+    """Get next question to ask to the user to collect context. If all questions have been asked, return None."""
+    if all(question["id"] in context_data.keys() for question in REQUIRED_CONTEXT_QUESTIONS):
+        return None
+
+    return REQUIRED_CONTEXT_QUESTIONS[len(context_data.keys())]["question"]
+
+def collect_context(state: Service1State, config: RunnableConfig):
+    llm = ChatOpenAI(model=model, temperature=0)
+    system_prompt = collect_context_system_prompt
+    
+    print("next context question (in theory):")
+    print(get_next_question(state['context_data']))
+    
+    if not state["messages"] or (len(state["messages"]) > 0 and state["messages"][-1].type == "human"):
+        
+        if len(state["messages"]) > 0 and state["messages"][-1].type == "human":
+            user_answer = state["messages"][-1].content
+            state["context_data"][REQUIRED_CONTEXT_QUESTIONS[len(state["context_data"])]["id"]] = user_answer
+            print(state['context_data'])
+        
+        next_question = get_next_question(state["context_data"])
+        
+        if next_question is not None:
+            system_prompt = system_prompt + "La question a poser: " + next_question
+        
+        state["context_complete"] = next_question is None
+
+        if state["context_complete"]:
+            return {
+                "messages": [
+                    AIMessage(
+                        "Merci pour ces informations. A quel message souhaites-tu répondre ?"
+                        )
+                    ],
+                "context_complete": True,
+                "context_data": state["context_data"],
+            }
+        
+        messages = [
+            SystemMessage(system_prompt),
+            *state['messages']
+        ]
+        
+        response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
+        message = AIMessage(response['question'])
+        message.pretty_print()
+        print()
+        
+        return {
+            'messages': [message],
+            "context_complete": False,
+            "context_data": state["context_data"]
+        }
+        
+    return state
+
+def should_collect_context(state: Service1State) -> Literal["collect_context", "agent1"]:
+    if state["context_complete"]:
+        return "agent1"
+    else:
+        return "collect_context"
 
 def ask_for_context(state: Service1State, config: RunnableConfig):
     
@@ -124,12 +211,50 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0, stream = True)
+    llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = give_advice_system_prompt
+    
+    # Check if there is a research request, that has not been consumed yet
+    # force give advice to take the research results into account
+    # force action=user_feedback
+    
+    action = None
+    
+    if state['research_results_ready']:
+        
+        system_prompt_extension="""Voici les resultats de `research_strategies` que 
+        tu dois prendre en compte pour la redaction de ta reponse.
+        
+        Tu dois les synthetiser et adapter au language de l'utilisateur.
+        
+        Tu NE DOIT PAS envoyer une 2eme requete a `research_strategies`.
+        
+        RESEARCH RESULT:
+        ================
+        """
+    
+        print('### Got RESEARCH:')
+        system_prompt += system_prompt_extension
+        # .format(
+        #     results = state['research_result'] #state['messages'][-1].content
+        # )
+        print()
+        # print(system_prompt)
+        
+        #manually set next action
+        action = 'user_feedback'
+        
+    # prepare message flux
     messages = [
         SystemMessage(system_prompt),
-        *state['messages']
+        *state['messages'],
     ]
+    
+    # append the research output if it has not been consumed yet
+    if state['research_results_ready']:
+        messages.append(
+        AIMessage(state['research_result'])
+        )
     
     class GiveAdviceAnswer(TypedDict):
         response: Annotated[str, ..., "Response"]
@@ -156,7 +281,8 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     return {
         'messages' : [response],
-        'action' : output['action']
+        'action' : output['action'] if not action else action,
+        'research_results_ready': False
     }
     
 def advice_router(state: Service1State) -> Literal["research_strategies", "user_feedback"]:
@@ -182,18 +308,42 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     system_prompt = research_strategies_system_prompt
     messages = [
         SystemMessage(system_prompt),
-        *state['messages']
+        state['messages'][-1]
     ]
     
     # TODO: do node work
         
-    response = AIMessage("RESEARCH: Not yet implemented")
+    # response = AIMessage("RESEARCH: Not yet implemented")
+    
+    output = llm.with_structured_output(ResearchResult).invoke(messages, config)
+    print(output)
+    
+    try:
+        # sometimes the return dict has keys = ['type', 'properties']
+        assert 'research_result' in output.keys()
+    
+    except:
+        # print(response)    
+        print(output.keys())
+        if 'type' in output.keys():
+            output = output['properties']    
+    
+    ######
+    # This is probably not necessary anymore
+    if 'RESEARCH:' not in output['research_result']:
+        response = AIMessage('RESEARCH: ' + output['research_result'])
+    else:
+        response = AIMessage(output['research_result'])
+    ####
     
     response.pretty_print()
     print()
     
     return {
-        'messages' : [response]
+        # 'messages' : [response],
+        'research_result':response.content,
+        'research_results_ready':True,
+        'action': output['action']
     }
 
 
@@ -213,7 +363,7 @@ def classify_message(state: Service1State, config: RunnableConfig):
     
     # TODO: do node work
     
-    response = AIMessage("CLASSIFIER: Not yet implemented")
+    response = AIMessage("CLASSIFIER: Not yet implemented, DO NOT CALL AGAIN")
     
     return {
         'messages' : [response]
@@ -246,6 +396,7 @@ def create_app():
     graph = StateGraph(Service1State)
 
     graph.add_node("agent1", agent1)
+    graph.add_node("collect_context", collect_context)
     graph.add_node("ask_for_context", ask_for_context)
     graph.add_node("give_advice", give_advice)
     graph.add_node("research_strategies", research_strategies)
@@ -254,7 +405,7 @@ def create_app():
     graph.add_node("user_feedback", user_feedback)
 
 
-    graph.add_edge("__start__", "agent1")
+    graph.add_conditional_edges("__start__", should_collect_context)
     graph.add_conditional_edges("agent1", router)
     # graph.add_edge("give_advice", "research_strategies")
     graph.add_conditional_edges("give_advice", advice_router)
@@ -284,7 +435,15 @@ def main():
             """
             )
             ],
-        'action': 'user_feedback'
+        'action': 'ask_for_context',
+        'context_complete':True,
+        'context_data':{
+            'role':"recu",
+            'platform':'whatsapp',
+            'message_type':'prive',
+            'emotion':'triste',
+            'planned_action':'rien'
+        }
     }
 
     app = create_app()
