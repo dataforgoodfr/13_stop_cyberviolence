@@ -8,7 +8,7 @@
     "LANGCHAIN_PROJECT":"dfg13_chatbot"
   },
   "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r chatbot_reqs.txt && uv pip install chainlit'",
-  "postStartCommand": "bash -c 'source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && cd /workspaces/13_stop_cyberviolence/chatbot  chainlit run ./chainlit_app.py'",
+  "postStartCommand": "bash -c 'source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && cd /workspaces/13_stop_cyberviolence/chatbot && chainlit run -w ./chainlit_app.py'",
   "forwardPorts": [8000],
   "portsAttributes": {
     "8000": {
