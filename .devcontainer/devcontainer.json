@@ -4,7 +4,7 @@
   "remoteEnv": {
     "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",
     "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",
-    "LANGSMITH_API_KEY": "${localEnv:LANGSMITH_API_KEY}",
+    "LANGCHAIN_API_KEY": "${localEnv:LANGSMITH_API_KEY}",
     "LANGCHAIN_PROJECT":"dfg13_chatbot"
   },
   "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r chatbot_reqs.txt && uv pip install chainlit'",
