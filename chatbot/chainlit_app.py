@@ -40,40 +40,30 @@ async def setup():
             # """
             # )
             ],
-        # "context_complete": False,
-        # "context_data": {},
-        # 'action': 'collect_context'
-        'action': 'ask_for_context',
-        'context_complete':True,
-        'context_data':{
-            'role':"recu",
-            'platform':'whatsapp',
-            'message_type':'prive',
-            'emotion':'triste',
-            'planned_action':'rien'
-        },
+        "context_complete": False,
+        "context_data": {},
+        'action': 'collect_context',
+
+        # UNCOMMENT TO SKIP intro questions
+        # 'action': 'ask_for_context',
+        # 'context_complete':False,
+        # 'context_data':{
+        #     'role':"recu",
+        #     'platform':'whatsapp',
+        #     'message_type':'prive',
+        #     'emotion':'triste',
+        #     'planned_action':'rien'
+        # },
+        
         'research_results_ready':False
     }
     
     output = app.invoke(initial_state,
                         RunnableConfig(callbacks = [cb], **config)
                         )
-    # print(output.content)
-    # output = json.loads("".join([*output]))
+
     content = output['messages'][-1].content
     initial_answer = cl.Message(content)
-    
-    # for msg, metadata in app.stream(
-    #     initial_state,
-    #     stream_mode="messages",
-    #     config=RunnableConfig(callbacks=[cb],
-    #                           **config)):
-    #     if (
-    #         msg.content
-    #         and not isinstance(msg, HumanMessage)
-    #         # and metadata["langgraph_node"] == "final"
-    #     ):
-    #         await initial_answer.stream_token(msg.content)
             
     await initial_answer.send()
     
@@ -115,7 +105,7 @@ async def on_message(msg: cl.Message):
     # Stream the graph execution
     async for chunk in app.astream(
         {"messages": human_msg},
-        config = config,
+        config = RunnableConfig(callbacks = [cb], **config),
         stream_mode="updates"  # Use "values" to get the full state at each step
     ):
         print(chunk)
