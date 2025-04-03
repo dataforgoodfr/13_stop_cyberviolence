@@ -108,8 +108,8 @@ Pour bien comprendre la situation qui a conduit le jeune / ado à soliciter le c
 
 Deux solutions semblent envisageables:
 
-1. Séries des questions déterminstes au début de l'échange, les infos sont enregistré dans dictionnaire
-2. Défintion d'un dictionnaire avec des champs prédefinis, la collecte des informations est laissé au LLM
+1. [x] Séries des questions déterminstes au début de l'échange, les infos sont enregistré dans dictionnaire
+2. [ ] Défintion d'un dictionnaire avec des champs prédefinis, la collecte des informations est laissé au LLM
 
 Dans les deux cas, les informations devront être injectés dans les system prompts. 
 
