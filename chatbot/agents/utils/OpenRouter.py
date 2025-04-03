@@ -1,6 +1,8 @@
 import os
 from langchain_openai import ChatOpenAI
-from typing import *
+#from typing import *
+#Modification pour correction erreur pre-commit
+from typing import Optional
 from langchain_core.language_models import LanguageModelInput
 from langchain_core.messages import BaseMessage
 from langchain_core.tools import BaseTool
