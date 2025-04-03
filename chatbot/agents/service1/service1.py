@@ -375,12 +375,7 @@ def escalate(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0)
-    system_prompt = escalate_system_prompt
-    messages = [
-        SystemMessage(system_prompt),
-        *state['messages']
-    ]
+    
     
     # TODO: do node work
     
