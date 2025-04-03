@@ -36,7 +36,7 @@ class Agent1Response(TypedDict):
         Literal['USER', 'RESEARCHER1', 'CLASSIFIER1', 'SERVICE2'], ..., "Recipient of message"
     ]
     # user_input: Annotated[bool, True, "User input required"]
-"
+
 #def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
 #modification due à l'erreur de hust
 def  create_agent1(llm=None):
