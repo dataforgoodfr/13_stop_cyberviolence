@@ -94,7 +94,7 @@ Chaque node a un prompt qui reste à definir/améliorer.
 
 - [x] Le début de l'échange doit être amélioré (le bot doit se présenter et préparer le terrain).
 - [x] `agent1` doit probablement etre converti en simple point de routage 
-- [ ] definition des informations contextuelle minimales
+- [x] definition des informations contextuelle minimales
 
 ### Situational context
 
