@@ -4,10 +4,17 @@ import numpy as np
 
 def discretize_age(
     data: pd.DataFrame,
-    bins: List[int] = [0, 11, 13, 15, 17, 99],
-    labels: List[str] = ['0-11', '11-12', '13-14', '15-17', '>17'],
+    #Modification pour correction des pre-commit
+    #bins: List[int] = [0, 11, 13, 15, 17, 99],
+    #labels: List[str] = ['0-11', '11-12', '13-14', '15-17', '>17'],
+    bins: List[int] = None,
+    labels: List[str] = None,
     no_days_year: float = 365.2425
 ) -> pd.Series:
+    if bins is None:
+        bins = [0, 11, 13, 15, 17, 99]
+    if labels is None:
+        labels = ['0-11', '11-12', '13-14', '15-17', '>17']
     
     return pd.cut(
         # delta t annees
