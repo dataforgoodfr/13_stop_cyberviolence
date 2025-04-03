@@ -36,8 +36,12 @@ class Agent1Response(TypedDict):
         Literal['USER', 'RESEARCHER1', 'CLASSIFIER1', 'SERVICE2'], ..., "Recipient of message"
     ]
     # user_input: Annotated[bool, True, "User input required"]
-
-def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
+"
+#def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
+#modification due à l'erreur de hust
+def  create_agent1(llm=None):
+    if llm is None:
+        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     llm = llm.with_structured_output(Agent1Response)
 
     system_prompt = SYSTEM_PROMPT
@@ -60,8 +64,9 @@ def create_agent1(llm = ChatOpenAI(model = "gpt-4o-mini", temperature=0)):
             # sometimes the return dict has keys = ['type', 'properties']
             # print(response.keys())
             assert 'destination' in response.keys()
-        
-        except:
+        #modification du à l'erreur
+        #except:
+        except Exception:
             
             if 'type' in response.keys():
                 response = response['properties']
