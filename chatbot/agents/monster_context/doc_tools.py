@@ -49,10 +49,10 @@ def load_docxs(docxs_folderpath: Path = default_dir):
         list: An empty list, as DOCX loading is not yet implemented.
     """
     return []  # Placeholder: DOCX loading is not currently implemented.
-
+#modification pour correction du pre-commit
 def ingest_docs(
     doc_dir: str = default_dir, output_file: str = './ateliers_jeunes_complete.md',
-    load_funcs: list = [load_pdfs, load_htmls, load_docxs],
+    load_funcs: list = None, #load_funcs: list = [load_pdfs, load_htmls, load_docxs],
     count_tokens: bool = False, model_str: str = 'models/gemini-2.0-flash'
     ):
     """
@@ -71,7 +71,9 @@ def ingest_docs(
         model_str (str, optional): The name or path of the language model to use for
             token counting. Defaults to 'models/gemini-2.0-flash'.
     """
-
+    # Modification pour correction du pre-commit
+    if load_funcs is None:
+        load_funcs = [load_pdfs, load_htmls, load_docxs]
     docs = []
     
     for f in load_funcs:  # Iterate through the list of loading functions
