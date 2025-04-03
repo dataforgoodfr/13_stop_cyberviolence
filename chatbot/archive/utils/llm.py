@@ -1,5 +1,5 @@
 import os
-# from mistralai import Mistral
+from mistralai import Mistral
 from .content import SYSTEM_PROMPT
 
 def complete_chat(input_user, temperature, max_tokens):
@@ -11,13 +11,16 @@ def complete_chat(input_user, temperature, max_tokens):
         model= model,
         temperature=temperature,
         max_tokens=max_tokens,
+        #Modification pour correction du pre-commit
         messages = [
-            {   
-                "role": "system",
-                "content": SYSTEM_PROMPT,
-                "role": "user",
-                "content": f"{input_user}"
-            },
-        ]
+    {
+        "role": "system",
+        "content": SYSTEM_PROMPT,
+    },
+    {
+        "role": "user",
+        "content": f"{input_user}"
+    }
+]
     )
     return chat_response.choices[0].message.content
