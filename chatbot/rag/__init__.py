@@ -1,1 +1,0 @@
-from chroma_client import get_client

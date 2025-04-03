@@ -1,4 +1,3 @@
-import os
 from mistralai import Mistral
 from .content import SYSTEM_PROMPT
 

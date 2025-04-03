@@ -116,7 +116,6 @@ def count_tokens(
     print(no_tokens)
         
 if __name__ == "__main__":
-    import sys
     import fire
     
     from types import SimpleNamespace

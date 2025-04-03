@@ -1,21 +1,12 @@
-import os
-import fire
-from typing import Annotated, Dict, TypedDict, List, Literal
+from typing import Annotated, TypedDict, List, Literal
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
-from langchain.tools import tool
 from langchain_core.messages import AnyMessage
 from langgraph.graph.message import add_messages
-from pydantic import BaseModel
-from PyPDF2 import PdfReader
-import asyncio
-import builtins
-from langgraph.graph import StateGraph, START, END
-import sys
+from langgraph.graph import StateGraph
 from pathlib import Path
 from rich.console import Console
-from rich.text import Text
 from rich.prompt import Prompt
 from langchain.schema.runnable.config import RunnableConfig
 #modification apporté à cause de la non compilation du pré- commit
@@ -25,15 +16,11 @@ from .prompts import (
     ask_for_context_system_prompt, 
     research_strategies_system_prompt,
     collect_context_system_prompt,
-    give_advice_system_prompt,
-    escalate_system_prompt
+    give_advice_system_prompt
     )
-import sys
-import os
 from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUESTIONS
 # sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
 # print(sys.path)
-from ..utils import ChatOpenRouter as ChatOpenAI
 
 service1_dir = Path(__file__).parent
 

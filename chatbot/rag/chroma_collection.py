@@ -1,6 +1,5 @@
 import os
 
-import chromadb
 from chroma_client import get_client
 from chromadb.utils import embedding_functions
 
