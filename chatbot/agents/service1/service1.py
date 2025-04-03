@@ -88,8 +88,9 @@ def agent1(state: Service1State, config: RunnableConfig):
         # sometimes the return dict has keys = ['type', 'properties']
         print(response.keys())
         assert 'action' in response.keys()
-    
-    except:
+    #Modification pour correction pré-commit
+    #except:
+    except Exception:
         # print(response)    
         if 'type' in response.keys():
             response = response['properties']
@@ -265,8 +266,9 @@ def give_advice(state: Service1State, config: RunnableConfig):
     try:
         # sometimes the return dict has keys = ['type', 'properties']
         assert 'response' in output.keys()
-    
-    except:
+    #Modification pour correction pre-commit
+    #except:
+    except Exception:
         # print(response)    
         print(output.keys())
         if 'type' in output.keys():
@@ -321,8 +323,9 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     try:
         # sometimes the return dict has keys = ['type', 'properties']
         assert 'research_result' in output.keys()
-    
-    except:
+    #Modification pour correction pre-commit
+    #except:
+    except Exception:
         # print(response)    
         print(output.keys())
         if 'type' in output.keys():
