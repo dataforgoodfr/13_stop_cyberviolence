@@ -9,7 +9,6 @@ format:
 
 # Cahier de charges
 
-
 ## Prospective design
 
 ```{mermaid}
