@@ -20,7 +20,7 @@ jobs:
       - name: Render Quarto Files
         shell: bash
         run: |
-          find . -name "*/chatbot/chatbot.qmd" -exec quarto render {} \;
+          find . -name "chatbot.qmd" -exec quarto render {} \;
           
       - name: Commit and push changes
         run: |
