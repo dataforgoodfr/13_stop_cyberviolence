@@ -55,7 +55,7 @@ end : End
 Service3 --> end
 ```
 
-# Update 12/03/2025
+# Update 03/04/2025
 
 ## Implementation
 
@@ -98,7 +98,7 @@ Chaque node a un prompt qui reste à definir/améliorer.
   et préparer le terrain).
 - [x] `agent1` doit probablement etre converti en simple point de
   routage
-- [ ] definition des informations contextuelle minimales
+- [x] definition des informations contextuelle minimales
 
 ### Situational context
 
@@ -107,18 +107,17 @@ soliciter le chatbot, on a besoin des infos suivants:
 
 - Rôle du jeune: Expéditeur (potentitiel), destinataire ou témoin
 - Le canal de communication par lequel le message est arrivé chez le
-  jeune (message privé, sur quelle plateforme, message public, commentaire interposé, ...)
-- Le ressenti / émotions que le message a évoqué
-- l'action envisagée à la suite de la réception
+  jeune
+- Le ressenti que le message a évoqué
 
 **Implementation**
 
 Deux solutions semblent envisageables:
 
-1.  Séries des questions déterminstes au début de l’échange, les infos
-    sont enregistré dans dictionnaire
-2.  Défintion d’un dictionnaire avec des champs prédefinis, la collecte
-    des informations est laissé au LLM
+1.  [x] Séries des questions déterminstes au début de l’échange, les
+    infos sont enregistré dans dictionnaire
+2.  [ ] Défintion d’un dictionnaire avec des champs prédefinis, la
+    collecte des informations est laissé au LLM
 
 Dans les deux cas, les informations devront être injectés dans les
 system prompts.
@@ -153,7 +152,9 @@ documents ?
 - [ ] Customisation ….
 
 <details>
+
 <summary>
+
 **Exemple d’un échange**
 </summary>
 
