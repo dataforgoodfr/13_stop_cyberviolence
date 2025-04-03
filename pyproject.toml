@@ -98,7 +98,7 @@ description = "Stop Cyberviolences Project"
 authors = ["Your Name <your.email@example.com>"]
 
 [tool.poetry.dependencies]
-python = ">=3.12"
+python = ">=3.12,<4.0" 
 
 [tool.ruff]
 line-length = 100
