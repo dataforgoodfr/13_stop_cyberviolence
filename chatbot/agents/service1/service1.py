@@ -171,12 +171,33 @@ def should_collect_context(state: Service1State) -> Literal["collect_context", "
     else:
         return "collect_context"
 
+def build_system_prompt(state: Service1State) -> str:
+    """Build the system prompt based on the context data."""
+    match state["action"]:
+        case "ask_for_context":
+            system_prompt = ask_for_context_system_prompt
+        case "give_advice":
+            system_prompt = give_advice_system_prompt
+        case "classify_message":
+            system_prompt = classify_message_system_prompt
+        case "escalate":
+            system_prompt = escalate_system_prompt
+        case _:
+            system_prompt = agent1_system_prompt
+    if state["context_complete"]:
+        system_prompt += "\n\n**Contexte collecté :**\nVoici les informations que tu as deja collectées concernant le contexte:\n"
+        for question in REQUIRED_CONTEXT_QUESTIONS:
+            if question["id"] in state["context_data"]:
+                system_prompt += f"{question['question']}: {state['context_data'][question['id']]}\n"
+    
+    return system_prompt
+
 def ask_for_context(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
     llm = ChatOpenAI(model=model, temperature=0)
-    system_prompt = ask_for_context_system_prompt
+    system_prompt = build_system_prompt(state)
     messages = [
         SystemMessage(system_prompt),
         *state['messages']
@@ -200,7 +221,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     # Node setup
     
     llm = ChatOpenAI(model=model, temperature=0)
-    system_prompt = give_advice_system_prompt
+    system_prompt = build_system_prompt(state)
     
     # Check if there is a research request, that has not been consumed yet
     # force give advice to take the research results into account
