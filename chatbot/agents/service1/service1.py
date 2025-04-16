@@ -1,5 +1,4 @@
 from typing import Annotated, TypedDict, List, Literal
-from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
 from langgraph.checkpoint.memory import MemorySaver
 from langchain_core.messages import AnyMessage
@@ -21,6 +20,7 @@ from .prompts import (
     escalate_system_prompt
     )
 from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUESTIONS
+from ..utils import ChatOpenRouter as ChatOpenAI
 # sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
 # print(sys.path)
 
