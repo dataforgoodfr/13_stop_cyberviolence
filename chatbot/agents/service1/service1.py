@@ -8,8 +8,7 @@ from pathlib import Path
 from rich.console import Console
 from rich.prompt import Prompt
 from langchain.schema.runnable.config import RunnableConfig
-#modification apporté à cause de la non compilation du pré- commit
-#from .prompts import *
+
 from .prompts import (
     agent1_system_prompt, 
     ask_for_context_system_prompt, 
@@ -19,17 +18,38 @@ from .prompts import (
     classify_message_system_prompt,
     escalate_system_prompt
     )
+
 from ..context_collector.required_context_questions import REQUIRED_CONTEXT_QUESTIONS
-from ..utils import ChatOpenRouter as ChatOpenAI
-# sys.path.append("home/kantundpeterpan/projects/dataforgood/13_stopcyberviolence/repo/chatbot")
-# print(sys.path)
+
+# allow switching model providers
+import os
+
+service1_provider = os.environ.get("SERVICE1_PROVIDER", None)
+
+if service1_provider == 'azure':
+    from langchain_openai import AzureChatOpenAI
+    os.environ['AZURE_OPENAI_ENDPOINT'] = "https://monstermessenger.openai.azure.com/"
+    llm = AzureChatOpenAI(
+        azure_deployment="gpt-4o",  # or your deployment
+        api_version="2024-08-01-preview",  # or your api version
+        temperature=0,
+        max_tokens=None,
+        timeout=None,   
+        max_retries=2,
+    )
+else:
+    from ..utils import ChatOpenRouter as ChatOpenAI
+    model = 'google/gemini-2.0-flash-001'
+    llm = ChatOpenAI(model=model, temperature=0)
+
+print(llm)
 
 service1_dir = Path(__file__).parent
 
 with open(service1_dir / "../monster_context/ateliers_jeunes_complete.md", "r") as f:
     research_strategies_system_prompt = research_strategies_system_prompt.format(docs = f.read())
 
-model = 'google/gemini-2.0-flash-001'
+
 # model = 'openai/gpt-4o-mini'
 console = Console()
 
@@ -40,6 +60,7 @@ class Service1State(TypedDict):
     context_data: dict[str, str]
     # the idea here would be not to keep the research reports in the general message flow to 
     # save tokens ... 
+    research_query: str
     research_result: str
     research_results_ready: bool
     
@@ -59,7 +80,7 @@ def agent1(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0)
+    global llm
     system_prompt = agent1_system_prompt
     messages = [
         SystemMessage(system_prompt),
@@ -77,8 +98,7 @@ def agent1(state: Service1State, config: RunnableConfig):
         # sometimes the return dict has keys = ['type', 'properties']
         print(response.keys())
         assert 'action' in response.keys()
-    #Modification pour correction pré-commit
-    #except:
+
     except Exception:
         # print(response)    
         if 'type' in response.keys():
@@ -86,8 +106,8 @@ def agent1(state: Service1State, config: RunnableConfig):
     
     message = AIMessage(response['action'])
 
-    message.pretty_print()
-    print()
+    # message.pretty_print()
+    # print()
     
     return {
         # 'messages' : [message],
@@ -118,7 +138,7 @@ def get_next_question(context_data: dict) -> str:
     return REQUIRED_CONTEXT_QUESTIONS[len(context_data.keys())]["question"]
 
 def collect_context(state: Service1State, config: RunnableConfig):
-    llm = ChatOpenAI(model=model, temperature=0)
+    global llm
     system_prompt = collect_context_system_prompt
     
     print("next context question (in theory):")
@@ -198,7 +218,7 @@ def ask_for_context(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0)
+    global llm
     system_prompt = build_system_prompt(state)
     messages = [
         SystemMessage(system_prompt),
@@ -222,7 +242,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0)
+    global llm
     system_prompt = build_system_prompt(state)
     
     # Check if there is a research request, that has not been consumed yet
@@ -239,13 +259,13 @@ def give_advice(state: Service1State, config: RunnableConfig):
         Tu dois les synthetiser et adapter au language de l'utilisateur.
         
         Tu NE DOIT PAS envoyer une 2eme requete a `research_strategies`.
-        
-        RESEARCH RESULT:
-        ================
-        {state['research_result']}
         """
+        
+        # RESEARCH RESULT:
+        # ================
+        # {state['research_result']}
     
-        print('### Got RESEARCH:')
+        # print('### Got RESEARCH:')
         system_prompt += system_prompt_extension
         # .format(
         #     results = state['research_result'] #state['messages'][-1].content
@@ -256,18 +276,20 @@ def give_advice(state: Service1State, config: RunnableConfig):
         #manually set next action
         action = 'user_feedback'
         
+        print(system_prompt)
+        
     # prepare message flux
     messages = [
         SystemMessage(system_prompt),
         *state['messages'],
     ]
     
-    # research output is in system prompt now
+    # research output  in system prompt does not seem to work
     # append the research output if it has not been consumed yet
-    # if state['research_results_ready']:
-    #     messages.append(
-    #     AIMessage(state['research_result'])
-    #     )
+    if state['research_results_ready']:
+        messages.append(
+        AIMessage(state['research_result'])
+        )
     
     class GiveAdviceAnswer(TypedDict):
         response: Annotated[str, ..., "Response"]
@@ -278,8 +300,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     try:
         # sometimes the return dict has keys = ['type', 'properties']
         assert 'response' in output.keys()
-    #Modification pour correction pre-commit
-    #except:
+
     except Exception:
         # print(response)    
         print(output.keys())
@@ -294,7 +315,8 @@ def give_advice(state: Service1State, config: RunnableConfig):
     print()
     
     return {
-        'messages' : [response],
+        'messages' : [response] if output['action'] != 'research_strategies' else [AIMessage('')],
+        'research_query' : output['response'] if output['action'] == 'research_strategies' else '',
         'action' : output['action'] if not action else action,
         'research_results_ready': False
     }
@@ -318,17 +340,17 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     
     # Node setup
     
-    llm = ChatOpenAI(model=model, temperature=0)
+    global llm
     system_prompt = research_strategies_system_prompt
     
     # pass only the last messages to this node
-    # it is the query formulated by give_advice
+    # = the query formulated by give_advice
     messages = [
         SystemMessage(system_prompt),
-        state['messages'][-1]
+        # state['messages'][-1]
+        AIMessage(state['research_query'])
     ]
         
-    # response = AIMessage("RESEARCH: Not yet implemented")
     
     output = llm.with_structured_output(ResearchResult).invoke(messages, config)
     print(output)
@@ -336,28 +358,29 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     try:
         # sometimes the return dict has keys = ['type', 'properties']
         assert 'research_result' in output.keys()
-    #Modification pour correction pre-commit
-    #except:
+
     except Exception:
         # print(response)    
         print(output.keys())
         if 'type' in output.keys():
             output = output['properties']    
     
-    ######
-    # This is probably not necessary anymore
-    # if 'RESEARCH:' not in output['research_result']:
-    #     response = AIMessage('RESEARCH: ' + output['research_result'])
-    # else:
-    #     response = AIMessage(output['research_result'])
-    ####
-    
-    response = AIMessage(output['research_result'])
+    #####
+    # append RESEARCH: to match template given in the prompt
+    if 'RESEARCH:' not in output['research_result']:
+        response = AIMessage('RESEARCH: ' + output['research_result'])
+
+    else:
+        response = AIMessage(output['research_result'])
+    ###
+    print() 
+    print('### RESEARCH RESULT')
     response.pretty_print()
-    print()
+    print('### ')
     
     return {
         # 'messages' : [response],
+        'research_query': '',
         'research_result':response.content,
         'research_results_ready':True,
         'action': output['action']
@@ -368,11 +391,6 @@ def classify_message(state: Service1State, config: RunnableConfig):
     """
     node code template
     """
-    
-    # Node setup
-    
-    #Code retirer car erreur du pre-commit
-    
     # TODO: do node work
     
     response = AIMessage("CLASSIFIER: Not yet implemented, DO NOT CALL AGAIN")
@@ -386,12 +404,6 @@ def escalate(state: Service1State, config: RunnableConfig):
     """
     node code template
     """
-    
-    # Node setup
-    
-    
-    
-    # TODO: do node work
     
     response = AIMessage("ESCALATION: Not yet implemented")
     
