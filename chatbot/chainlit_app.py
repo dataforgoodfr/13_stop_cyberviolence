@@ -118,6 +118,7 @@ async def on_message(msg: cl.Message):
         )
         
     answer = cl.Message(content="")
+    emotion = None
     
     # Stream the graph execution
     async for chunk in app.astream(
@@ -126,9 +127,31 @@ async def on_message(msg: cl.Message):
         stream_mode="updates"  # Use "values" to get the full state at each step
     ):
         print(chunk)
+                
+            
         if hasattr(chunk, 'keys'):
             for k in chunk.keys():
+                print(k)
                 if hasattr(chunk[k], 'keys'):
+                    
+                    # intercept 'emotion' question and provide choices
+                    if 'context_data' in chunk[k].keys():
+                        if len(chunk[k]['context_data'].keys()) == 3:
+                            emotion = await cl.AskActionMessage(
+                                content="Comment te sens-tu après avoir reçu ce message?",
+                                actions=[
+                                    cl.Action(name="J'adore", payload={"value": "j'adore"}, label="😍"),
+                                    cl.Action(name="Joyeux", payload={"value": "content"}, label="😊"),
+                                    cl.Action(name="MDR", payload={"value": "mdr"}, label="🤣"),
+                                    cl.Action(name="Pensif", payload={"value": "pensif"}, label="🤔"),
+                                    cl.Action(name="Etonne", payload={"value": "etonne"}, label="😮"),
+                                    cl.Action(name="Colere", payload={"value": "en colere"}, label="😡"),
+                                    cl.Action(name="Triste", payload={"value": "triste"}, label="😥")
+                                ],
+                                ).send()
+                            break
+
+                    # print answer
                     for kk in chunk[k].keys():
                         if kk == "messages" and not isinstance(chunk[k][kk], HumanMessage):
                             print("author: ", k)
@@ -136,7 +159,18 @@ async def on_message(msg: cl.Message):
                             answer = cl.Message("", author=k)
                             await answer.stream_token(chunk[k][kk][0].content)
             
+                            await answer.send()
+    
+    # the user chosen emotion has to be fed back to the graph    
+    if emotion:
+        aimsg = app.invoke(
+            {"messages": HumanMessage(emotion.get("payload").get("value"))},
+            config = RunnableConfig(callbacks = [lfcb], **config)
+        )
+        
+        await answer.stream_token(aimsg['messages'][-1].content)
         await answer.send()
+            
     
     # for msg, metadata in app.stream(
     #     {"messages": [HumanMessage(content=msg.content)]},
