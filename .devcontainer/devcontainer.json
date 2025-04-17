@@ -1,16 +1,15 @@
 {
   "name": "DFG13 StopCyber",
-  // "image": "mcr.microsoft.com/devcontainers/python:3",
-  // "image": "kantundpeterpan/chainlit_uv:devcontainer",
-  "build": { "dockerfile": "chainlit_devcontainer.Dockerfile" },
+  "image": "mcr.microsoft.com/devcontainers/python:3",
+  // "build": { "dockerfile": "chainlit_devcontainer.Dockerfile" },
   "remoteEnv": {
     "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",
     "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",
     "LANGCHAIN_API_KEY": "${localEnv:LANGCHAIN_API_KEY}",
     "LANGCHAIN_PROJECT":"dfg13_chatbot"
   },
-  // "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r chatbot_reqs.txt && uv pip install chainlit'",
-  // "postStartCommand": "bash -c 'source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && cd /workspaces/13_stop_cyberviolence/chatbot && chainlit run -w ./chainlit_app.py'",
+  "postCreateCommand": "bash -c 'curl -LsSf https://astral.sh/uv/install.sh | sh && cd  /workspaces/13_stop_cyberviolence/chatbot && uv venv && uv pip install -r chatbot_reqs.txt && uv pip install chainlit'",
+  "postStartCommand": "bash -c 'source /workspaces/13_stop_cyberviolence/chatbot/.venv/bin/activate && cd /workspaces/13_stop_cyberviolence/chatbot && chainlit run -w ./chainlit_app.py'",
   "postStartCommand": "bash -c 'cd /workspaces/13_stop_cyberviolence/chatbot && chainlit run -w ./chainlit_app.py'",
   
   "forwardPorts": [8000],
@@ -26,9 +25,9 @@
         "ms-python.python",
         "ms-python.vscode-pylance"
       ],
-      // "settings": {
-      //   "python.defaultInterpreterPath": "/workspaces/13_stop_cyberviolence/chatbot/.venv/bin/python"
-      // }
+      "settings": {
+        "python.defaultInterpreterPath": "/workspaces/13_stop_cyberviolence/chatbot/.venv/bin/python"
+      }
     }
   }
 }
