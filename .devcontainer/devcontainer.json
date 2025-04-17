@@ -1,6 +1,7 @@
 {
   "name": "DFG13 StopCyber",
-  "image": "mcr.microsoft.com/devcontainers/python:3",
+  // "image": "mcr.microsoft.com/devcontainers/python:3",
+  "image": "kantundpeterpan/chainlit_uv:dev",
   "remoteEnv": {
     "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}",
     "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",
