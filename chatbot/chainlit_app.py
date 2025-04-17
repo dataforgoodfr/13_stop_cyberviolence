@@ -6,6 +6,16 @@ from agents.service1 import create_app
 from langchain_core.messages import HumanMessage
 from langchain.schema.runnable.config import RunnableConfig
 
+import os
+from langfuse.callback import CallbackHandler
+from langfuse import Langfuse
+
+# langfuse = Langfuse(
+#     secret_key = os.environ['LANGFUSE_SECRET_KEY'],     
+#     public_key = os.environ['LANGFUSE_PUBLIC_KEY'],
+#     host="https://cloud.langfuse.com", # 🇪🇺 EU region
+# )
+
 config = {"configurable": {"thread_id": 555123412345}}
 
 def encode_image_to_base64(image_path: str) -> str:
@@ -25,6 +35,13 @@ async def setup():
     cl.user_session.set("app", app)
     
     cb = cl.LangchainCallbackHandler()
+    lfcb = CallbackHandler(
+        secret_key = os.environ['LANGFUSE_SECRET_KEY'],
+        public_key = os.environ['LANGFUSE_PUBLIC_KEY'],
+        host="https://cloud.langfuse.com", # 🇪🇺 EU region
+    )
+    
+    cl.user_session.set("lfcb", lfcb)
     cl.user_session.set("cb", cb)
     cl.user_session.set('config', config)
     
@@ -44,21 +61,21 @@ async def setup():
         'action': 'collect_context',
 
         # UNCOMMENT TO SKIP intro questions
-        # 'action': 'ask_for_context',
-        # 'context_complete':False,
-        # 'context_data':{
-        #     'role':"recu",
-        #     'platform':'whatsapp',
-        #     'message_type':'prive',
-        #     'emotion':'triste',
-        #     'planned_action':'rien'
-        # },
+        'action': 'ask_for_context',
+        'context_complete':False,
+        'context_data':{
+            'role':"recu",
+            'platform':'whatsapp',
+            'message_type':'prive',
+            'emotion':'triste',
+            'planned_action':'rien'
+        },
         
         'research_results_ready':False
     }
     
     output = app.invoke(initial_state,
-                        RunnableConfig(callbacks = [cb], **config)
+                        RunnableConfig(callbacks = [lfcb], **config)
                         )
 
     content = output['messages'][-1].content
@@ -77,6 +94,7 @@ async def on_message(msg: cl.Message):
     app = cl.user_session.get('app')
     config = cl.user_session.get("config")
     cb = cl.user_session.get("cb")
+    lfcb = cl.user_session.get("lfcb")
     
     # Check for attachements
     if not msg.elements:
@@ -104,7 +122,7 @@ async def on_message(msg: cl.Message):
     # Stream the graph execution
     async for chunk in app.astream(
         {"messages": human_msg},
-        config = RunnableConfig(callbacks = [cb], **config),
+        config = RunnableConfig(callbacks = [lfcb], **config),
         stream_mode="updates"  # Use "values" to get the full state at each step
     ):
         print(chunk)

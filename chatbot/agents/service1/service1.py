@@ -233,7 +233,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     
     if state['research_results_ready']:
         
-        system_prompt_extension="""Voici les resultats de `research_strategies` que 
+        system_prompt_extension=f"""Voici les resultats de `research_strategies` que 
         tu dois prendre en compte pour la redaction de ta reponse.
         
         Tu dois les synthetiser et adapter au language de l'utilisateur.
@@ -242,6 +242,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
         
         RESEARCH RESULT:
         ================
+        {state['research_result']}
         """
     
         print('### Got RESEARCH:')
@@ -261,11 +262,12 @@ def give_advice(state: Service1State, config: RunnableConfig):
         *state['messages'],
     ]
     
+    # research output is in system prompt now
     # append the research output if it has not been consumed yet
-    if state['research_results_ready']:
-        messages.append(
-        AIMessage(state['research_result'])
-        )
+    # if state['research_results_ready']:
+    #     messages.append(
+    #     AIMessage(state['research_result'])
+    #     )
     
     class GiveAdviceAnswer(TypedDict):
         response: Annotated[str, ..., "Response"]
@@ -318,12 +320,13 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     
     llm = ChatOpenAI(model=model, temperature=0)
     system_prompt = research_strategies_system_prompt
+    
+    # pass only the last messages to this node
+    # it is the query formulated by give_advice
     messages = [
         SystemMessage(system_prompt),
         state['messages'][-1]
     ]
-    
-    # TODO: do node work
         
     # response = AIMessage("RESEARCH: Not yet implemented")
     
@@ -343,12 +346,13 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     
     ######
     # This is probably not necessary anymore
-    if 'RESEARCH:' not in output['research_result']:
-        response = AIMessage('RESEARCH: ' + output['research_result'])
-    else:
-        response = AIMessage(output['research_result'])
+    # if 'RESEARCH:' not in output['research_result']:
+    #     response = AIMessage('RESEARCH: ' + output['research_result'])
+    # else:
+    #     response = AIMessage(output['research_result'])
     ####
     
+    response = AIMessage(output['research_result'])
     response.pretty_print()
     print()
     
