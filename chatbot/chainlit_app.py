@@ -61,15 +61,15 @@ async def setup():
         'action': 'collect_context',
 
         # UNCOMMENT TO SKIP intro questions
-        'action': 'ask_for_context',
-        'context_complete':False,
-        'context_data':{
-            'role':"recu",
-            'platform':'whatsapp',
-            'message_type':'prive',
-            'emotion':'triste',
-            'planned_action':'rien'
-        },
+        # 'action': 'ask_for_context',
+        # 'context_complete':False,
+        # 'context_data':{
+        #     'role':"recu",
+        #     'platform':'whatsapp',
+        #     'message_type':'prive',
+        #     'emotion':'triste',
+        #     'planned_action':'rien'
+        # },
         
         'research_results_ready':False
     }

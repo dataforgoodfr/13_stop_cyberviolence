@@ -111,7 +111,7 @@ unfixable = []
 dummy-variable-rgx = "^_"
 mccabe = { max-complexity = 10 }
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 
 [tool.poetry.group.dev.dependencies]
