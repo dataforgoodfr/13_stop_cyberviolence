@@ -9,7 +9,7 @@
     // "LANGCHAIN_API_KEY": "${localEnv:LANGCHAIN_API_KEY}",
     "SERVICE1_PROVIDER":"azure",
     "AZURE_OPENAI_API_KEY": "${localEnv:AZURE_OPENAI_API_KEY}",
-    "LANGFUSE_PRIVATE_KEY": "",
+    "LANGFUSE_SECRET_KEY": "",
     "LANGFUSE_PUBLIC_KEY": "",
     "LANGCHAIN_PROJECT":"dfg13_chatbot"
   },
