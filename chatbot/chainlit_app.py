@@ -41,7 +41,7 @@ async def setup():
         secret_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_SECRET_KEY', ''),
         public_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_PUBLIC_KEY', ''),
         host="https://cloud.langfuse.com", # 🇪🇺 EU region
-        session_id = sesssion_id
+        session_id = session_id
     )
     
     cl.user_session.set("lfcb", lfcb)
