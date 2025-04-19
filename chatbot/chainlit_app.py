@@ -36,8 +36,8 @@ async def setup():
     
     cb = cl.LangchainCallbackHandler()
     lfcb = CallbackHandler(
-        secret_key = os.environ['LANGFUSE_SECRET_KEY'],
-        public_key = os.environ['LANGFUSE_PUBLIC_KEY'],
+        secret_key = os.environ.get('LANGFUSE_SECRET_KEY', ''),
+        public_key = os.environ.get('LANGFUSE_PUBLIC_KEY', ''),
         host="https://cloud.langfuse.com", # 🇪🇺 EU region
     )
     
