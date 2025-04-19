@@ -11,7 +11,7 @@ from langfuse.callback import CallbackHandler
 
 import uuid
 
-session_id = uuid.uuid4()
+session_id = str(uuid.uuid4())
 config = {"configurable": {"thread_id": session_id}}
 
 def encode_image_to_base64(image_path: str) -> str:
@@ -36,6 +36,8 @@ async def setup():
     
     if not model_provider:
         raise EnvironmentError("SERVICE1_PROVIDER env var must be defined")
+    
+    print(session_id)
     
     lfcb = CallbackHandler(
         secret_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_SECRET_KEY', ''),
