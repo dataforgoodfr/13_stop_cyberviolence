@@ -3,7 +3,7 @@ EXPOSE 8080
 RUN apt-get update && apt-get install -y git
 
 # Clone the repository
-RUN git clone https://github.com/kantundpeterpan/13_stop_cyberviolence.git /app
+RUN git clone https://github.com/dataforgoodfr/13_stop_cyberviolence.git /app
 
 # Install Python dependencies
 WORKDIR /app/chatbot
