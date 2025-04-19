@@ -30,9 +30,15 @@ async def setup():
     cl.user_session.set("app", app)
     
     cb = cl.LangchainCallbackHandler()
+    
+    model_provider = os.getenv("SERVICE1_PROVIDER")
+    
+    if not model_provider:
+        raise EnvironmentError("SERVICE1_PROVIDER env var must be defined")
+    
     lfcb = CallbackHandler(
-        secret_key = os.environ.get('LANGFUSE_SECRET_KEY', ''),
-        public_key = os.environ.get('LANGFUSE_PUBLIC_KEY', ''),
+        secret_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_SECRET_KEY', ''),
+        public_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_PUBLIC_KEY', ''),
         host="https://cloud.langfuse.com", # 🇪🇺 EU region
     )
     
