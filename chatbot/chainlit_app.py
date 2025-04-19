@@ -11,7 +11,8 @@ from langfuse.callback import CallbackHandler
 
 import uuid
 
-config = {"configurable": {"thread_id": uuid.uuid4()}}
+session_id = uuid.uuid4()
+config = {"configurable": {"thread_id": session_id}}
 
 def encode_image_to_base64(image_path: str) -> str:
     with Image.open(image_path) as img:
@@ -40,6 +41,7 @@ async def setup():
         secret_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_SECRET_KEY', ''),
         public_key = os.environ.get(f'LANGFUSE_{model_provider.upper()}_PUBLIC_KEY', ''),
         host="https://cloud.langfuse.com", # 🇪🇺 EU region
+        session_id = sesssion_id
     )
     
     cl.user_session.set("lfcb", lfcb)
