@@ -8,15 +8,10 @@ from langchain.schema.runnable.config import RunnableConfig
 
 import os
 from langfuse.callback import CallbackHandler
-from langfuse import Langfuse
 
-# langfuse = Langfuse(
-#     secret_key = os.environ['LANGFUSE_SECRET_KEY'],     
-#     public_key = os.environ['LANGFUSE_PUBLIC_KEY'],
-#     host="https://cloud.langfuse.com", # 🇪🇺 EU region
-# )
+import uuid
 
-config = {"configurable": {"thread_id": 555123412345}}
+config = {"configurable": {"thread_id": uuid.uuid4()}}
 
 def encode_image_to_base64(image_path: str) -> str:
     with Image.open(image_path) as img:
@@ -170,29 +165,3 @@ async def on_message(msg: cl.Message):
         
         await answer.stream_token(aimsg['messages'][-1].content)
         await answer.send()
-            
-    
-    # for msg, metadata in app.stream(
-    #     {"messages": [HumanMessage(content=msg.content)]},
-    #     stream_mode="messages",
-    #     config=RunnableConfig(#callbacks=[cb],
-    #                           **config)):
-    #     if (
-    #         msg.content
-    #         and not isinstance(msg, HumanMessage)
-    #         # and metadata["langgraph_node"] == "final"
-    #     ):
-    #         await final_answer.stream_token(msg.content)
-
-    # output = app.invoke({"messages": [HumanMessage(content=msg.content)]},
-    #                     RunnableConfig(callbacks = [cb], **config)
-    #                     )
-    
-    # # output = json.loads("".join([*output]))
-    
-    # for m in output['messages']:
-    #     await cl.Message(m.content).send()
-    
-    # final_answer = cl.Message(content=output['messages'][-1].content)  
-
-    # await final_answer.send()
