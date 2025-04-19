@@ -11,8 +11,6 @@ from langfuse.callback import CallbackHandler
 
 import uuid
 
-session_id = str(uuid.uuid4())
-config = {"configurable": {"thread_id": session_id}}
 
 def encode_image_to_base64(image_path: str) -> str:
     with Image.open(image_path) as img:
@@ -25,7 +23,9 @@ def encode_image_to_base64(image_path: str) -> str:
 @cl.on_chat_start
 async def setup():
     
-    global config
+    # global config
+    session_id = str(uuid.uuid4())
+    config = {"configurable": {"thread_id": session_id}}
     
     app = create_app()
     cl.user_session.set("app", app)
