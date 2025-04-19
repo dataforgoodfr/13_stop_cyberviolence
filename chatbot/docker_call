@@ -8,4 +8,4 @@ docker run -it --rm \
     -e LANGFUSE_GEMINI_SECRET_KEY=$LANGFUSE_GEMINI_SECRET_KEY \
     -e LANGFUSE_GEMINI_PUBLIC_KEY=$LANGFUSE_GEMINI_PUBLIC_KEY \
     -v $(pwd):/app \
-    chainlit_uv:dev chainlit run -w chainlit_app.py --host 0.0.0.0 --port 8000 
+    kantundpeterpan/chainlit_uv:dev chainlit run -w chainlit_app.py --host 0.0.0.0 --port 8000 
