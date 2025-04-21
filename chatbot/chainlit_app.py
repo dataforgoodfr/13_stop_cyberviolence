@@ -143,7 +143,7 @@ async def on_message(msg: cl.Message):
                     if 'context_data' in chunk[k].keys():
                         if len(chunk[k]['context_data'].keys()) == 4:
                             emotion = await cl.AskActionMessage(
-                                content="Comment te sens-tu après avoir reçu ce message?",
+                                content=chunk[k]['messages'][0].content, #"Comment te sens-tu après avoir reçu ce message?",
                                 actions=[
                                     cl.Action(name="J'adore", payload={"value": "j'adore"}, label="😍"),
                                     cl.Action(name="Joyeux", payload={"value": "content"}, label="😊"),
