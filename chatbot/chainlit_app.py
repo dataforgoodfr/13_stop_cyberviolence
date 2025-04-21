@@ -64,6 +64,7 @@ async def setup():
         "context_complete": False,
         "context_data": {},
         'action': 'collect_context',
+        'first_advice':False,
 
         # UNCOMMENT TO SKIP intro questions
         # 'action': 'ask_for_context',
@@ -126,6 +127,8 @@ async def on_message(msg: cl.Message):
     emotion = None
     
     # Stream the graph execution
+    # given that we are exclusively working with structured output
+    # this part can drop the streaming
     async for chunk in app.astream(
         {"messages": human_msg},
         config = RunnableConfig(callbacks = [lfcb], **config),
@@ -168,10 +171,11 @@ async def on_message(msg: cl.Message):
     
     # the user chosen emotion has to be fed back to the graph    
     if emotion:
-        aimsg = app.invoke(
+        aimsg = await app.ainvoke(
             {"messages": HumanMessage(emotion.get("payload").get("value"))},
             config = RunnableConfig(callbacks = [lfcb], **config)
         )
-        
-        await answer.stream_token(aimsg['messages'][-1].content)
+        response = aimsg['messages'][-1]
+        answer = cl.Message(content=response.content, author = response.author)
+
         await answer.send()

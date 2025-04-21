@@ -63,11 +63,11 @@ class Service1State(TypedDict):
     research_query: str
     research_result: str
     research_results_ready: bool
+    # flag whether give_advice is called for the first time
+    first_advice: bool
     
 class Agent1Response(TypedDict):
-    # action: Literal['ask_for_context', 'give_advice', 'classify_message', 'escalate']
     action: Literal['ask_for_context', 'give_advice', 'escalate']
-    # response: Annotated[str, ..., "Response"]
     
 class ResearchResult(TypedDict):
     research_result: Annotated[str, ..., "Answer for the query based on the available documents"]
@@ -78,8 +78,6 @@ class ContextQuestion(TypedDict):
 
 def agent1(state: Service1State, config: RunnableConfig):
     
-    # Node setup
-    
     global llm
     system_prompt = agent1_system_prompt
     messages = [
@@ -88,7 +86,6 @@ def agent1(state: Service1State, config: RunnableConfig):
     ]
     
     response = llm.with_structured_output(Agent1Response).invoke(
-                # [SystemMessage(system_prompt), *state['messages']],
                 messages,
                 config
             )
@@ -117,8 +114,6 @@ def agent1(state: Service1State, config: RunnableConfig):
 
 def router(state: Service1State) -> Literal["ask_for_context","give_advice","classify_message","escalate", "user_feedback"]:
     
-    # TODO: routing logic
-    
     print()
     print('---')
     console.print('[blue] Routed to: ', state['action'])
@@ -141,31 +136,33 @@ def collect_context(state: Service1State, config: RunnableConfig):
     global llm
     system_prompt = collect_context_system_prompt
     
-    print("next context question (in theory):")
-    print(get_next_question(state['context_data']))
+    #debugging
+    # print("next context question (in theory):")
+    # print(get_next_question(state['context_data']))
     
+    # check whether this is the beginning of the conversation or not
     if not state["messages"] or (len(state["messages"]) > 0 and state["messages"][-1].type == "human"):
         
+        # save last answer
         if len(state["messages"]) > 0 and state["messages"][-1].type == "human":
             user_answer = state["messages"][-1].content
             state["context_data"][REQUIRED_CONTEXT_QUESTIONS[len(state["context_data"])]["id"]] = user_answer
-            print(state['context_data'])
+            # print(state['context_data'])
         
+        # get next question
         next_question = get_next_question(state["context_data"])
         
+        # dynamically build system prompt together with the question at hand
         if next_question is not None:
             system_prompt = system_prompt + "La question a poser: " + next_question
         
-        state["context_complete"] = next_question is None
+        # look one question ahead, if none left context collection is done
+        state["context_complete"] = get_next_question(state['context_data']) is None
 
         if state["context_complete"]:
             return {
-                "messages": [
-                    AIMessage(
-                        "Merci pour ces informations. Pourrais-tu m'expliquer un peu ce qui se passe ou ce dont tu as besoin ?"
-                        )
-                    ],
                 "context_complete": True,
+                "first_advice": True,
                 "context_data": state["context_data"],
             }
         
@@ -175,7 +172,7 @@ def collect_context(state: Service1State, config: RunnableConfig):
         ]
         
         response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
-        message = AIMessage(response['question'])
+        message = AIMessage(response['question'], author = 'collect_context')
         message.pretty_print()
         print()
         
@@ -187,7 +184,18 @@ def collect_context(state: Service1State, config: RunnableConfig):
         
     return state
 
+def give_advice_after_context_collection(state:Service1State) -> Literal['__end__', 'give_advice']:
+
+    """Short circuit from collect_context to give_advice after
+    context collection has been completed"""
+
+    if state['context_complete']:
+        return 'give_advice'
+    else:
+        return '__end__'
+
 def should_collect_context(state: Service1State) -> Literal["collect_context", "agent1"]:
+
     if state["context_complete"]:
         return "agent1"
     else:
@@ -206,6 +214,7 @@ def build_system_prompt(state: Service1State) -> str:
             system_prompt = escalate_system_prompt
         case _:
             system_prompt = agent1_system_prompt
+            
     if state["context_complete"]:
         system_prompt += "\n\n**Contexte collecté :**\nVoici les informations que tu as deja collectées concernant le contexte:\n"
         for question in REQUIRED_CONTEXT_QUESTIONS:
@@ -225,7 +234,7 @@ def ask_for_context(state: Service1State, config: RunnableConfig):
         *state['messages']
     ]
     
-    # TODO: do node work
+    # node work
     
     response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
     
@@ -245,11 +254,24 @@ def give_advice(state: Service1State, config: RunnableConfig):
     global llm
     system_prompt = build_system_prompt(state)
     
+    
+    action = None
+    
+    # extend system prompt on first call
+        
+    if state['first_advice']:
+        system_prompt_extension = """
+        C'est la première interaction avec le jeune adolescents après avoir collecté un minimum de context sur sa 
+        situation.
+        Sois proactif et propose plusieurs stratégies pour affronter la situation et évalue avec l'utilisateur
+        laquelle est à préférer. 
+        """
+        
+        system_prompt += system_prompt_extension
+    
     # Check if there is a research request, that has not been consumed yet
     # force give advice to take the research results into account
     # force action=user_feedback
-    
-    action = None
     
     if state['research_results_ready']:
         
@@ -276,7 +298,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
         #manually set next action
         action = 'user_feedback'
         
-        print(system_prompt)
+        # print(system_prompt)
         
     # prepare message flux
     messages = [
@@ -303,13 +325,13 @@ def give_advice(state: Service1State, config: RunnableConfig):
 
     except Exception:
         # print(response)    
-        print(output.keys())
+        # print(output.keys())
         if 'type' in output.keys():
             output = output['properties']
     
     
-    print(output)
-    response = AIMessage(output['response'])
+    # print(output)
+    response = AIMessage(output['response'], author = 'give_advice')
     print()
     response.pretty_print()
     print()
@@ -318,7 +340,8 @@ def give_advice(state: Service1State, config: RunnableConfig):
         'messages' : [response] if output['action'] != 'research_strategies' else [AIMessage('')],
         'research_query' : output['response'] if output['action'] == 'research_strategies' else '',
         'action' : output['action'] if not action else action,
-        'research_results_ready': False
+        'research_results_ready': False,
+        'first_advice':False
     }
     
 def advice_router(state: Service1State) -> Literal["research_strategies", "user_feedback"]:
@@ -353,7 +376,7 @@ def research_strategies(state: Service1State, config: RunnableConfig):
         
     
     output = llm.with_structured_output(ResearchResult).invoke(messages, config)
-    print(output)
+    # print(output)
     
     try:
         # sometimes the return dict has keys = ['type', 'properties']
@@ -425,6 +448,7 @@ def create_app():
 
 
     graph.add_conditional_edges("__start__", should_collect_context)
+    graph.add_conditional_edges('collect_context', give_advice_after_context_collection)
     graph.add_conditional_edges("agent1", router)
     # graph.add_edge("give_advice", "research_strategies")
     graph.add_conditional_edges("give_advice", advice_router)
@@ -434,7 +458,7 @@ def create_app():
 
     memory = MemorySaver()
     app = graph.compile(checkpointer=memory)
-    
+
     return app
 
 
@@ -466,7 +490,6 @@ def main():
     }
 
     app = create_app()
-    app.get_graph().draw_mermaid_png(output_file_path="graph.png")
 
     config = {'configurable':{'thread_id' : "3"}}
     
