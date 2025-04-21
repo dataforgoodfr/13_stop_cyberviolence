@@ -1,22 +1,22 @@
 REQUIRED_CONTEXT_QUESTIONS = [
     {
-        "id": "role",
-        "question": "Es-tu la personne qui a reçu le message, celle qui l'a envoyé, ou un témoin?",
+        "id":"message_of_interest",
+        "question":"Bonjour, quel est le message pour lequel tu as besoin d'aide ?"
     },
     {
-        "id": "platform",
-        "question": "Sur quelle plateforme as-tu reçu ce message? (Par exemple: Instagram, WhatsApp, TikTok, Discord, etc.)"
+        "id": "role",
+        "question": "Est-ce un message que tu as reçu, vu ou que tu souhaites envoyer ?",
+    },
+    {
+        "id": "conversation_partner",
+        "question": "Qui est la personne qui t'a envoyé ce message (ou a qui tu envoies ce message) ?"
     },
     {
         "id": "message_type",
-        "question": "Comment as-tu reçu ce message? (Par exemple: message privé, commentaire public, story, etc.)"
+        "question": "Est-ce un message privé ou public ?"
     },
     {
         "id": "emotion",
         "question": "Comment te sens-tu après avoir reçu ce message?",
     },
-    {
-        "id": "planned_action",
-        "question": "Qu'as-tu pensé faire après avoir reçu ce message?"
-    }
 ]

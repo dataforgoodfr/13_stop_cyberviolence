@@ -162,7 +162,7 @@ def collect_context(state: Service1State, config: RunnableConfig):
             return {
                 "messages": [
                     AIMessage(
-                        "Merci pour ces informations. A quel message souhaites-tu répondre ?"
+                        "Merci pour ces informations. Pourrais-tu m'expliquer un peu ce qui se passe ou ce dont tu as besoin ?"
                         )
                     ],
                 "context_complete": True,

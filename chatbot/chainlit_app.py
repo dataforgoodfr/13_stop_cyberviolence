@@ -141,7 +141,7 @@ async def on_message(msg: cl.Message):
                     
                     # intercept 'emotion' question and provide choices
                     if 'context_data' in chunk[k].keys():
-                        if len(chunk[k]['context_data'].keys()) == 3:
+                        if len(chunk[k]['context_data'].keys()) == 4:
                             emotion = await cl.AskActionMessage(
                                 content="Comment te sens-tu après avoir reçu ce message?",
                                 actions=[
