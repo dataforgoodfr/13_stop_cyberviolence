@@ -25,8 +25,8 @@ on each push to `main`
 
 - The following secrets are set as environment variables in the Google Cloud Run configuration:
 
-    - LANFUSE_{AZURE/GEMINI}_SECRET_KEY
-    - LANFUSE_{AZURE/GEMINI}_PUBLIC_KEY
+    - LANGFUSE_{AZURE/GEMINI}_SECRET_KEY
+    - LANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY
     - SERVICE1_PROVIDER (azure or gemini)
     - OPENAI_API_KEY
     - 0PENROUTER_API_KEY
