@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Bellota:400,700&display=swap');
+
+body {
+  font-family: 'Nunito', serif !important;
+    /* font-family: 'Times New Roman', serif !important; */
+    background-color: #f5f7fa;
+}
+
+#MMHeader {
+    font-family: 'Bellota', serif !important;
+    font-size: 200% !important;
+}
+
+.message-content {
+    margin: auto;
+}
+
+.custom-landing-header {
+    color: #3b82f6;
+    text-align: center;
+    margin-top: 40px;
+    font-size: 2.2rem;
+}
+
+div[data-step-type="assistant_message"] span[data-state="closed"] {
+    width: 2.5em;
+    height: 2.5em;
+}
+
+#message-composer {
+    border-radius: 0.8em;
+    border: grey;
+    border-width: 2px;
+    border-style: solid;
+}
+
+#header {
+    background-color: #FF6A6A;
+    color: white;
+    height: 10%;
+}
+
+#new-chat-button {
+    color: white;
+}
+
+#chat-input {
+    border-radius: 1.2em;
+    background-color: white;
+}
+
+#message-composer {
+    background-color: turquoise;
+}
+
+#message-composer button {
+    color: turquoise;
+    border-radius: 1.2em;
+    border-width: 2px;
+    border-style: solid;
+    background-color: white;
+}
+
+#message-composer div:nth-of-type(1) {
+    padding: 10px;
+}
+
+
+
+#chat-submit {
+    background-color: #32E3C2;
+}
+
+.watermark {
+    visibility: hidden;
+}
