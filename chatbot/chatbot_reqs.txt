@@ -212,3 +212,4 @@ wikipedia==1.4.0
 wrapt==1.17.2
 yarl==1.18.3
 zstandard==0.23.0
+chainlit @ git+https://github.com/kantundpeterpan/chainlit.git@dev_monster#subdirectory=backend/

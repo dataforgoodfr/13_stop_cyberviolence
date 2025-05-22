@@ -4,11 +4,11 @@ Last updated: 2025-05-01
 
 - [./chainlit_dev.Dockerfile](./chainlit_dev.Dockerfile)
 
-    Base image for an environmnet container based on [../chatbot_reqs.txt](../chatbot_reqs.txt), requirements ossibly a bit bloated
+    Base image for an environment container based on [../chatbot_reqs.txt](../chatbot_reqs.txt), requirements possibly a bit bloated
 
 - [./chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
 
-    App container image, based on the environemnt image
+    App container image, based on the environment image
 
 # Local deployment
 
