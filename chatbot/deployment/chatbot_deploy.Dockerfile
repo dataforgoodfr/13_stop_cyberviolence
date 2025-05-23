@@ -8,6 +8,9 @@ RUN git clone https://github.com/dataforgoodfr/13_stop_cyberviolence.git /app
 # Install Python dependencies
 WORKDIR /app/chatbot
 RUN uv pip install -r chatbot_reqs.txt --system
+RUN mkdir -p .chainlit/translations
+RUN cp fr-FR.json .chainlit/translations
+
 
 # Define the entry point (optional, if only running one command)
 ENTRYPOINT ["chainlit", "run", "chainlit_app.py", "--host", "0.0.0.0", "--port",  "8080"]
