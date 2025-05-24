@@ -37,10 +37,25 @@ if service1_provider == 'azure':
         timeout=None,   
         max_retries=2,
     )
-else:
+    
+elif service1_provider == 'openrouter':
     from ..utils import ChatOpenRouter as ChatOpenAI
     model = 'google/gemini-2.0-flash-001'
     llm = ChatOpenAI(model=model, temperature=0)
+
+
+elif service1_provider == 'gemini':
+    # from langchain_google_genai import ChatGoogleGenerativeAI
+    from langchain_openai import ChatOpenAI
+    # from langchain_google_vertexai import ChatVertex
+    model = 'gemini-2.0-flash'
+    llm = ChatOpenAI(
+        openai_api_key = os.environ['GOOGLE_API_KEY'],
+        openai_api_base = "https://generativelanguage.googleapis.com/v1beta/openai/",
+        model = model,
+        temperature = 0,
+        max_retries = 2
+    )
 
 print(llm)
 
@@ -144,7 +159,7 @@ def collect_context(state: Service1State, config: RunnableConfig):
     if not state["messages"] or (len(state["messages"]) > 0 and state["messages"][-1].type == "human"):
         
         # save last answer
-        if len(state["messages"]) > 0 and state["messages"][-1].type == "human":
+        if len(state["messages"]) > 2 and state["messages"][-1].type == "human":
             user_answer = state["messages"][-1].content
             state["context_data"][REQUIRED_CONTEXT_QUESTIONS[len(state["context_data"])]["id"]] = user_answer
             # print(state['context_data'])
@@ -337,7 +352,7 @@ def give_advice(state: Service1State, config: RunnableConfig):
     print()
     
     return {
-        'messages' : [response] if output['action'] != 'research_strategies' else [AIMessage('')],
+        'messages' : [response] if output['action'] != 'research_strategies' else [AIMessage('...')],
         'research_query' : output['response'] if output['action'] == 'research_strategies' else '',
         'action' : output['action'] if not action else action,
         'research_results_ready': False,
@@ -402,7 +417,7 @@ def research_strategies(state: Service1State, config: RunnableConfig):
     print('### ')
     
     return {
-        # 'messages' : [response],
+        # 'messages' : [AIMessage('...')],
         'research_query': '',
         'research_result':response.content,
         'research_results_ready':True,

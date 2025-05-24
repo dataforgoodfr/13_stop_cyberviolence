@@ -53,9 +53,9 @@ edit_message = true
 
 [UI]
 # Name of the assistant.
-name = "Assistant"
+name = "Monster Messenger"
 
-# default_theme = "dark"
+default_theme = "light"
 
 # layout = "wide"
 

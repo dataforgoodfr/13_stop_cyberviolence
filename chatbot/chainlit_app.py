@@ -3,7 +3,7 @@ import base64
 from PIL import Image
 from io import BytesIO
 from agents.service1 import create_app
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import HumanMessage, AIMessage
 from langchain.schema.runnable.config import RunnableConfig
 
 import os
@@ -52,6 +52,7 @@ async def setup():
     
     initial_state = {
         "messages": [
+            HumanMessage("")
             # SystemMessage(SYSTEM_PROMPT),
             # HumanMessage("""
             # On va discuter en francais. Presente-toi stp. 
