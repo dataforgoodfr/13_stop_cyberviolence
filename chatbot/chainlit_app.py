@@ -24,9 +24,15 @@ def encode_image_to_base64(image_path: str) -> str:
 async def setup():
     
     # global config
+    # session_id will be used for langgraph and langgfuse
     session_id = str(uuid.uuid4())
+    
+    # langgraph thread_id for memory
     config = {"configurable": {"thread_id": session_id}}
     
+    # save also for chainlit to link feedback to llm experience
+    cl.user_session.set("langfuse_session", session_id)
+     
     app = create_app()
     cl.user_session.set("app", app)
     
@@ -89,9 +95,85 @@ async def setup():
     initial_answer = cl.Message(content)
             
     await initial_answer.send()
-    
-    
-    
+
+# DATA LAYER SETUP
+from chainlit.data.sql_alchemy import SQLAlchemyDataLayer
+from chainlit.data.storage_clients.gcs import GCSStorageClient
+
+gcs_creds = {
+    k:os.environ[f"GOOGLE_{k.upper()}"] for k in ('project_id', 'client_email', 'private_key', 'bucket_name')
+}
+
+gcs_creds['private_key'] = gcs_creds['private_key'].replace('\\n', '\n') 
+
+storage_client = GCSStorageClient(
+    **gcs_creds
+)
+
+@cl.data_layer
+def get_data_layer():
+    return SQLAlchemyDataLayer(
+        # conninfo="sqlite+aiosqlite:///cl_data_layer/cl_data_layer.db",
+        conninfo = os.environ['DL_CONNINFO'].replace("postgres", "postgresql+psycopg"),
+        storage_provider=storage_client
+    )
+
+from sqlalchemy import text
+
+@cl.action_callback("handle_feedback")
+async def handle_feedback_action(action):
+    # Extract feedback and comment from the action payload
+    value = action.payload.get("feedback")  # value 1-10
+    comment = action.payload.get("comment", "")
+    thread_id = action.payload.get("thread_id")
+
+    if not thread_id:
+        # Try to fetch from context if not in session
+        thread_id = getattr(cl.user_session, "id", None)
+    if not thread_id:
+        await cl.Message(content="Could not determine thread ID for feedback.").send()
+        return
+
+    # Generate a new UUID for the feedback entry
+    feedback_id = str(uuid.uuid4())
+
+    # Insert feedback into the longfeedbacks table using the Chainlit data layer
+    # keep only the most recent feedback for a given thread
+    # # sqlite
+    # query = text("""
+    #     INSERT OR REPLACE INTO longfeedbacks (id, threadId, value, comment)
+    #     VALUES (:id, :threadId, :value, :comment)
+    #     ON CONFLICT (threadId) DO UPDATE SET
+    #     id = excluded.id,
+    #     value = excluded.value,
+    #     comment = excluded.comment;
+    # """)
+
+    # PostgreSQL
+    # need to quote camel case column names to keep camel case
+    query = text("""
+        INSERT INTO longfeedbacks (id, "threadId", value, comment)
+        VALUES (:id, :threadId, :value, :comment)
+        ON CONFLICT ("threadId") DO UPDATE SET
+            id = EXCLUDED.id,
+            value = EXCLUDED.value,
+            comment = EXCLUDED.comment;
+    """)
+
+    # print(cl.datalayer())
+
+    try:
+        async with get_data_layer().engine.begin() as conn:
+            await conn.execute(query, {
+                "id": feedback_id,
+                "threadId": thread_id,
+                "value": value,
+                "comment": comment
+            })
+        await cl.Message(content="Thank you for your feedback!").send()
+    except Exception as e:
+        raise e
+        await cl.Message(content=f"Failed to save feedback: {e}").send()
     
 @cl.on_message
 async def on_message(msg: cl.Message):
@@ -125,6 +207,12 @@ async def on_message(msg: cl.Message):
         )
         
     answer = cl.Message(content="")
+    
+    if msg.content.startswith("#feedback"):
+        feedback_element = cl.CustomElement(name="FeedbackWidget")
+        await cl.Message(content="Please provide your feedback:", elements=[feedback_element]).send()
+        return
+    
     emotion = None
     
     # Stream the graph execution

@@ -1,6 +1,8 @@
+adal==1.2.7
 aiofiles==23.2.1
 aiohappyeyeballs==2.4.6
 aiohttp==3.11.12
+aiopg==1.4.0
 aiosignal==1.3.2
 aiosqlite==0.20.0
 annotated-types==0.7.0
@@ -11,7 +13,9 @@ argon2-cffi-bindings==21.2.0
 arrow==1.3.0
 asttokens==3.0.0
 async-lru==2.0.4
+async-timeout==4.0.3
 asyncer==0.0.7
+asyncpg==0.30.0
 attrs==25.1.0
 audioop-lts==0.2.1
 babel==2.17.0
@@ -55,7 +59,11 @@ google-api-core==2.24.2
 google-api-python-client==2.166.0
 google-auth==2.38.0
 google-auth-httplib2==0.2.0
+google-cloud-core==2.4.3
+google-cloud-storage==3.1.0
+google-crc32c==1.7.1
 google-generativeai==0.8.4
+google-resumable-media==2.7.2
 googleapis-common-protos==1.69.2
 gradio==4.39.0
 gradio-client==1.1.1
@@ -74,6 +82,7 @@ importlib-resources==6.5.2
 inflection==0.5.1
 ipykernel==6.29.5
 ipython==8.32.0
+isodate==0.7.2
 isoduration==20.11.0
 jedi==0.19.2
 jinja2==3.1.5
@@ -93,6 +102,7 @@ jupyter-server-terminals==0.5.3
 jupyterlab==4.3.5
 jupyterlab-pygments==0.3.0
 jupyterlab-server==2.27.3
+kestra-secret-encoder @ file:///home/kantundpeterpan/projects/probstats/hasselt/digital_epi/kestra_secret_encoder
 kiwisolver==1.4.8
 langchain==0.3.18
 langchain-community==0.3.17
@@ -121,7 +131,10 @@ mcp==1.9.0
 mdurl==0.1.2
 mistune==3.1.1
 monotonic==1.6
+msal==1.32.3
 msgpack==1.1.0
+msrest==0.7.1
+msrestazure==0.6.4.post1
 multidict==6.1.0
 mypy-extensions==1.0.0
 nbclient==0.10.2
@@ -132,6 +145,7 @@ networkx==3.4.2
 notebook==7.3.2
 notebook-shim==0.2.4
 numpy==2.2.2
+oauthlib==3.2.2
 ollama==0.4.7
 openai==1.61.1
 opentelemetry-api==1.31.1
@@ -194,6 +208,10 @@ propcache==0.2.1
 proto-plus==1.26.1
 protobuf==5.29.4
 psutil==6.1.1
+psycopg==3.2.9
+psycopg-binary==3.2.9
+psycopg2==2.9.10
+psycopg2-binary==2.9.10
 ptyprocess==0.7.0
 pure-eval==0.2.3
 pyasn1==0.6.1
@@ -221,6 +239,7 @@ pyzmq==26.2.1
 referencing==0.36.2
 regex==2024.11.6
 requests==2.32.3
+requests-oauthlib==2.0.0
 requests-toolbelt==1.0.0
 rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1
@@ -250,6 +269,7 @@ terminado==0.18.1
 tiktoken==0.8.0
 tinycss2==1.4.0
 tokenizers==0.21.1
+toml==0.10.2
 tomli==2.2.1
 tomlkit==0.12.0
 tornado==6.4.2
