@@ -102,7 +102,6 @@ jupyter-server-terminals==0.5.3
 jupyterlab==4.3.5
 jupyterlab-pygments==0.3.0
 jupyterlab-server==2.27.3
-kestra-secret-encoder @ file:///home/kantundpeterpan/projects/probstats/hasselt/digital_epi/kestra_secret_encoder
 kiwisolver==1.4.8
 langchain==0.3.18
 langchain-community==0.3.17

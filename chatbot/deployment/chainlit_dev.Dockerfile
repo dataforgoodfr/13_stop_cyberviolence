@@ -12,7 +12,7 @@ RUN git init
 RUN git remote add origin https://github.com/dataforgoodfr/13_stop_cyberviolence.git
 RUN git config core.sparsecheckout true
 RUN echo "chatbot/chatbot_reqs.txt" >> .git/info/sparse-checkout
-RUN git pull origin main
+RUN git pull origin dev_bot_chainlit_datalayer
 RUN uv pip install -r chatbot/chatbot_reqs.txt --system
 RUN rm -r chatbot
     
