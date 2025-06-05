@@ -1,10 +1,14 @@
-Last updated: 2025-05-01
+Last updated: 2025-06-05
 
 # Docker files 
 
+- [./python_uv_node.Dockerfile](./python_uv_node.Dockerfile)
+
+    Customisation of the UI required forking [`chainlit`](https://github.com/kantundpeterpan/chainlit), this container contains the base environment for building directly from the fork repo (`(p)npm`)
+
 - [./chainlit_dev.Dockerfile](./chainlit_dev.Dockerfile)
 
-    Base image for an environment container based on [../chatbot_reqs.txt](../chatbot_reqs.txt), requirements possibly a bit bloated
+    Based on the `python_uv_node` image,  for an environment container based on [../chatbot_reqs.txt](../chatbot_reqs.txt), requirements possibly a bit bloated
 
 - [./chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
 
@@ -21,15 +25,20 @@ Last updated: 2025-05-01
 - Google Cloud Build is configured in the github applications of the repo and builds [./chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
 on each push to `main`
 
-- Two versions are deployed using Google Cloud Run : one using Gemini and another using Azure OpenAI, both currently suspended due to incurred costs beyond the free tier
-
+- Currently a single version is running, using the `generativelanguage` API of Google Cloud
+- Model: `gemini-flash-2.0`
 - The following secrets are set as environment variables in the Google Cloud Run configuration:
 
     - LANGFUSE_{AZURE/GEMINI}_SECRET_KEY
     - LANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY
     - SERVICE1_PROVIDER (azure or gemini)
     - OPENAI_API_KEY
-    - 0PENROUTER_API_KEY
+    - OPENROUTER_API_KEY
+    - GOOGLE_API_KEY
+    - GOOGLE_PROJECT_ID
+    - GOOGLE_PRIVATE_KEY
+    - GOOGLE_CLIENT_EMAIL
+    - GOOGLE_BUCKET_NAME
 
 https://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q
 
