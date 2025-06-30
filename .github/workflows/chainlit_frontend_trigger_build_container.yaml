@@ -16,7 +16,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: docker.io # or your registry (e.g., gcr.io, ecr.amazonaws.com)
-          username: ${{ secrects.DOCKER_USERNAME }} # or your Docker Hub username
+          username: ${{ secrets.DOCKER_USERNAME }} # or your Docker Hub username
           password: ${{ secrets.DOCKERHUB_TOKEN }} # Store this in GitHub secrets
 
       - name: Build and push Docker image
