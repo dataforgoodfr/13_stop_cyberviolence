@@ -1,6 +1,7 @@
 name: Build Chainlit environment container on dispatch
 
 on:
+  workflow_dispatch:
   repository_dispatch:
     types: [chainlit_updated]
 
