@@ -3,6 +3,7 @@ project:
   output-dir: build
   render:
     - src/doc.qmd
+  site-url: "https://dataforgoodfr.github.io/13_stop_cyberviolence/"
 
 website: 
   title: "StopCyberviolence"
@@ -12,6 +13,3 @@ website:
       - href: src/doc.qmd
         text: Documentation
         icon: circle 
-
-website:
-  site-url: "https://dataforgoodfr.github.io/13_stop_cyberviolence/"
