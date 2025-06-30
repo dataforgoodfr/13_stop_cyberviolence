@@ -1,6 +1,8 @@
 project:
   type: website
   output-dir: docs
+  render:
+    - src/doc.qmd
 
 website: 
   title: "StopCyberviolence"
@@ -9,4 +11,4 @@ website:
     contents:
       - href: src/doc.qmd
         text: Documentation
-        icon: circle
+        icon: circle 
