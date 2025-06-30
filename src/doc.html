@@ -140,10 +140,60 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="test" class="level1">
-<h1>Test</h1>
+<p>Last updated: 2025-06-05</p>
+<section id="docker-files" class="level1">
+<h1>Docker files</h1>
+<ul>
+<li><p><a href="./python_uv_node.Dockerfile">./python_uv_node.Dockerfile</a></p>
+<p>Customisation of the UI required forking <a href="https://github.com/kantundpeterpan/chainlit"><code>chainlit</code></a>, this container contains the base environment for building directly from the fork repo (<code>(p)npm</code>)</p></li>
+<li><p><a href="./chainlit_dev.Dockerfile">./chainlit_dev.Dockerfile</a></p>
+<p>Based on the <code>python_uv_node</code> image, for an environment container based on <a href="../chatbot_reqs.txt">../chatbot_reqs.txt</a>, requirements possibly a bit bloated</p></li>
+<li><p><a href="./chatbot_deploy.Dockerfile">./chatbot_deploy.Dockerfile</a></p>
+<p>App container image, based on the environment image</p></li>
+</ul>
+</section>
+<section id="local-deployment" class="level1">
+<h1>Local deployment</h1>
+<ul>
+<li>from within the cloned repo, the app can be started using <a href="../docker_call">../docker_call</a>, if the necessary environment variables are set correctly.</li>
+</ul>
+</section>
+<section id="cicd" class="level1">
+<h1>CI/CD</h1>
+<section id="google-cloud-build-run" class="level2">
+<h2 class="anchored" data-anchor-id="google-cloud-build-run">Google Cloud Build / Run</h2>
+<ul>
+<li><p>Google Cloud Build is configured in the github applications of the repo and builds <a href="./chatbot_deploy.Dockerfile">./chatbot_deploy.Dockerfile</a> on each push to <code>main</code></p></li>
+<li><p>Currently a single version is running, using the <code>generativelanguage</code> API of Google Cloud</p></li>
+<li><p>Model: <code>gemini-flash-2.0</code></p></li>
+<li><p>The following secrets are set as environment variables in the Google Cloud Run configuration:</p>
+<ul>
+<li>LANGFUSE_{AZURE/GEMINI}_SECRET_KEY</li>
+<li>LANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY</li>
+<li>SERVICE1_PROVIDER (azure or gemini)</li>
+<li>OPENAI_API_KEY</li>
+<li>OPENROUTER_API_KEY</li>
+<li>GOOGLE_API_KEY</li>
+<li>GOOGLE_PROJECT_ID</li>
+<li>GOOGLE_PRIVATE_KEY</li>
+<li>GOOGLE_CLIENT_EMAIL</li>
+<li>GOOGLE_BUCKET_NAME</li>
+</ul></li>
+</ul>
+<p>https://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q</p>
+<p>https://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww</p>
+</section>
+<section id="azure-pipelines-container-apps-services" class="level2">
+<h2 class="anchored" data-anchor-id="azure-pipelines-container-apps-services">Azure Pipelines / Container Apps, Services</h2>
+<p>exact Azure Service to be used TBD</p>
+<p>https://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw</p>
+<ul>
+<li>Azure Pipelines is granted access to the repo</li>
+<li>cannot build at the moment due to quota issues</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

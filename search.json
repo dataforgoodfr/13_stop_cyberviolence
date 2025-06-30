@@ -4,7 +4,27 @@
     "href": "src/doc.html",
     "title": "StopCyberviolence documentation",
     "section": "",
-    "text": "Test",
+    "text": "Last updated: 2025-06-05",
+    "crumbs": [
+      "Documentation"
+    ]
+  },
+  {
+    "objectID": "src/doc.html#google-cloud-build-run",
+    "href": "src/doc.html#google-cloud-build-run",
+    "title": "StopCyberviolence documentation",
+    "section": "Google Cloud Build / Run",
+    "text": "Google Cloud Build / Run\n\nGoogle Cloud Build is configured in the github applications of the repo and builds ./chatbot_deploy.Dockerfile on each push to main\nCurrently a single version is running, using the generativelanguage API of Google Cloud\nModel: gemini-flash-2.0\nThe following secrets are set as environment variables in the Google Cloud Run configuration:\n\nLANGFUSE_{AZURE/GEMINI}_SECRET_KEY\nLANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY\nSERVICE1_PROVIDER (azure or gemini)\nOPENAI_API_KEY\nOPENROUTER_API_KEY\nGOOGLE_API_KEY\nGOOGLE_PROJECT_ID\nGOOGLE_PRIVATE_KEY\nGOOGLE_CLIENT_EMAIL\nGOOGLE_BUCKET_NAME\n\n\nhttps://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q\nhttps://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww",
+    "crumbs": [
+      "Documentation"
+    ]
+  },
+  {
+    "objectID": "src/doc.html#azure-pipelines-container-apps-services",
+    "href": "src/doc.html#azure-pipelines-container-apps-services",
+    "title": "StopCyberviolence documentation",
+    "section": "Azure Pipelines / Container Apps, Services",
+    "text": "Azure Pipelines / Container Apps, Services\nexact Azure Service to be used TBD\nhttps://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw\n\nAzure Pipelines is granted access to the repo\ncannot build at the moment due to quota issues",
     "crumbs": [
       "Documentation"
     ]
