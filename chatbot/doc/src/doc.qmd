@@ -2,9 +2,105 @@
 title: StopCyberviolence documentation
 ---
 
+# Agentic framework and structure
+
+TBD
+
+# Local development
+
+## Environment preparation {#sec-envprep}
+
+The project uses a combination of `mamba (conda)` (non-python dependencies) and `uv` (python dependecies) for environment management.
+
+*Backend environment*
+
+```bash
+mamba create -n stopcyber_backend -c conda-forge uv 
+uv pip install -r ./chatbot/chatbot_reqs.txt
+```
+
+*Frontend environment*
+
+```bash
+mamba create -n stopcyber_frontend -c conda-forge nodejs pnpm
+```
+
+## Backend development {#sec-locbackdev}
+
+For environment creation see @sec-envprep.
+
+**clone app repo**
+
+```bash
+git clone https://github.com/dataforgoodfr/13_stop_cyberviolence
+```
+
+* AI Agent
+* Datalayer
+
+## Frontend development
+
+### Chainlit React Layer
+
+#### Preparation
+
+If the frontend environment is ready, proceed as detailed below, else see @sec-envprep. 
+
+**clone `chainlit` fork**
+
+```bash
+git clone --single-branch --branch dev_monster https://github.com/kantundpeterpan/chainlit.git
+```
+
+In order to launch a REACT development server and connecting the chatbot app, the backend environment needs to be created and the chatbot app repo needs to be cloned see @sec-envprep and @sec-locbackdev.  
+
+#### Frontend development setup
+
+1. Launch React dev server
+
+```bash
+# from the chainlit repo
+cd frontend/
+npm run dev
+
+### Output:
+VITE v5.4.14  ready in 1481 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+###
+```
+
+2. Launch `chainlit` app
+
+```bash
+# from app repo ./chatbot
+SERVICE1_PROVIDER=gemini chainlit run -h chainlit_app.py
+```
+
+Make sure all necessary env vars are set correctly (see below).
+
+3. (Optional if remote) Forward ports
+
+```bash
+ssh ip_to_remote -NL 5173:localhost:5173
+ssh ip_to_remote -NL 8000:localhost:8000
+```
+
+4. Develop
+
+
+### Chainlit Python layer
+
+- `config.toml`
+- `public`
+
+# Deployment
+
 Last updated: 2025-06-05
 
-# Docker files 
+## Docker files 
 
 - [./python_uv_node.Dockerfile](./python_uv_node.Dockerfile)
 
@@ -18,15 +114,32 @@ Last updated: 2025-06-05
 
     App container image, based on the environment image
 
-# Local deployment
+## Local deployment
 
 - from within the cloned repo, the app can be started using [../docker_call](../docker_call), if the necessary environment variables are set correctly.
 
-# CI/CD
+## CI/CD
 
-## Google Cloud Build / Run
+### Frontend changes pushed to production
 
-- Google Cloud Build is configured in the github applications of the repo and builds [./chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
+The frontend repo is configured to trigger a rebuild and push to `dockerhub` of the custom `chainlit` environment container.
+
+*Important files, repos*
+
+- github workflow emitting a `repository_dispatch` on chainlit fork:
+    - production branch `monstermessenger`
+
+- github workflow processing the `repository_dispatch` on chatbot repo:
+    - [x] build and push the environment container
+    - [ ] trigger Google Cloud Build/Run to rebuild with the new env-container
+
+### Backend / Chainlit python layer changes pushed to production
+
+Changes pushed to `main` of the chatbot repo trigger Google Cloud Build/Run (see below)
+
+### Google Cloud Build / Run
+
+- Google Cloud Build is configured in the github applications of the repo and builds [..//chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
 on each push to `main`
 
 - Currently a single version is running, using the `generativelanguage` API of Google Cloud
@@ -48,7 +161,13 @@ https://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOk
 
 https://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww
 
-## Azure Pipelines / Container Apps, Services
+### Repo and database ownership
+
+- dataforgoodfr/13_stop_cyberviolence
+- kantundpeterpan/chainlit
+- chainlit datalayer Postgres DB: kantundpeterpan, currently on neon
+
+### Azure Pipelines / Container Apps, Services
 
 exact Azure Service to be used TBD
 
