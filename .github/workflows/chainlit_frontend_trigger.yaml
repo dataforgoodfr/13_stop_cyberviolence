@@ -1,0 +1,29 @@
+name: Debug Dispatch Trigger
+
+on:
+  repository_dispatch:
+    types: [chainlit_updated]
+
+jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print GitHub Event Payload
+        run: |
+          echo "GitHub event payload:"
+          echo '${{ toJSON(github.event) }}'
+
+      - name: Print Client Payload (if any)
+        run: |
+          if [ -n "${{ github.event.client_payload }}" ]; then
+            echo "Client payload:"
+            echo '${{ toJSON(github.event.client_payload) }}'
+          else
+            echo "No client payload received."
+          fi
+
+      - name: Print Workflow Context
+        run: |
+          echo "Workflow context:"
+          echo "SHA: ${{ github.sha }}"
+          echo "Ref: ${{ github.ref }}"
