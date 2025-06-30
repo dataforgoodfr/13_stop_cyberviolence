@@ -1,0 +1,14 @@
+{
+  "rag/alim_rag.ipynb": {
+    "alim_rag.html": "1d6cf37e"
+  },
+  "chatbot.qmd": {
+    "README.md": "eba9fdea"
+  },
+  "agents/monster_context/ateliers_jeunes_complete.md": {
+    "ateliers_jeunes_complete.html": "f08a1f1e"
+  },
+  "chainlit.md": {
+    "chainlit.html": "ea6c9b81"
+  }
+}
