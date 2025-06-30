@@ -7,7 +7,7 @@ project:
 website: 
   title: "StopCyberviolence"
   sidebar:
-    logo: "../public/logo_light.png"
+    logo: "./img/logo_light.png"
     title: StopCyberviolence
     contents:
       - href: src/doc.qmd
