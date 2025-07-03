@@ -16,6 +16,7 @@ website:
     contents:
       - text: Project & Team
         href: index.qmd
+        icon: circle-filled
       - text: Documentation
         icon: circle
         contents: 
