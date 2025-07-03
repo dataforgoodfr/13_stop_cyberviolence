@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - bot_quarto_docs
+  pull_request:
+    branches:
+      - bot_quarto_docs
 
 jobs:
   build-deploy:
