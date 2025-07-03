@@ -1,0 +1,21 @@
+---
+title: Extending the documentation
+---
+
+# Prerequisites
+
+The documention used [`quarto`](https://quarto.org/)  and `.qmd` quarto markdown (a superset of markdown).
+
+see [documentation](https://quarto.org/docs/reference) 
+
+# Configuration 
+
+The configuration for the static documentation site is defined in `chatbot/doc/_quarto.yaml`.
+
+# Creating or modifying parts of the documentation
+
+All documents are stored in `.qmd` format in `chatbot/doc`.
+Creation or modification of the documentation does not require local installation
+of `quarto`.
+
+Once finished, directly `push` (if you can ;)) or open a pull request to the `bot_quarto_docs` branch. This will trigger the `github` workflow defined in `build_quarto_docs.yaml`.
