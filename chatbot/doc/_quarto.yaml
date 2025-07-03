@@ -2,7 +2,11 @@ project:
   type: website
   output-dir: build
   render:
-    - src/doc.qmd
+    - index.qmd
+    - extend_doc.qmd
+    - agent.qmd
+    - local_dev.qmd
+    - deployment.qmd
 
 website: 
   title: "StopCyberviolence"
@@ -10,7 +14,18 @@ website:
     logo: "./img/logo_light.png"
     title: StopCyberviolence
     contents:
-      - href: src/doc.qmd
-        text: Documentation
-        icon: circle 
+      - text: Project & Team
+        href: index.qmd
+      - text: Documentation
+        icon: circle
+        contents: 
+          - text: "Extending the documentation"
+            href: extend_doc.qmd
+          - text: "Agentic framework and structure"
+            href: agent.qmd
+          - text: "Local development"
+            href: local_dev.qmd
+          - text: Deployment
+            href: deployment.qmd
+
   site-url: "https://dataforgoodfr.github.io/13_stop_cyberviolence/"
