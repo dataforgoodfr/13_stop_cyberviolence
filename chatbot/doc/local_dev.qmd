@@ -1,0 +1,91 @@
+---
+title: Local development
+---
+
+# Environment preparation {#sec-envprep}
+
+The project uses a combination of `mamba (conda)` (non-python dependencies) and `uv` (python dependecies) for environment management.
+
+*Backend environment*
+
+```bash
+mamba create -n stopcyber_backend -c conda-forge uv 
+uv pip install -r ./chatbot/chatbot_reqs.txt
+```
+
+*Frontend environment*
+
+```bash
+mamba create -n stopcyber_frontend -c conda-forge nodejs pnpm
+```
+
+# Backend development {#sec-locbackdev}
+
+For environment creation see @sec-envprep.
+
+**clone app repo**
+
+```bash
+git clone https://github.com/dataforgoodfr/13_stop_cyberviolence
+```
+
+* AI Agent
+* Datalayer
+
+# Frontend development
+
+## Chainlit React Layer
+
+### Preparation
+
+If the frontend environment is ready, proceed as detailed below, else see @sec-envprep. 
+
+**clone `chainlit` fork**
+
+```bash
+git clone --single-branch --branch dev_monster https://github.com/kantundpeterpan/chainlit.git
+```
+
+In order to launch a REACT development server and connecting the chatbot app, the backend environment needs to be created and the chatbot app repo needs to be cloned see @sec-envprep and @sec-locbackdev.  
+
+### Frontend development setup
+
+1. Launch React dev server
+
+```bash
+# from the chainlit repo
+cd frontend/
+npm run dev
+
+### Output:
+VITE v5.4.14  ready in 1481 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+###
+```
+
+2. Launch `chainlit` app
+
+```bash
+# from app repo ./chatbot
+SERVICE1_PROVIDER=gemini chainlit run -h chainlit_app.py
+```
+
+Make sure all necessary env vars are set correctly (see below).
+
+3. (Optional if remote) Forward ports
+
+```bash
+ssh ip_to_remote -NL 5173:localhost:5173
+ssh ip_to_remote -NL 8000:localhost:8000
+```
+
+4. Develop
+
+
+## Chainlit Python layer
+
+- `config.toml`
+- `public`
