@@ -163,8 +163,92 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="deployment" class="level1">
+<h1>Deployment</h1>
+<p>Last updated: 2025-06-05</p>
+<section id="docker-files" class="level2">
+<h2 class="anchored" data-anchor-id="docker-files">Docker files</h2>
+<ul>
+<li><p><a href="./python_uv_node.Dockerfile">./python_uv_node.Dockerfile</a></p>
+<p>Customisation of the UI required forking <a href="https://github.com/kantundpeterpan/chainlit"><code>chainlit</code></a>, this container contains the base environment for building directly from the fork repo (<code>(p)npm</code>)</p></li>
+<li><p><a href="./chainlit_dev.Dockerfile">./chainlit_dev.Dockerfile</a></p>
+<p>Based on the <code>python_uv_node</code> image, for an environment container based on <a href="../chatbot_reqs.txt">../chatbot_reqs.txt</a>, requirements possibly a bit bloated</p></li>
+<li><p><a href="./chatbot_deploy.Dockerfile">./chatbot_deploy.Dockerfile</a></p>
+<p>App container image, based on the environment image</p></li>
+</ul>
+</section>
+<section id="local-deployment" class="level2">
+<h2 class="anchored" data-anchor-id="local-deployment">Local deployment</h2>
+<ul>
+<li>from within the cloned repo, the app can be started using <a href="../docker_call">../docker_call</a>, if the necessary environment variables are set correctly.</li>
+</ul>
+</section>
+<section id="cicd" class="level2">
+<h2 class="anchored" data-anchor-id="cicd">CI/CD</h2>
+<section id="frontend-changes-pushed-to-production" class="level3">
+<h3 class="anchored" data-anchor-id="frontend-changes-pushed-to-production">Frontend changes pushed to production</h3>
+<p>The frontend repo is configured to trigger a rebuild and push to <code>dockerhub</code> of the custom <code>chainlit</code> environment container.</p>
+<p><em>Important files, repos</em></p>
+<ul>
+<li>github workflow emitting a <code>repository_dispatch</code> on chainlit fork:
+<ul>
+<li>production branch <code>monstermessenger</code></li>
+</ul></li>
+<li>github workflow processing the <code>repository_dispatch</code> on chatbot repo:
+<ul class="task-list">
+<li><label><input type="checkbox" checked="">build and push the environment container</label></li>
+<li><label><input type="checkbox">trigger Google Cloud Build/Run to rebuild with the new env-container</label></li>
+</ul></li>
+</ul>
+</section>
+<section id="backend-chainlit-python-layer-changes-pushed-to-production" class="level3">
+<h3 class="anchored" data-anchor-id="backend-chainlit-python-layer-changes-pushed-to-production">Backend / Chainlit python layer changes pushed to production</h3>
+<p>Changes pushed to <code>main</code> of the chatbot repo trigger Google Cloud Build/Run (see below)</p>
+</section>
+<section id="google-cloud-build-run" class="level3">
+<h3 class="anchored" data-anchor-id="google-cloud-build-run">Google Cloud Build / Run</h3>
+<ul>
+<li><p>Google Cloud Build is configured in the github applications of the repo and builds <a href="./chatbot_deploy.Dockerfile">..//chatbot_deploy.Dockerfile</a> on each push to <code>main</code></p></li>
+<li><p>Currently a single version is running, using the <code>generativelanguage</code> API of Google Cloud</p></li>
+<li><p>Model: <code>gemini-flash-2.0</code></p></li>
+<li><p>The following secrets are set as environment variables in the Google Cloud Run configuration:</p>
+<ul>
+<li>LANGFUSE_{AZURE/GEMINI}_SECRET_KEY</li>
+<li>LANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY</li>
+<li>SERVICE1_PROVIDER (azure or gemini)</li>
+<li>OPENAI_API_KEY</li>
+<li>OPENROUTER_API_KEY</li>
+<li>GOOGLE_API_KEY</li>
+<li>GOOGLE_PROJECT_ID</li>
+<li>GOOGLE_PRIVATE_KEY</li>
+<li>GOOGLE_CLIENT_EMAIL</li>
+<li>GOOGLE_BUCKET_NAME</li>
+</ul></li>
+</ul>
+<p>https://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q</p>
+<p>https://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww</p>
+</section>
+<section id="repo-and-database-ownership" class="level3">
+<h3 class="anchored" data-anchor-id="repo-and-database-ownership">Repo and database ownership</h3>
+<ul>
+<li>dataforgoodfr/13_stop_cyberviolence</li>
+<li>kantundpeterpan/chainlit</li>
+<li>chainlit datalayer Postgres DB: kantundpeterpan, currently on neon</li>
+</ul>
+</section>
+<section id="azure-pipelines-container-apps-services" class="level3">
+<h3 class="anchored" data-anchor-id="azure-pipelines-container-apps-services">Azure Pipelines / Container Apps, Services</h3>
+<p>exact Azure Service to be used TBD</p>
+<p>https://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw</p>
+<ul>
+<li>Azure Pipelines is granted access to the repo</li>
+<li>cannot build at the moment due to quota issues</li>
+</ul>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>extend_doc – StopCyberviolence</title>
+<title>Extending the documentation – StopCyberviolence</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -158,13 +158,43 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./extend_doc.html">Documentation</a></li><li class="breadcrumb-item"><a href="./extend_doc.html">Extending the documentation</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./extend_doc.html">Documentation</a></li><li class="breadcrumb-item"><a href="./extend_doc.html">Extending the documentation</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Extending the documentation</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<section id="prerequisites" class="level1">
+<h1>Prerequisites</h1>
+<p>The documention used <a href="https://quarto.org/"><code>quarto</code></a> and <code>.qmd</code> quarto markdown (a superset of markdown).</p>
+<p>see <a href="https://quarto.org/docs/reference">documentation</a></p>
+</section>
+<section id="configuration" class="level1">
+<h1>Configuration</h1>
+<p>The configuration for the static documentation site is defined in <code>chatbot/doc/_quarto.yaml</code>.</p>
+</section>
+<section id="creating-or-modifying-parts-of-the-documentation" class="level1">
+<h1>Creating or modifying parts of the documentation</h1>
+<p>All documents are stored in <code>.qmd</code> format in <code>chatbot/doc</code>. Creation or modification of the documentation does not require local installation of <code>quarto</code>.</p>
+<p>Once finished, directly <code>push</code> (if you can ;)) or open a pull request to the <code>bot_quarto_docs</code> branch. This will trigger the <code>github</code> workflow defined in <code>build_quarto_docs.yaml</code>.</p>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

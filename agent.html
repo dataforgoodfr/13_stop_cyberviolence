@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>agent – StopCyberviolence</title>
+<title>Agentic framework and structure – StopCyberviolence</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -158,13 +161,268 @@ ul.task-list li input[type="checkbox"] {
 <!-- margin-sidebar -->
     
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./extend_doc.html">Documentation</a></li><li class="breadcrumb-item"><a href="./agent.html">Agentic framework and structure</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./extend_doc.html">Documentation</a></li><li class="breadcrumb-item"><a href="./agent.html">Agentic framework and structure</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Agentic framework and structure</h1>
+</div>
 
 
 
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
 
 
+</header>
 
+
+<section id="cahier-de-charges" class="level1">
+<h1>Cahier de charges</h1>
+<section id="prospective-design" class="level2">
+<h2 class="anchored" data-anchor-id="prospective-design">Prospective design</h2>
+<div class="cell" data-collapse="true" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">stateDiagram-v2
+  u: User input
+  a1: Agent service 1
+  r1: Research assistant
+  class1: classifier
+
+
+  u --&gt; a1
+  a1 --&gt; u : context questions
+  a2 --&gt; u : interaction
+
+  a1 --&gt; a2 : handoff
+Service1 --&gt; Service2 : Cyberviolence detection
+
+state Service1 {
+  a1 --&gt; r1
+  r1 --&gt; a1
+  a1 --&gt; class1
+  class1 --&gt; a1
+}
+
+
+state Service2{
+  a2: Agent service 2
+  r2: Research assistant
+
+  a2 --&gt; r2
+  r2 --&gt; a2
+}
+
+
+Service2 --&gt; Service3 : referral to specialized service necessary
+
+a2 --&gt; a3 : handoff
+a3 --&gt; u : interaction
+
+state Service3 {
+  a3: Agent Service 3
+  r3: Research assistant 3
+
+  a3 --&gt; r3
+  r3 --&gt; a3
+}
+
+end : End
+
+Service3 --&gt; end
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="update-03042025" class="level1">
+<h1>Update 03/04/2025</h1>
+<section id="implementation" class="level2">
+<h2 class="anchored" data-anchor-id="implementation">Implementation</h2>
+<p>J’ai choisi <code>langgraph</code> en combinaison avec <code>langchain</code>. Les deux sont open-source, avec une documentation extensive et de nombreux tutoriels disponibles.</p>
+<p>Pour un premier draft, je me suis inspiré (entre autres) de cet <a href="https://ai.gopubby.com/building-rag-research-multi-agent-with-langgraph-1bd47acac69f">article</a>.</p>
+<p>Pour le premier draft, nous nous concentrons sur le service 1 “Aide à la réponse”.</p>
+<p>Le modèle utilisé est <del><code>GPT-4o-mini</code> de <code>OpenAI</code>sans raison spécifique.</del> <code>Gemini 2.0 Flash</code> pour sa fenêtre de contexte très large. Avec <code>GPT-4o-mini</code>, on arrivait déjà à la limite ce qui reste suspicieux (code à vérifier). Les calls de API passe maintenant par <code>OpenRouter</code>, cela permet de facilement changer les modèles pour un prototypage rapide. Potentiellement, on pourra envisager d’utiliser différents modèles pour différents tâches.</p>
+<p><strong>État actuel</strong></p>
+<p><img src="./graph.png" class="img-fluid"></p>
+<p>Le routage fonctionne (par exemple, “je me sens en danger” active la voie ‘escalate’), à vérifier en language ados.</p>
+<p><del>Pour l’instant, j’ai l’impression que nous devons forcer l’agent à solliciter le RESEARCHER ou le CLASSIFIER (du genre à demander directement).</del></p>
+<p>Chaque node a un prompt qui reste à definir/améliorer.</p>
+<p><strong>TODO</strong></p>
+<section id="agent" class="level3">
+<h3 class="anchored" data-anchor-id="agent">Agent</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="">Le début de l’échange doit être amélioré (le bot doit se présenter et préparer le terrain).</label></li>
+<li><label><input type="checkbox" checked=""><code>agent1</code> doit probablement etre converti en simple point de routage</label></li>
+<li><label><input type="checkbox" checked="">definition des informations contextuelle minimales</label></li>
+</ul>
+</section>
+<section id="situational-context" class="level3">
+<h3 class="anchored" data-anchor-id="situational-context">Situational context</h3>
+<p>Pour bien comprendre la situation qui a conduit le jeune / ado à soliciter le chatbot, on a besoin des infos suivants:</p>
+<ul>
+<li>Rôle du jeune: Expéditeur (potentitiel), destinataire ou témoin</li>
+<li>Le canal de communication par lequel le message est arrivé chez le jeune</li>
+<li>Le ressenti que le message a évoqué</li>
+</ul>
+<p><strong>Implementation</strong></p>
+<p>Deux solutions semblent envisageables:</p>
+<ol type="1">
+<li><label><input type="checkbox" checked="">Séries des questions déterminstes au début de l’échange, les infos sont enregistré dans dictionnaire</label></li>
+<li><label><input type="checkbox">Défintion d’un dictionnaire avec des champs prédefinis, la collecte des informations est laissé au LLM</label></li>
+</ol>
+<p>Dans les deux cas, les informations devront être injectés dans les system prompts.</p>
+</section>
+<section id="rag-pour-research_strategies" class="level3">
+<h3 class="anchored" data-anchor-id="rag-pour-research_strategies">RAG pour <code>research_strategies</code></h3>
+<p>On part pour une exploration de <a href="https://github.com/Cinnamon/kotaemon/tree/main"><code>kotaemon</code></a>, un open-source RAG tool. Ce qui sera probablement le plus intéressant, sont les procédures de traitement des documents, les embeddings, le stockage et le retrieval.</p>
+<p>Est-ce qu’on ne garderait pqs l’UI <code>kotaemon</code> pour la gestion des documents ?</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Liste des documents à ingérer</label></li>
+<li><label><input type="checkbox">Quel vectorstore ?</label></li>
+<li><label><input type="checkbox">Procédure de retrieval des informations.</label></li>
+</ul>
+</section>
+<section id="nlp-message-classifier-priorite-moindre" class="level3">
+<h3 class="anchored" data-anchor-id="nlp-message-classifier-priorite-moindre">NLP message classifier (priorite moindre)</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">Modèle de classification du dataset <a href="https://hatespeechdata.com/#cyberagressionado-v1"><code>cyberagressionado-v1</code></a>.</label></li>
+<li><label><input type="checkbox">Procédure pour que CLASSIFIER1 puisse se servir du modèle de classification (peut-être ce sera plutôt un outil pour AGENT1 qu’un agent spécialisé).</label></li>
+</ul>
+</section>
+<section id="interface-graphique" class="level3">
+<h3 class="anchored" data-anchor-id="interface-graphique">Interface graphique</h3>
+<ul class="task-list">
+<li><label><input type="checkbox" checked="">Interface graphique de base en place, implementé avec <code>chainlit</code></label></li>
+<li><label><input type="checkbox" checked="">support envoi capture d’ecran</label></li>
+<li><label><input type="checkbox">Customisation ….</label></li>
+</ul>
+<details>
+<summary>
+<strong>Exemple d’un échange</strong>
+</summary>
+<pre><code>Enter your query (type '-q' to quit):
+&gt; ================================== Ai Message ==================================
+
+I understand that you're feeling upset about what happened. It's really important to talk about it. Can you tell me more about what was said or done? This will help me understand the situation better.
+
+---
+ Routed to:  USER
+---
+
+&gt; : ================================ Human Message =================================
+
+hi, est-ce qu'on peut discuter en francais ?
+
+================================== Ai Message ==================================
+
+Bien sûr, nous pouvons discuter en français ! Je suis là pour t'aider. Peux-tu me dire ce qui te préoccupe ?
+
+---
+ Routed to:  USER
+---
+
+&gt; : ================================ Human Message =================================
+
+j'ai recu un message de qqn que je connais pas vraiment. je comprends pas trop ce que ca veut dire
+
+================================== Ai Message ==================================
+
+Je comprends que recevoir un message d'une personne que tu ne connais pas peut être déroutant et même un peu inquiétant. Peux-tu me dire ce que le message disait ? Cela m'aidera à mieux comprendre la situation et à te donner des conseils appropriés.
+
+---
+ Routed to:  USER
+---
+
+&gt; : ================================ Human Message =================================
+
+il m'a dit que je suis moche
+
+================================== Ai Message ==================================
+
+Je suis vraiment désolé d'apprendre que tu as reçu un message aussi blessant. C'est très injuste et tu ne mérites pas d'être traité de cette façon. Les commentaires comme celui-ci sont une forme de cyberharcèlement, et c'est important de se rappeler que ce n'est pas de ta faute.
+
+Voici quelques étapes que tu peux suivre :
+1. **Ne réponds pas** à ce message. Parfois, ignorer les personnes qui essaient de te blesser est la meilleure chose à faire.
+2. **Prends une capture d'écran** du message pour garder une preuve de ce qui a été dit.
+3. **Bloque la personne** sur la plateforme où tu as reçu le message. Cela peut t'aider à te sentir plus en sécurité.
+4. **Parle-en à un adulte de confiance**, comme un parent, un enseignant ou un conseiller scolaire. Ils peuvent t'aider à gérer la situation.
+
+N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi et qui peuvent t'aider. Tu es précieux et tu mérites d'être traité avec respect !
+
+---
+ Routed to:  USER
+---
+
+&gt; : ================================ Human Message =================================
+
+tu me conseilles de faire quoi?
+
+================================== Ai Message ==================================
+
+Je te conseille de suivre ces étapes :
+
+1. **Ne réponds pas** au message. Ignorer les personnes qui essaient de te blesser est souvent la meilleure option.
+2. **Prends une capture d'écran** du message pour garder une preuve de ce qui a été dit. Cela peut être utile si tu en parles à un adulte.
+3. **Bloque la personne** sur la plateforme où tu as reçu le message. Cela peut t'aider à te sentir plus en sécurité et à éviter d'autres messages blessants.
+4. **Parle-en à un adulte de confiance**, comme un parent, un enseignant ou un conseiller scolaire. Ils peuvent t'aider à gérer la situation et à te soutenir.
+
+N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi et qui peuvent t'aider. Tu es précieux et tu mérites d'être traité avec respect !
+
+---
+ Routed to:  USER
+---
+
+&gt; : ================================ Human Message =================================
+
+tu crois que c'est du cyberharcelement?
+
+================================== Ai Message ==================================
+
+Oui, ce que tu as décrit ressemble à du cyberharcèlement. Quand quelqu'un t'envoie des messages blessants ou méchants, cela fait partie des comportements de harcèlement en ligne. C'est important de se rappeler que ce n'est pas de ta faute et que tu ne mérites pas d'être traité de cette manière.
+
+Si tu veux, je peux t'aider à prendre des mesures pour te protéger et te sentir mieux. Que souhaites-tu faire ?
+
+---
+ Routed to:  CLASSIFIER1
+---
+
+================================== Ai Message ==================================
+
+Clearly cyberviolence
+
+================================== Ai Message ==================================
+
+Je pense qu'il est important de prendre cette situation au sérieux. Étant donné que tu as reçu un message blessant et que cela ressemble à du cyberharcèlement, je vais transférer ton cas à un service spécialisé qui pourra t'aider davantage. Ils pourront te fournir le soutien dont tu as besoin.
+
+N'oublie pas que tu n'es pas seul et qu'il y a des gens qui se soucient de toi. Je vais maintenant te transférer à ce service.
+
+---
+ Routed to:  SERVICE2
+---
+
+================================== Ai Message ==================================
+
+Service 2 not yet implemented
+
+</code></pre>
+</details>
+
+
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
