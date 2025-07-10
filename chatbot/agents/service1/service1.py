@@ -253,7 +253,7 @@ def ask_for_context(state: Service1State, config: RunnableConfig):
     
     response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
     
-    message = AIMessage(response['question'])
+    message = AIMessage(response['question'], author = 'ask_for_context')
     message.pretty_print()
     print()
     
