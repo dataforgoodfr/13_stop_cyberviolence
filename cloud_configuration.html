@@ -207,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="app-deployment" class="level1">
 <h1>App deployment</h1>
-<p>The Google Cloud Build/Run is configured with the repository. For the time being it resources are scaled down to zero depending on demand. This induces a startup delay, when the app is requested after a longer pause.</p>
+<p>The Google Cloud Build/Run is configured with the repository. For the time being, its resources are scaled down to zero depending on demand. This induces a startup delay, when the app is requested after a longer pause.</p>
 </section>
 <section id="network" class="level1">
 <h1>Network</h1>
@@ -231,16 +231,25 @@ ul.task-list li input[type="checkbox"] {
     service secret_manager(disk)[Secret Manager] in gcp
     service vpc(internet)[VPC] in gcp
     service cloud_run(server)[Cloud Run Instance] in gcp
+    service gcs_bucket(disk)[Google Cloud Bucket] in gcp
 
  group external(cloud)[External Services]
     service ovh_postgres(database)[PostgresSQL DB] in external
     service neon_postgres(database)[Neon Serverless PostgresSQL Database] in external
+
+group stopcyber(internet)[StopCyber website]
+    service iframe(internet)[Embedded App] in stopcyber
+
+service auth(test)[Authentication]
 
   %% Define the relationships
     repo:T -- B:build_run
     secret_manager:L -- R:cloud_run
     build_run:T -- B:cloud_run
     cloud_run:T -- B:vpc
+    cloud_run:R -- L:gcs_bucket
+    iframe:R -- L:auth
+    auth:R -- L:cloud_run
     vpc:T -- B:ovh_postgres
     vpc:T -- B:neon_postgres
 </pre>
