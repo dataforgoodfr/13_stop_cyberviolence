@@ -1,6 +1,6 @@
 ---
 modified: '2025-07-21'
-title: Cloud configuration
+title: Cloud configuration and architecture
 ---
 
 _Last updated: {{< meta modified >}}_
@@ -12,8 +12,38 @@ All necessary keys and environment variables are stored in the Google Cloud secr
 # App deployment
 
 The Google Cloud Build/Run is configured with the repository. For the time being it resources are scaled down to zero depending on demand.
-This induces a startup delay, when the app is requested
+This induces a startup delay, when the app is requested after a longer pause.
 
 # Network
 
+In order to enable secure communication with the PostgresSQL database of the data layer (which in the future will be hosted on OVH by Centres Relier), the Cloud Run instance is connected to a VPC through which all traffic is routed.
+The VPC is configured with a static IP address that is authorised for database access.
+
 # Datalayer
+
+For proof-of-concept the app was connected to a serverless PostgresSQL database on [neon](neon.tech). This configuration is currently intact but will be subject to change.
+
+```{mermaid}
+architecture-beta
+
+  group github(internet)[GitHub]
+    service repo(server)[Github repo] in github
+
+  group gcp(cloud)[Google Cloud Platform]
+    service build_run(server)[Cloud Build] in gcp
+    service secret_manager(disk)[Secret Manager] in gcp
+    service vpc(internet)[VPC] in gcp
+    service cloud_run(server)[Cloud Run Instance] in gcp
+
+ group external(cloud)[External Services]
+    service ovh_postgres(database)[PostgresSQL DB] in external
+    service neon_postgres(database)[Neon Serverless PostgresSQL Database] in external
+
+  %% Define the relationships
+    repo:T -- B:build_run
+    secret_manager:L -- R:cloud_run
+    build_run:T -- B:cloud_run
+    cloud_run:T -- B:vpc
+    vpc:T -- B:ovh_postgres
+    vpc:T -- B:neon_postgres
+```
