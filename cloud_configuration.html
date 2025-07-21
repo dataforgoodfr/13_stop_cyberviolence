@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Cloud configuration – StopCyberviolence</title>
+<title>Cloud configuration and architecture – StopCyberviolence</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
 
 
 </head>
@@ -180,7 +183,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./extend_doc.html">Documentation</a></li><li class="breadcrumb-item"><a href="./cloud_configuration.html">Cloud configuration</a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">Cloud configuration</h1>
+<h1 class="title">Cloud configuration and architecture</h1>
 </div>
 
 
@@ -204,13 +207,48 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="app-deployment" class="level1">
 <h1>App deployment</h1>
-<p>The Google Cloud Build/Run is configured with the repository. For the time being it resources are scaled down to zero depending on demand. This induces a startup delay, when the app is requested</p>
+<p>The Google Cloud Build/Run is configured with the repository. For the time being it resources are scaled down to zero depending on demand. This induces a startup delay, when the app is requested after a longer pause.</p>
 </section>
 <section id="network" class="level1">
 <h1>Network</h1>
+<p>In order to enable secure communication with the PostgresSQL database of the data layer (which in the future will be hosted on OVH by Centres Relier), the Cloud Run instance is connected to a VPC through which all traffic is routed. The VPC is configured with a static IP address that is authorised for database access.</p>
 </section>
 <section id="datalayer" class="level1">
 <h1>Datalayer</h1>
+<p>For proof-of-concept the app was connected to a serverless PostgresSQL database on <a href="neon.tech">neon</a>. This configuration is currently intact but will be subject to change.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<pre class="mermaid mermaid-js">architecture-beta
+
+  group github(internet)[GitHub]
+    service repo(server)[Github repo] in github
+
+  group gcp(cloud)[Google Cloud Platform]
+    service build_run(server)[Cloud Build] in gcp
+    service secret_manager(disk)[Secret Manager] in gcp
+    service vpc(internet)[VPC] in gcp
+    service cloud_run(server)[Cloud Run Instance] in gcp
+
+ group external(cloud)[External Services]
+    service ovh_postgres(database)[PostgresSQL DB] in external
+    service neon_postgres(database)[Neon Serverless PostgresSQL Database] in external
+
+  %% Define the relationships
+    repo:T -- B:build_run
+    secret_manager:L -- R:cloud_run
+    build_run:T -- B:cloud_run
+    cloud_run:T -- B:vpc
+    vpc:T -- B:ovh_postgres
+    vpc:T -- B:neon_postgres
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
 
 
 </section>
