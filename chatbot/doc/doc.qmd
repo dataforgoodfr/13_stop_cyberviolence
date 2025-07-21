@@ -17,7 +17,31 @@ The agent is implemented using `langgraph` and calls the `gemini` API (OpenAI sy
 All data models for :
 
 - the current graph state
-- schemas 
+- schemas used for requesting structured output
+
+are also defined in `service1.py` as `TypedDict`.
+
+## Node descriptions
+
+- `agent1`
+
+    Router node that determines the next action based on the message history
+
+- `collect_context`
+
+    This node is only active in the beginning of the conversation and the graph flow is forced through this node until all required context questions have been asked.
+
+- `ask_for_context`
+
+    The conversation is routed through this node when `agent1` determines that the context of the situation still needs clarification.
+
+- `give_advice`
+
+    Node responsible for redacting an advice message, is encouraged to invoke `research_strategies` to enrich answers with ingested documents (see below)
+
+- `research_strategies`
+
+    Is invoked by `give_advice`, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between `give_advice` and `research_strategies` are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.
 
 
 # Local development
@@ -98,8 +122,8 @@ Make sure all necessary env vars are set correctly (see below).
 3. (Optional if remote) Forward ports
 
 ```bash
-ssh ip_to_remote -NL 5173:localhost:5173
-ssh ip_to_remote -NL 8000:localhost:8000
+ssh user@ip_to_remote -NL 5173:localhost:5173
+ssh user@ip_to_remote -NL 8000:localhost:8000
 ```
 
 4. Develop
