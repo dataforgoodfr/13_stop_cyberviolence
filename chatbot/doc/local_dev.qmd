@@ -78,8 +78,8 @@ Make sure all necessary env vars are set correctly (see below).
 3. (Optional if remote) Forward ports
 
 ```bash
-ssh ip_to_remote -NL 5173:localhost:5173
-ssh ip_to_remote -NL 8000:localhost:8000
+ssh user@ip_to_remote -NL 5173:localhost:5173
+ssh user@ip_to_remote -NL 8000:localhost:8000
 ```
 
 4. Develop

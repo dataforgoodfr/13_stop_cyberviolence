@@ -43,6 +43,18 @@ are also defined in `service1.py` as `TypedDict`.
 
     Is invoked by `give_advice`, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between `give_advice` and `research_strategies` are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.
 
+- `classify_message`
+
+    This node is an artifact from early development. Its purpose was to provide a tool for the agent to classify the message of interest as cyberviolence using a classical NLP approach. 
+    Not implemented (yet), might be removed in the future.
+
+- `user_feedback`
+
+    Also an artifact from early development for debuggin purposes, to be removed in the future
+
+## Routings
+
+
 
 # Local development
 
