@@ -16,4 +16,5 @@ docker run -it --rm \
     -e GOOGLE_BUCKET_NAME="$GOOGLE_BUCKET_NAME" \
     -e DL_CONNINFO="$DL_CONNINFO" \
     -v $(pwd):/app \
-    kantundpeterpan/chainlit_uv:latest chainlit run -w app/chainlit_app.py --host 0.0.0.0 --port 8000
+    -w /app \
+    kantundpeterpan/chainlit_uv:latest chainlit run -w chainlit_app.py --host 0.0.0.0 --port 8000
