@@ -44,6 +44,71 @@
     ]
   },
   {
+    "objectID": "local_dev.html",
+    "href": "local_dev.html",
+    "title": "Local development",
+    "section": "",
+    "text": "Last updated: 2025-07-21",
+    "crumbs": [
+      "Documentation",
+      "Local development"
+    ]
+  },
+  {
+    "objectID": "local_dev.html#chainlit-react-layer",
+    "href": "local_dev.html#chainlit-react-layer",
+    "title": "Local development",
+    "section": "Chainlit React Layer",
+    "text": "Chainlit React Layer\n\nPreparation\nIf the frontend environment is ready, proceed as detailed below, else see Section 1.\nclone chainlit fork\ngit clone --single-branch --branch dev_monster https://github.com/kantundpeterpan/chainlit.git\nIn order to launch a REACT development server and connecting the chatbot app, the backend environment needs to be created and the chatbot app repo needs to be cloned see Section 1 and Section 2.\n\n\nFrontend development setup\n\nLaunch React dev server\n\n# from the chainlit repo\ncd frontend/\nnpm run dev\n\n### Output:\nVITE v5.4.14  ready in 1481 ms\n\n  ➜  Local:   http://localhost:5173/\n  ➜  Network: use --host to expose\n  ➜  press h + enter to show help\n###\n\nLaunch chainlit app\n\n# from app repo ./chatbot\nSERVICE1_PROVIDER=gemini chainlit run -h chainlit_app.py\nMake sure all necessary env vars are set correctly (see below).\n\n(Optional if remote) Forward ports\n\nssh user@ip_to_remote -NL 5173:localhost:5173\nssh user@ip_to_remote -NL 8000:localhost:8000\n\nDevelop",
+    "crumbs": [
+      "Documentation",
+      "Local development"
+    ]
+  },
+  {
+    "objectID": "local_dev.html#chainlit-python-layer",
+    "href": "local_dev.html#chainlit-python-layer",
+    "title": "Local development",
+    "section": "Chainlit Python layer",
+    "text": "Chainlit Python layer\n\nconfig.toml\npublic",
+    "crumbs": [
+      "Documentation",
+      "Local development"
+    ]
+  },
+  {
+    "objectID": "datalayer.html",
+    "href": "datalayer.html",
+    "title": "Chainlit data layer and LLM Observability",
+    "section": "",
+    "text": "Last updated: 2025-07-21\n\nChainlit data layer\nsee also docs on CL data layer\nThe chainlit app data layer uses the SQLAlchemyDataLayer and the GCSStorageClient implemented in chainlit. This layer captures all user interactions, text is stored in a SQL database (see schema below), and artifacts (images, audio, etc.). The original schema presented at https://docs.chainlit.io/data-layers/sqlalchemy as has been extended by the longfeedbacks table to save input from the custom feedback form.\nThe connection uri for the PostgreSQL is read from the environment variable DL_CONNINFO on runtime. (see also Cloud Configuration)\n--: code-fold: true\nCREATE TABLE users (\n    \"id\" UUID PRIMARY KEY,\n    \"identifier\" TEXT NOT NULL UNIQUE,\n    \"metadata\" JSONB NOT NULL,\n    \"createdAt\" TEXT\n);\n\nCREATE TABLE IF NOT EXISTS threads (\n    \"id\" UUID PRIMARY KEY,\n    \"createdAt\" TEXT,\n    \"name\" TEXT,\n    \"userId\" UUID,\n    \"userIdentifier\" TEXT,\n    \"tags\" TEXT[],\n    \"metadata\" JSONB,\n    FOREIGN KEY (\"userId\") REFERENCES users(\"id\") ON DELETE CASCADE\n);\n\nCREATE TABLE IF NOT EXISTS steps (\n    \"id\" UUID PRIMARY KEY,\n    \"name\" TEXT NOT NULL,\n    \"type\" TEXT NOT NULL,\n    \"threadId\" UUID NOT NULL,\n    \"parentId\" UUID,\n    \"streaming\" BOOLEAN NOT NULL,\n    \"waitForAnswer\" BOOLEAN,\n    \"isError\" BOOLEAN,\n    \"metadata\" JSONB,\n    \"tags\" TEXT[],\n    \"input\" TEXT,\n    \"output\" TEXT,\n    \"createdAt\" TEXT,\n    \"command\" TEXT,\n    \"start\" TEXT,\n    \"end\" TEXT,\n    \"generation\" JSONB,\n    \"showInput\" TEXT,\n    \"language\" TEXT,\n    \"indent\" INT,\n    \"defaultOpen\" BOOLEAN,\n    FOREIGN KEY (\"threadId\") REFERENCES threads(\"id\") ON DELETE CASCADE\n);\n\nCREATE TABLE IF NOT EXISTS elements (\n    \"id\" UUID PRIMARY KEY,\n    \"threadId\" UUID,\n    \"type\" TEXT,\n    \"url\" TEXT,\n    \"chainlitKey\" TEXT,\n    \"name\" TEXT NOT NULL,\n    \"display\" TEXT,\n    \"objectKey\" TEXT,\n    \"size\" TEXT,\n    \"page\" INT,\n    \"language\" TEXT,\n    \"forId\" UUID,\n    \"mime\" TEXT,\n    \"props\" JSONB,\n    FOREIGN KEY (\"threadId\") REFERENCES threads(\"id\") ON DELETE CASCADE\n);\n\nCREATE TABLE IF NOT EXISTS feedbacks (\n    \"id\" UUID PRIMARY KEY,\n    \"forId\" UUID NOT NULL,\n    \"threadId\" UUID NOT NULL,\n    \"value\" INT NOT NULL,\n    \"comment\" TEXT,\n    FOREIGN KEY (\"threadId\") REFERENCES threads(\"id\") ON DELETE CASCADE\n);\n\nCREATE TABLE IF NOT EXISTS longfeedbacks (\n    \"id\" UUID PRIMARY KEY,\n    \"threadId\" UUID UNIQUE NOT NULL,\n    \"value\" INT NOT NULL,\n    \"comment\" TEXT,\n    FOREIGN KEY (\"threadId\") REFERENCES threads(\"id\") ON DELETE CASCADE\n);\n\n\nLLM Observability\nLLM debugging and observability is assured using Langfuse which provides prebuilt callback object for langgraph. Datalayer and LLM traces are linked via the langfuse_session field of the metadata dictionary in the steps table of the PostgreSQL data layer.",
+    "crumbs": [
+      "Documentation",
+      "App data layer and LLM observability"
+    ]
+  },
+  {
+    "objectID": "extend_doc.html",
+    "href": "extend_doc.html",
+    "title": "Extending the documentation",
+    "section": "",
+    "text": "Last updated: 2025-07-21\n\nPrerequisites\nThe documention used quarto and .qmd quarto markdown (a superset of markdown).\nsee documentation\n\n\nConfiguration\nThe configuration for the static documentation site is defined in chatbot/doc/_quarto.yaml.\n\n\nCreating or modifying parts of the documentation\nAll documents are stored in .qmd format in chatbot/doc. Creation or modification of the documentation does not require local installation of quarto.\nOnce finished, directly push (if you can ;)) or open a pull request to the bot_quarto_docs branch. This will trigger the github workflow defined in build_quarto_docs.yaml.",
+    "crumbs": [
+      "Documentation",
+      "Extending the documentation"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Stop Cyberviolence",
+    "section": "",
+    "text": "Last updated: 2025-07-21\nThis page contains an introduction and the technical documentation for the project Stop Cyberviolence as a part of season 13 hosted by Data for Good France.",
+    "crumbs": [
+      "Project & Team"
+    ]
+  },
+  {
     "objectID": "agent.html",
     "href": "agent.html",
     "title": "Agentic framework and structure",
@@ -77,57 +142,25 @@
     ]
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Stop Cyberviolence",
-    "section": "",
-    "text": "Last updated: 2025-07-21\nThis page contains an introduction and the technical documentation for the project Stop Cyberviolence as a part of season 13 hosted by Data for Good France.",
-    "crumbs": [
-      "Project & Team"
-    ]
-  },
-  {
-    "objectID": "extend_doc.html",
-    "href": "extend_doc.html",
-    "title": "Extending the documentation",
-    "section": "",
-    "text": "Last updated: 2025-07-21\n\nPrerequisites\nThe documention used quarto and .qmd quarto markdown (a superset of markdown).\nsee documentation\n\n\nConfiguration\nThe configuration for the static documentation site is defined in chatbot/doc/_quarto.yaml.\n\n\nCreating or modifying parts of the documentation\nAll documents are stored in .qmd format in chatbot/doc. Creation or modification of the documentation does not require local installation of quarto.\nOnce finished, directly push (if you can ;)) or open a pull request to the bot_quarto_docs branch. This will trigger the github workflow defined in build_quarto_docs.yaml.",
-    "crumbs": [
-      "Documentation",
-      "Extending the documentation"
-    ]
-  },
-  {
-    "objectID": "local_dev.html",
-    "href": "local_dev.html",
-    "title": "Local development",
+    "objectID": "custom_feedback.html",
+    "href": "custom_feedback.html",
+    "title": "Custom feedback",
     "section": "",
     "text": "Last updated: 2025-07-21",
     "crumbs": [
       "Documentation",
-      "Local development"
+      "Custom Feedback element"
     ]
   },
   {
-    "objectID": "local_dev.html#chainlit-react-layer",
-    "href": "local_dev.html#chainlit-react-layer",
-    "title": "Local development",
-    "section": "Chainlit React Layer",
-    "text": "Chainlit React Layer\n\nPreparation\nIf the frontend environment is ready, proceed as detailed below, else see Section 1.\nclone chainlit fork\ngit clone --single-branch --branch dev_monster https://github.com/kantundpeterpan/chainlit.git\nIn order to launch a REACT development server and connecting the chatbot app, the backend environment needs to be created and the chatbot app repo needs to be cloned see Section 1 and Section 2.\n\n\nFrontend development setup\n\nLaunch React dev server\n\n# from the chainlit repo\ncd frontend/\nnpm run dev\n\n### Output:\nVITE v5.4.14  ready in 1481 ms\n\n  ➜  Local:   http://localhost:5173/\n  ➜  Network: use --host to expose\n  ➜  press h + enter to show help\n###\n\nLaunch chainlit app\n\n# from app repo ./chatbot\nSERVICE1_PROVIDER=gemini chainlit run -h chainlit_app.py\nMake sure all necessary env vars are set correctly (see below).\n\n(Optional if remote) Forward ports\n\nssh user@ip_to_remote -NL 5173:localhost:5173\nssh user@ip_to_remote -NL 8000:localhost:8000\n\nDevelop",
+    "objectID": "cloud_configuration.html",
+    "href": "cloud_configuration.html",
+    "title": "Cloud configuration",
+    "section": "",
+    "text": "Last updated: 2025-07-21\n\nSecret manager\nAll necessary keys and environment variables are stored in the Google Cloud secret manager. For access contact Valentin, Heiner or Daniel.\n\n\nApp deployment\nThe Google Cloud Build/Run is configured with the repository. For the time being it resources are scaled down to zero depending on demand. This induces a startup delay, when the app is requested\n\n\nNetwork\n\n\nDatalayer",
     "crumbs": [
       "Documentation",
-      "Local development"
-    ]
-  },
-  {
-    "objectID": "local_dev.html#chainlit-python-layer",
-    "href": "local_dev.html#chainlit-python-layer",
-    "title": "Local development",
-    "section": "Chainlit Python layer",
-    "text": "Chainlit Python layer\n\nconfig.toml\npublic",
-    "crumbs": [
-      "Documentation",
-      "Local development"
+      "Cloud configuration"
     ]
   }
 ]

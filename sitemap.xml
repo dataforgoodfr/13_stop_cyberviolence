@@ -2,22 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/deployment.html</loc>
-    <lastmod>2025-07-21T14:06:03.077Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/agent.html</loc>
-    <lastmod>2025-07-21T14:06:03.153Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/index.html</loc>
-    <lastmod>2025-07-21T14:06:03.115Z</lastmod>
-  </url>
-  <url>
-    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/extend_doc.html</loc>
-    <lastmod>2025-07-21T14:06:03.037Z</lastmod>
+    <lastmod>2025-07-21T14:10:30.179Z</lastmod>
   </url>
   <url>
     <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/local_dev.html</loc>
-    <lastmod>2025-07-21T14:06:02.958Z</lastmod>
+    <lastmod>2025-07-21T14:10:30.056Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/datalayer.html</loc>
+    <lastmod>2025-07-21T14:10:30.016Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/extend_doc.html</loc>
+    <lastmod>2025-07-21T14:10:30.138Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/index.html</loc>
+    <lastmod>2025-07-21T14:10:30.220Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/agent.html</loc>
+    <lastmod>2025-07-21T14:10:30.260Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/custom_feedback.html</loc>
+    <lastmod>2025-07-21T14:10:30.301Z</lastmod>
+  </url>
+  <url>
+    <loc>https://dataforgoodfr.github.io/13_stop_cyberviolence/cloud_configuration.html</loc>
+    <lastmod>2025-07-21T14:10:30.341Z</lastmod>
   </url>
 </urlset>
