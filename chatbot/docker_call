@@ -14,5 +14,6 @@ docker run -it --rm \
     -e GOOGLE_PRIVATE_KEY="$GOOGLE_PRIVATE_KEY" \
     -e GOOGLE_CLIENT_EMAIL="$GOOGLE_CLIENT_EMAIL" \
     -e GOOGLE_BUCKET_NAME="$GOOGLE_BUCKET_NAME" \
+    -e DL_CONNINFO="$DL_CONNINFO" \
     -v $(pwd):/app \
-    kantundpeterpan/chainlit_uv:dev chainlit run -w app/chainlit_app.py --host 0.0.0.0 --port 8000
+    kantundpeterpan/chainlit_uv:latest chainlit run -w app/chainlit_app.py --host 0.0.0.0 --port 8000

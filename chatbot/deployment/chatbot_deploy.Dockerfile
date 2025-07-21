@@ -1,4 +1,4 @@
-FROM kantundpeterpan/chainlit_uv:dev
+FROM kantundpeterpan/chainlit_uv:latest
 EXPOSE 8080
 RUN apt-get update && apt-get install -y git
 

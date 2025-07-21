@@ -199,13 +199,13 @@ def collect_context(state: Service1State, config: RunnableConfig):
         
     return state
 
-def give_advice_after_context_collection(state:Service1State) -> Literal['__end__', 'give_advice']:
+def give_advice_after_context_collection(state:Service1State) -> Literal['__end__', 'agent1']:
 
     """Short circuit from collect_context to give_advice after
     context collection has been completed"""
 
     if state['context_complete']:
-        return 'give_advice'
+        return 'agent1'
     else:
         return '__end__'
 
@@ -253,7 +253,7 @@ def ask_for_context(state: Service1State, config: RunnableConfig):
     
     response = llm.with_structured_output(ContextQuestion).invoke(messages, config)
     
-    message = AIMessage(response['question'])
+    message = AIMessage(response['question'], author = 'ask_for_context')
     message.pretty_print()
     print()
     
@@ -443,7 +443,7 @@ def escalate(state: Service1State, config: RunnableConfig):
     node code template
     """
     
-    response = AIMessage("ESCALATION: Not yet implemented")
+    response = AIMessage("ESCALATION: Not yet implemented", author = 'escalate')
     
     return {
         'messages' : [response]
