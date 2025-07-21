@@ -33,7 +33,7 @@ website:
             href: custom_feedback.qmd
           - text: "Local development"
             href: local_dev.qmd
-          - text: Cloud configuration
+          - text: "Cloud configuration/architecture"
             href: cloud_configuration.qmd
           - text: Deployment
             href: deployment.qmd

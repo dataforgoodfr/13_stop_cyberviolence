@@ -37,8 +37,7 @@ architecture-beta
     service gcs_bucket(disk)[Google Cloud Bucket] in gcp
 
  group external(cloud)[External Services]
-    service ovh_postgres(database)[PostgresSQL DB] in external
-    service neon_postgres(database)[Neon Serverless PostgresSQL Database] in external
+    service ovh_postgres(database)[PostgresSQL DB Datalayer] in external
 
 group stopcyber(internet)[StopCyber website]
     service iframe(internet)[Embedded App] in stopcyber
@@ -54,5 +53,4 @@ service auth(test)[Authentication]
     iframe:R -- L:auth
     auth:R -- L:cloud_run
     vpc:T -- B:ovh_postgres
-    vpc:T -- B:neon_postgres
 ```
