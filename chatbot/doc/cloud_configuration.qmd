@@ -1,0 +1,15 @@
+---
+title: Cloud configuration
+---
+
+# Secret manager
+
+All necessary keys and environment variables are stored in the Google Cloud secret manager. For access contact Valentin, Heiner or Daniel. 
+
+# App deployment
+
+
+
+# Network
+
+# Datalayer
