@@ -4,7 +4,21 @@ title: StopCyberviolence documentation
 
 # Agentic framework and structure
 
-TBD
+:::{#fig-agentlayout}
+![The structure of the `service1` agent.](./img/graph.png)
+:::
+
+**Implementation details**
+
+At the current state, the main agent logic is implemented as a monolith in the main .py file : `chatbot/agents/service1/service1.py`
+
+The agent is implemented using `langgraph` and calls the `gemini` API (OpenAI syntax) using the convenience wrappers import from `langchain`.
+
+All data models for :
+
+- the current graph state
+- schemas 
+
 
 # Local development
 
