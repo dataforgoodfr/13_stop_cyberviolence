@@ -43,6 +43,10 @@ are also defined in `service1.py` as `TypedDict`.
 
     Is invoked by `give_advice`, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between `give_advice` and `research_strategies` are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.
 
+- `escalate`
+
+    Invoked when `agent1` determines that the situation needs human intervention, logic not yet implemented
+
 - `classify_message`
 
     This node is an artifact from early development. Its purpose was to provide a tool for the agent to classify the message of interest as cyberviolence using a classical NLP approach. 
@@ -50,10 +54,27 @@ are also defined in `service1.py` as `TypedDict`.
 
 - `user_feedback`
 
-    Also an artifact from early development for debuggin purposes, to be removed in the future
+    Also an artifact from early development for debugging purposes, to be removed in the future
 
 ## Routings
 
 Routing are either deterministic or conditional on the `action` chosen by the agent. `action` is tracked in the current graph state.
+Conditional routings are not mentioned by name in @fig-agentlayout but indicated by dashed lines between nodes.
 
+- `router`
+
+  Routing within the agent's actions as determined by `agent1`
+
+
+- `give_advice_after_context_collection`
+
+  Artifact from an attempt to short circuit to `give_advice` after the initial context collecition is complete, error prone for problematic messages, routes to `agent1` in current state
+
+- `should_collect_context`
+
+  Checks whether the initial context collection phase has been completed, if not loops to `collect_context` until done
+
+- `advice_router`
+
+  Routing after `give_advice`, can invoke `research_strategies`
 

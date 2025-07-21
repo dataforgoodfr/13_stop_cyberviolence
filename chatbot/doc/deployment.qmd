@@ -42,7 +42,7 @@ Changes pushed to `main` of the chatbot repo trigger Google Cloud Build/Run (see
 
 ### Google Cloud Build / Run
 
-- Google Cloud Build is configured in the github applications of the repo and builds [..//chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
+- Google Cloud Build is configured in the github applications of the repo and builds [../chatbot_deploy.Dockerfile](./chatbot_deploy.Dockerfile)
 on each push to `main`
 
 - Currently a single version is running, using the `generativelanguage` API of Google Cloud
