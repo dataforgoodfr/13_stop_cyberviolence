@@ -24,8 +24,14 @@ website:
             href: extend_doc.qmd
           - text: "Agentic framework and structure"
             href: agent.qmd
+          - text: "App data layer and LLM observability"
+            href: datalayer.qmd
+          - text: "Custom Feedback element"
+            href: custom_feedback.qmd
           - text: "Local development"
             href: local_dev.qmd
+          - text: Cloud configuration
+            href: cloud_configuration.qmd
           - text: Deployment
             href: deployment.qmd
 
