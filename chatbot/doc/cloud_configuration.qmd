@@ -11,7 +11,8 @@ All necessary keys and environment variables are stored in the Google Cloud secr
 
 # App deployment
 
-
+The Google Cloud Build/Run is configured with the repository. For the time being it resources are scaled down to zero depending on demand.
+This induces a startup delay, when the app is requested
 
 # Network
 

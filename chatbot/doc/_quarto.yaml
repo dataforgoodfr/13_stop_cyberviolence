@@ -5,7 +5,10 @@ project:
     - index.qmd
     - extend_doc.qmd
     - agent.qmd
+    - datalayer.qmd
+    - custom_feedback.qmd
     - local_dev.qmd
+    - cloud_configuration.qmd
     - deployment.qmd
 
 website: 
