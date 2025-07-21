@@ -4,7 +4,7 @@
     "href": "deployment.html",
     "title": "Deployment",
     "section": "",
-    "text": "Last updated: 2025-06-05\n\n\n\n./python_uv_node.Dockerfile\nCustomisation of the UI required forking chainlit, this container contains the base environment for building directly from the fork repo ((p)npm)\n./chainlit_dev.Dockerfile\nBased on the python_uv_node image, for an environment container based on ../chatbot_reqs.txt, requirements possibly a bit bloated\n./chatbot_deploy.Dockerfile\nApp container image, based on the environment image\n\n\n\n\n\nfrom within the cloned repo, the app can be started using ../docker_call, if the necessary environment variables are set correctly.\n\n\n\n\n\n\nThe frontend repo is configured to trigger a rebuild and push to dockerhub of the custom chainlit environment container.\nImportant files, repos\n\ngithub workflow emitting a repository_dispatch on chainlit fork:\n\nproduction branch monstermessenger\n\ngithub workflow processing the repository_dispatch on chatbot repo:\n\nbuild and push the environment container\ntrigger Google Cloud Build/Run to rebuild with the new env-container\n\n\n\n\n\nChanges pushed to main of the chatbot repo trigger Google Cloud Build/Run (see below)\n\n\n\n\nGoogle Cloud Build is configured in the github applications of the repo and builds ../chatbot_deploy.Dockerfile on each push to main\nCurrently a single version is running, using the generativelanguage API of Google Cloud\nModel: gemini-flash-2.0\nThe following secrets are set as environment variables in the Google Cloud Run configuration:\n\nLANGFUSE_{AZURE/GEMINI}_SECRET_KEY\nLANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY\nSERVICE1_PROVIDER (azure or gemini)\nOPENAI_API_KEY\nOPENROUTER_API_KEY\nGOOGLE_API_KEY\nGOOGLE_PROJECT_ID\nGOOGLE_PRIVATE_KEY\nGOOGLE_CLIENT_EMAIL\nGOOGLE_BUCKET_NAME\n\n\nhttps://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q\nhttps://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww\n\n\n\n\ndataforgoodfr/13_stop_cyberviolence\nkantundpeterpan/chainlit\nchainlit datalayer Postgres DB: kantundpeterpan, currently on neon\n\n\n\n\nexact Azure Service to be used TBD, on halt, all cloud resources are on Google Cloud at the moment\nhttps://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw\n\nAzure Pipelines is granted access to the repo\ncannot build at the moment due to quota issues",
+    "text": "Last updated: 2025-07-21",
     "crumbs": [
       "Documentation",
       "Deployment"
@@ -14,8 +14,8 @@
     "objectID": "deployment.html#docker-files",
     "href": "deployment.html#docker-files",
     "title": "Deployment",
-    "section": "",
-    "text": "./python_uv_node.Dockerfile\nCustomisation of the UI required forking chainlit, this container contains the base environment for building directly from the fork repo ((p)npm)\n./chainlit_dev.Dockerfile\nBased on the python_uv_node image, for an environment container based on ../chatbot_reqs.txt, requirements possibly a bit bloated\n./chatbot_deploy.Dockerfile\nApp container image, based on the environment image",
+    "section": "Docker files",
+    "text": "Docker files\n\n./python_uv_node.Dockerfile\nCustomisation of the UI required forking chainlit, this container contains the base environment for building directly from the fork repo ((p)npm)\n./chainlit_dev.Dockerfile\nBased on the python_uv_node image, for an environment container based on ../chatbot_reqs.txt, requirements possibly a bit bloated\n./chatbot_deploy.Dockerfile\nApp container image, based on the environment image",
     "crumbs": [
       "Documentation",
       "Deployment"
@@ -25,8 +25,8 @@
     "objectID": "deployment.html#local-deployment",
     "href": "deployment.html#local-deployment",
     "title": "Deployment",
-    "section": "",
-    "text": "from within the cloned repo, the app can be started using ../docker_call, if the necessary environment variables are set correctly.",
+    "section": "Local deployment",
+    "text": "Local deployment\n\nfrom within the cloned repo, the app can be started using ../docker_call, if the necessary environment variables are set correctly.",
     "crumbs": [
       "Documentation",
       "Deployment"
@@ -36,8 +36,8 @@
     "objectID": "deployment.html#cicd",
     "href": "deployment.html#cicd",
     "title": "Deployment",
-    "section": "",
-    "text": "The frontend repo is configured to trigger a rebuild and push to dockerhub of the custom chainlit environment container.\nImportant files, repos\n\ngithub workflow emitting a repository_dispatch on chainlit fork:\n\nproduction branch monstermessenger\n\ngithub workflow processing the repository_dispatch on chatbot repo:\n\nbuild and push the environment container\ntrigger Google Cloud Build/Run to rebuild with the new env-container\n\n\n\n\n\nChanges pushed to main of the chatbot repo trigger Google Cloud Build/Run (see below)\n\n\n\n\nGoogle Cloud Build is configured in the github applications of the repo and builds ../chatbot_deploy.Dockerfile on each push to main\nCurrently a single version is running, using the generativelanguage API of Google Cloud\nModel: gemini-flash-2.0\nThe following secrets are set as environment variables in the Google Cloud Run configuration:\n\nLANGFUSE_{AZURE/GEMINI}_SECRET_KEY\nLANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY\nSERVICE1_PROVIDER (azure or gemini)\nOPENAI_API_KEY\nOPENROUTER_API_KEY\nGOOGLE_API_KEY\nGOOGLE_PROJECT_ID\nGOOGLE_PRIVATE_KEY\nGOOGLE_CLIENT_EMAIL\nGOOGLE_BUCKET_NAME\n\n\nhttps://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q\nhttps://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww\n\n\n\n\ndataforgoodfr/13_stop_cyberviolence\nkantundpeterpan/chainlit\nchainlit datalayer Postgres DB: kantundpeterpan, currently on neon\n\n\n\n\nexact Azure Service to be used TBD, on halt, all cloud resources are on Google Cloud at the moment\nhttps://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw\n\nAzure Pipelines is granted access to the repo\ncannot build at the moment due to quota issues",
+    "section": "CI/CD",
+    "text": "CI/CD\n\nFrontend changes pushed to production\nThe frontend repo is configured to trigger a rebuild and push to dockerhub of the custom chainlit environment container.\nImportant files, repos\n\ngithub workflow emitting a repository_dispatch on chainlit fork:\n\nproduction branch monstermessenger\n\ngithub workflow processing the repository_dispatch on chatbot repo:\n\nbuild and push the environment container\ntrigger Google Cloud Build/Run to rebuild with the new env-container\n\n\n\n\nBackend / Chainlit python layer changes pushed to production\nChanges pushed to main of the chatbot repo trigger Google Cloud Build/Run (see below)\n\n\nGoogle Cloud Build / Run\n\nGoogle Cloud Build is configured in the github applications of the repo and builds ../chatbot_deploy.Dockerfile on each push to main\nCurrently a single version is running, using the generativelanguage API of Google Cloud\nModel: gemini-flash-2.0\nThe following secrets are set as environment variables in the Google Cloud Run configuration:\n\nLANGFUSE_{AZURE/GEMINI}_SECRET_KEY\nLANGFUSE_{AZURE/GEMINI}_PUBLIC_KEY\nSERVICE1_PROVIDER (azure or gemini)\nOPENAI_API_KEY\nOPENROUTER_API_KEY\nGOOGLE_API_KEY\nGOOGLE_PROJECT_ID\nGOOGLE_PRIVATE_KEY\nGOOGLE_CLIENT_EMAIL\nGOOGLE_BUCKET_NAME\n\n\nhttps://www.perplexity.ai/search/how-to-deploy-a-chainlit-app-o-1_qhFwFxTsO0VFOksS67.Q\nhttps://www.perplexity.ai/search/make-a-minimal-viable-example-zL9hudIbRZCFEjMqaJhiww\n\n\nRepo and database ownership\n\ndataforgoodfr/13_stop_cyberviolence\nkantundpeterpan/chainlit\nchainlit datalayer Postgres DB: kantundpeterpan, currently on neon\n\n\n\nAzure Pipelines / Container Apps, Services\nexact Azure Service to be used TBD, on halt, all cloud resources are on Google Cloud at the moment\nhttps://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw\n\nAzure Pipelines is granted access to the repo\ncannot build at the moment due to quota issues",
     "crumbs": [
       "Documentation",
       "Deployment"
@@ -48,7 +48,7 @@
     "href": "agent.html",
     "title": "Agentic framework and structure",
     "section": "",
-    "text": "The structure of the service1 agent.\n\n\n\n\nFigure 1\n\n\n\nImplementation details\nAt the current state, the main agent logic is implemented as a monolith in the main .py file : chatbot/agents/service1/service1.py\nThe agent is implemented using langgraph and calls the gemini API (OpenAI syntax) using the convenience wrappers import from langchain.\nAll data models for :\n\nthe current graph state\nschemas used for requesting structured output\n\nare also defined in service1.py as TypedDict.\n\n\n\nagent1\nRouter node that determines the next action based on the message history\ncollect_context\nThis node is only active in the beginning of the conversation and the graph flow is forced through this node until all required context questions have been asked.\nask_for_context\nThe conversation is routed through this node when agent1 determines that the context of the situation still needs clarification.\ngive_advice\nNode responsible for redacting an advice message, is encouraged to invoke research_strategies to enrich answers with ingested documents (see below)\nresearch_strategies\nIs invoked by give_advice, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between give_advice and research_strategies are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.\nescalate\nInvoked when agent1 determines that the situation needs human intervention, logic not yet implemented\nclassify_message\nThis node is an artifact from early development. Its purpose was to provide a tool for the agent to classify the message of interest as cyberviolence using a classical NLP approach. Not implemented (yet), might be removed in the future.\nuser_feedback\nAlso an artifact from early development for debugging purposes, to be removed in the future\n\n\n\n\nRouting are either deterministic or conditional on the action chosen by the agent. action is tracked in the current graph state. Conditional routings are not mentioned by name in Figure 1 but indicated by dashed lines between nodes.\n\nrouter\nRouting within the agent’s actions as determined by agent1\ngive_advice_after_context_collection\nArtifact from an attempt to short circuit to give_advice after the initial context collecition is complete, error prone for problematic messages, routes to agent1 in current state\nshould_collect_context\nChecks whether the initial context collection phase has been completed, if not loops to collect_context until done\nadvice_router\nRouting after give_advice, can invoke research_strategies",
+    "text": "Last updated: 2025-07-21",
     "crumbs": [
       "Documentation",
       "Agentic framework and structure"
@@ -58,8 +58,8 @@
     "objectID": "agent.html#node-descriptions",
     "href": "agent.html#node-descriptions",
     "title": "Agentic framework and structure",
-    "section": "",
-    "text": "agent1\nRouter node that determines the next action based on the message history\ncollect_context\nThis node is only active in the beginning of the conversation and the graph flow is forced through this node until all required context questions have been asked.\nask_for_context\nThe conversation is routed through this node when agent1 determines that the context of the situation still needs clarification.\ngive_advice\nNode responsible for redacting an advice message, is encouraged to invoke research_strategies to enrich answers with ingested documents (see below)\nresearch_strategies\nIs invoked by give_advice, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between give_advice and research_strategies are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.\nescalate\nInvoked when agent1 determines that the situation needs human intervention, logic not yet implemented\nclassify_message\nThis node is an artifact from early development. Its purpose was to provide a tool for the agent to classify the message of interest as cyberviolence using a classical NLP approach. Not implemented (yet), might be removed in the future.\nuser_feedback\nAlso an artifact from early development for debugging purposes, to be removed in the future",
+    "section": "Node descriptions",
+    "text": "Node descriptions\n\nagent1\nRouter node that determines the next action based on the message history\ncollect_context\nThis node is only active in the beginning of the conversation and the graph flow is forced through this node until all required context questions have been asked.\nask_for_context\nThe conversation is routed through this node when agent1 determines that the context of the situation still needs clarification.\ngive_advice\nNode responsible for redacting an advice message, is encouraged to invoke research_strategies to enrich answers with ingested documents (see below)\nresearch_strategies\nIs invoked by give_advice, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between give_advice and research_strategies are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.\nescalate\nInvoked when agent1 determines that the situation needs human intervention, logic not yet implemented\nclassify_message\nThis node is an artifact from early development. Its purpose was to provide a tool for the agent to classify the message of interest as cyberviolence using a classical NLP approach. Not implemented (yet), might be removed in the future.\nuser_feedback\nAlso an artifact from early development for debugging purposes, to be removed in the future",
     "crumbs": [
       "Documentation",
       "Agentic framework and structure"
@@ -69,8 +69,8 @@
     "objectID": "agent.html#routings",
     "href": "agent.html#routings",
     "title": "Agentic framework and structure",
-    "section": "",
-    "text": "Routing are either deterministic or conditional on the action chosen by the agent. action is tracked in the current graph state. Conditional routings are not mentioned by name in Figure 1 but indicated by dashed lines between nodes.\n\nrouter\nRouting within the agent’s actions as determined by agent1\ngive_advice_after_context_collection\nArtifact from an attempt to short circuit to give_advice after the initial context collecition is complete, error prone for problematic messages, routes to agent1 in current state\nshould_collect_context\nChecks whether the initial context collection phase has been completed, if not loops to collect_context until done\nadvice_router\nRouting after give_advice, can invoke research_strategies",
+    "section": "Routings",
+    "text": "Routings\nRouting are either deterministic or conditional on the action chosen by the agent. action is tracked in the current graph state. Conditional routings are not mentioned by name in Figure 1 but indicated by dashed lines between nodes.\n\nrouter\nRouting within the agent’s actions as determined by agent1\ngive_advice_after_context_collection\nArtifact from an attempt to short circuit to give_advice after the initial context collecition is complete, error prone for problematic messages, routes to agent1 in current state\nshould_collect_context\nChecks whether the initial context collection phase has been completed, if not loops to collect_context until done\nadvice_router\nRouting after give_advice, can invoke research_strategies",
     "crumbs": [
       "Documentation",
       "Agentic framework and structure"
@@ -81,7 +81,7 @@
     "href": "index.html",
     "title": "Stop Cyberviolence",
     "section": "",
-    "text": "This page contains an introduction and the technical documentation for the project Stop Cyberviolence as a part of season 13 hosted by Data for Good France.",
+    "text": "Last updated: 2025-07-21\nThis page contains an introduction and the technical documentation for the project Stop Cyberviolence as a part of season 13 hosted by Data for Good France.",
     "crumbs": [
       "Project & Team"
     ]
@@ -91,7 +91,7 @@
     "href": "extend_doc.html",
     "title": "Extending the documentation",
     "section": "",
-    "text": "Prerequisites\nThe documention used quarto and .qmd quarto markdown (a superset of markdown).\nsee documentation\n\n\nConfiguration\nThe configuration for the static documentation site is defined in chatbot/doc/_quarto.yaml.\n\n\nCreating or modifying parts of the documentation\nAll documents are stored in .qmd format in chatbot/doc. Creation or modification of the documentation does not require local installation of quarto.\nOnce finished, directly push (if you can ;)) or open a pull request to the bot_quarto_docs branch. This will trigger the github workflow defined in build_quarto_docs.yaml.",
+    "text": "Last updated: 2025-07-21\n\nPrerequisites\nThe documention used quarto and .qmd quarto markdown (a superset of markdown).\nsee documentation\n\n\nConfiguration\nThe configuration for the static documentation site is defined in chatbot/doc/_quarto.yaml.\n\n\nCreating or modifying parts of the documentation\nAll documents are stored in .qmd format in chatbot/doc. Creation or modification of the documentation does not require local installation of quarto.\nOnce finished, directly push (if you can ;)) or open a pull request to the bot_quarto_docs branch. This will trigger the github workflow defined in build_quarto_docs.yaml.",
     "crumbs": [
       "Documentation",
       "Extending the documentation"
@@ -102,7 +102,7 @@
     "href": "local_dev.html",
     "title": "Local development",
     "section": "",
-    "text": "The project uses a combination of mamba (conda) (non-python dependencies) and uv (python dependecies) for environment management.\nBackend environment\nmamba create -n stopcyber_backend -c conda-forge uv \nuv pip install -r ./chatbot/chatbot_reqs.txt\nFrontend environment\nmamba create -n stopcyber_frontend -c conda-forge nodejs pnpm",
+    "text": "Last updated: 2025-07-21",
     "crumbs": [
       "Documentation",
       "Local development"
