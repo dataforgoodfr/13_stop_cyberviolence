@@ -43,7 +43,7 @@ jobs:
           git config --global user.email "actions@github.com"
           git add -A
           git commit -m "Update last modified" || echo "No changes to commit"
-          git push bot_quarto_docs
+          git push origin bot_quarto_docs
 
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
