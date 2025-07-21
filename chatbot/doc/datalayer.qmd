@@ -2,6 +2,9 @@
 title: "Chainlit data layer and LLM Observability"
 ---
 
+_Last updated: {{< meta modified >}}_
+
+
 # Chainlit data layer
 
 see also [docs on CL data layer](https://docs.chainlit.io/data-layers/sqlalchemy)

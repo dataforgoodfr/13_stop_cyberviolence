@@ -3,5 +3,7 @@ title: Stop Cyberviolence
 subtitle: Data for Good - Saison 13
 ---
 
+_Last updated: {{< meta modified >}}_
+
 This page contains an introduction and the technical documentation for the project Stop Cyberviolence as a part of season 13 hosted by Data for Good France.
 

@@ -2,6 +2,8 @@
 title: Local development
 ---
 
+_Last updated: {{< meta modified >}}_
+
 # Environment preparation {#sec-envprep}
 
 The project uses a combination of `mamba (conda)` (non-python dependencies) and `uv` (python dependecies) for environment management.

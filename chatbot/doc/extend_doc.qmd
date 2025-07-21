@@ -2,6 +2,8 @@
 title: Extending the documentation
 ---
 
+_Last updated: {{< meta modified >}}_
+
 # Prerequisites
 
 The documention used [`quarto`](https://quarto.org/)  and `.qmd` quarto markdown (a superset of markdown).

@@ -1,7 +1,9 @@
+---
+title: Deployment
+---
 
-# Deployment
+_Last updated: {{< meta modified >}}_
 
-Last updated: 2025-06-05
 
 ## Docker files 
 
