@@ -208,7 +208,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="google-cloud-build-run" class="level3">
 <h3 class="anchored" data-anchor-id="google-cloud-build-run">Google Cloud Build / Run</h3>
 <ul>
-<li><p>Google Cloud Build is configured in the github applications of the repo and builds <a href="./chatbot_deploy.Dockerfile">..//chatbot_deploy.Dockerfile</a> on each push to <code>main</code></p></li>
+<li><p>Google Cloud Build is configured in the github applications of the repo and builds <a href="./chatbot_deploy.Dockerfile">../chatbot_deploy.Dockerfile</a> on each push to <code>main</code></p></li>
 <li><p>Currently a single version is running, using the <code>generativelanguage</code> API of Google Cloud</p></li>
 <li><p>Model: <code>gemini-flash-2.0</code></p></li>
 <li><p>The following secrets are set as environment variables in the Google Cloud Run configuration:</p>
@@ -238,7 +238,7 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="azure-pipelines-container-apps-services" class="level3">
 <h3 class="anchored" data-anchor-id="azure-pipelines-container-apps-services">Azure Pipelines / Container Apps, Services</h3>
-<p>exact Azure Service to be used TBD</p>
+<p>exact Azure Service to be used TBD, on halt, all cloud resources are on Google Cloud at the moment</p>
 <p>https://www.perplexity.ai/search/what-would-be-de-equivalent-of-IBve3EyyTs.n5K_BY65.xw</p>
 <ul>
 <li>Azure Pipelines is granted access to the repo</li>

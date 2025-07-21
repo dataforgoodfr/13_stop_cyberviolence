@@ -218,15 +218,27 @@ Figure&nbsp;1
 <p>Node responsible for redacting an advice message, is encouraged to invoke <code>research_strategies</code> to enrich answers with ingested documents (see below)</p></li>
 <li><p><code>research_strategies</code></p>
 <p>Is invoked by <code>give_advice</code>, documents provided by the School of Social networks and StopCyberviolence are provided using prompt stuffing. Exchanges between <code>give_advice</code> and <code>research_strategies</code> are handled via the graph state but kept apart from the general message flow in order to save tokens and preserve context.</p></li>
+<li><p><code>escalate</code></p>
+<p>Invoked when <code>agent1</code> determines that the situation needs human intervention, logic not yet implemented</p></li>
 <li><p><code>classify_message</code></p>
 <p>This node is an artifact from early development. Its purpose was to provide a tool for the agent to classify the message of interest as cyberviolence using a classical NLP approach. Not implemented (yet), might be removed in the future.</p></li>
 <li><p><code>user_feedback</code></p>
-<p>Also an artifact from early development for debuggin purposes, to be removed in the future</p></li>
+<p>Also an artifact from early development for debugging purposes, to be removed in the future</p></li>
 </ul>
 </section>
 <section id="routings" class="level2">
 <h2 class="anchored" data-anchor-id="routings">Routings</h2>
-<p>Routing are either deterministic or conditional on the <code>action</code> chosen by the agent. <code>action</code> is tracked in the current graph state.</p>
+<p>Routing are either deterministic or conditional on the <code>action</code> chosen by the agent. <code>action</code> is tracked in the current graph state. Conditional routings are not mentioned by name in <a href="#fig-agentlayout" class="quarto-xref">Figure&nbsp;1</a> but indicated by dashed lines between nodes.</p>
+<ul>
+<li><p><code>router</code></p>
+<p>Routing within the agent’s actions as determined by <code>agent1</code></p></li>
+<li><p><code>give_advice_after_context_collection</code></p>
+<p>Artifact from an attempt to short circuit to <code>give_advice</code> after the initial context collecition is complete, error prone for problematic messages, routes to <code>agent1</code> in current state</p></li>
+<li><p><code>should_collect_context</code></p>
+<p>Checks whether the initial context collection phase has been completed, if not loops to <code>collect_context</code> until done</p></li>
+<li><p><code>advice_router</code></p>
+<p>Routing after <code>give_advice</code>, can invoke <code>research_strategies</code></p></li>
+</ul>
 
 
 </section>
